@@ -37,3 +37,36 @@ J'utilise le modèle Dreamshaper8 avec une instance local InvokeAI, pour génér
 - Utilisation d'Angular 19 `npm i -g @angular/cli`
 - Création de l'application angular (sans tests pour le moment) `ng new KitsuTrail --style=scss` (Sans SSR)
 - Draft du design à l'aide de Moqups [https://app.moqups.com](https://app.moqups.com) ![design_draft](./img/kitsutrail_design_draft.png)
+
+**Mise en place de l'architecture et des premiers composant**
+- core: répertoire pour les modules de base de l'application
+  - components
+    - header: entête du site
+    - landing-page: page d'accueil
+    - sidebar: barre de navigation latérale
+- features: répertoire des fonctionnalités de l'app
+  - users: composant spécialisé dans la gestion des utilisateurs
+    - components
+      - users-list: liste des utilisateurs
+
+L'ajout du composant user-list va simplement permettre de vérifier la bonne configuration du routing dans cette phase.
+Je garde aussi cette page comme exemple de lazy-loading pour plus tard.
+Les guards ne sont pas en place pour le moment.
+
+**Mise en forme globale**
+Préparation CSS des 3 éléments principaux de l'affichage.
+1. Barre latérale
+  * Mise en forme du header avec l’icône, un titre et un sous-titre
+  * Préparation liens et des menus déroulants
+  * Mise en place d'un pied de page qui va contenir le nom de l'utilisateur
+2. Entête
+  * Elle va servir à transmettre des informations à l'utilisateur
+3. Contenant principal
+  * c'est la que les actions de l'utilisateur vont se dérouler.
+
+Le favicon a également été changé.
+
+Le logo et le favicon ont été généré par IA (voir plus haut), des modifications mineures, principalement de la transparence, ont été réalisées avec GIMP.
+
+> Fin de travail
+> Prochaine étape gérer les menus déroulants de la barre latérale
