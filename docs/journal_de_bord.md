@@ -27,7 +27,13 @@ Initialement, je compte utiliser les technologies suivantes:
 Démarrage officiel du projet avec la création des répertoires de l'architecture globale du projet avec les répertoires frontend, backend et database.
 J'ai également ajouté ce fichier journal de bord, des fichiers README et une licence GNU GPL3 pour être complètement OpenSource.
 
-L'ensemble du projet a été poussé dans github: https://github.com/peredur0/KitsuTrail
+L'ensemble du projet a été poussé dans github: [https://github.com/peredur0/KitsuTrail](https://github.com/peredur0/KitsuTrail)
 
 Le nom du projet est KitsuTrail, Kitsu en référence au renard et Trail pour la piste. Je tente également de créer le logo de la plateforme avec de l'IA générative.
 J'utilise le modèle Dreamshaper8 avec une instance local InvokeAI, pour générer un logo.
+
+**Démarrage du développement du frontend**
+- Utilisation de node 18 `nvm use 18`
+- Utilisation d'Angular 19 `npm i -g @angular/cli`
+- Création de l'application angular (sans tests pour le moment) `ng new KitsuTrail --style=scss` (Sans SSR)
+- Draft du design à l'aide de Moqups [https://app.moqups.com](https://app.moqups.com) ![design_draft](./img/kitsutrail_design_draft.png)
