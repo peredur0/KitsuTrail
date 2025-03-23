@@ -25,7 +25,7 @@ Initialement, je compte utiliser les technologies suivantes:
 
 ## 2025-03-23 - Initialisation du projet
 Démarrage officiel du projet avec la création des répertoires de l'architecture globale du projet avec les répertoires frontend, backend et database.
-J'ai également ajouté ce fichier journal de bord, des fichiers README et une licence GNU GPL3 pour être complètement OpenSource.
+J'ai également ajouté ce fichier journal de bord, des fichiers README et une licence MIT pour être complètement OpenSource.
 
 L'ensemble du projet a été poussé dans github: [https://github.com/peredur0/KitsuTrail](https://github.com/peredur0/KitsuTrail)
 
