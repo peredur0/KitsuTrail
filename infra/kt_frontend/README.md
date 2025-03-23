@@ -1,0 +1,2 @@
+# KitsuTrail Frontend
+**UNDER CONSTRUCTION**
