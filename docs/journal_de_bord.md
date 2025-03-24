@@ -68,5 +68,31 @@ Le favicon a également été changé.
 
 Le logo et le favicon ont été généré par IA (voir plus haut), des modifications mineures, principalement de la transparence, ont été réalisées avec GIMP.
 
-> Fin de travail
+> Fin de travail:
 > Prochaine étape gérer les menus déroulants de la barre latérale
+
+
+## 2025-04-24 - Travail sur la barre latérale
+L'idée est d'ajouter des menus retractable dans le sidebar.
+Le module Angular Material offre cette possibilité [https://material.angular.io/](https://material.angular.io/)
+```
+ng add @angular/material
+```
+Documentation sur les expansion panel : [https://material.angular.io/components/expansion/overview](https://material.angular.io/components/expansion/overview)
+
+La mise en place des menu retractable est assez simple.
+Tout comme la modification des éléments graphique.
+L'installation du module va ajouter des données dans le fichier style global. Il est alors possible de faire un override dans le CSS du component.
+
+J'ai ajouté des liens fictifs afin de donner un peu de corps à la barre latérale.
+
+> **Difficultés**:
+> 1. Je ne suis pas parvenue à gérer correctement l'espacement entre le header du menu retractable et le premier item de la liste en dessous
+> 2. Le div central de la sidebar n'est pas scrollable. Sur des fenêtres petites certains menu peuvent se retrouver masqués
+
+Résultat en image:
+
+![Barre latérale](./img/20250324_sidebare.png)
+
+
+> Le travail de ce jour a été principalement HTML et CSS et uniquement sur la barre latérale. Demain on vas essayer de construire la page d'accueil ou la gestion des utilisateurs

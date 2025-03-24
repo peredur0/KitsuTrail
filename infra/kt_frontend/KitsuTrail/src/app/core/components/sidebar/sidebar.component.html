@@ -5,22 +5,41 @@
             <span class="logo-title">KitsuTrail</span>
             <span class="logo-subtitle">Simulation de données</span>
         </div>
-        
     </div>
-    <div class="sidebar-content">
-        <nav>
-            <a routerLink="">Accueil</a>
 
-            <div>
-                Users
-                <span>▼</span>
-            </div>
-            <div>
-                <a routerLink="users">Utilisateurs</a>
-            </div>
-        </nav>
+    <div class="sidebar-menu">
+        <a routerLink="">Accueil</a>
+        <mat-expansion-panel>
+            <mat-expansion-panel-header>
+                <mat-panel-title>Gestion utilisateurs</mat-panel-title>
+            </mat-expansion-panel-header>
+            <ul>
+                <li><a routerLink="users">Utilisateurs</a></li>
+            </ul>
+        </mat-expansion-panel>
+
+        <mat-expansion-panel>
+            <mat-expansion-panel-header>
+                <mat-panel-title>Fournisseurs</mat-panel-title>
+            </mat-expansion-panel-header>
+            <ul>
+                <li><a routerLink="providers/idp">Identité</a></li>
+                <li><a routerLink="providers/sp">Service</a></li>
+            </ul>
+        </mat-expansion-panel>
+
+        <mat-expansion-panel>
+            <mat-expansion-panel-header>
+                <mat-panel-title>Data</mat-panel-title>
+            </mat-expansion-panel-header>
+            <ul>
+                <li><a routerLink="data/audit">Journalisation</a></li>
+                <li><a routerLink="data/dashboard">Tableau de bord</a></li>
+            </ul>
+        </mat-expansion-panel>
     </div>
+
     <div class="sidebar-footer">
-        <p>Footer</p>
+        <p>Projet personnel - 2025</p>
     </div>
 </div>

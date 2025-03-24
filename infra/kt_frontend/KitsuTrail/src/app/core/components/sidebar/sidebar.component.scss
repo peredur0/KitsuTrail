@@ -1,7 +1,11 @@
+@use '@angular/material' as mat;
+
 .sidebar-container {
-    color: gray;
+    color: rgb(175, 175, 175);
     height: 100vh;
     top: 0;
+    display: flex;
+    flex-direction: column;
 }
 
 .sidebar-header {
@@ -31,6 +35,52 @@
     font-weight: bold;
 }
 
-.logo-subtitle{
+.logo-subtitle {
     font-size: 14px;
+}
+
+.sidebar-menu {
+    display: flex;
+    flex-direction: column;
+    flex-grow: 1;
+    gap: 5px;
+    margin-left: 10px;
+    margin-right: 10px;
+    @include mat.expansion-overrides((
+        container-background-color: black,
+        container-text-color: gray,
+        header-text-color: white,
+    ));
+}
+
+mat-expansion-panel mat-expansion-panel-header {
+    margin-bottom: 0px;
+}
+
+a {
+    color: gray;
+    text-decoration: none;
+}
+a:hover {
+    color: white;
+    text-decoration: underline;
+    transition: 0.3s;
+}
+
+ul {
+    list-style: none;
+    margin-top: 0;
+    padding-left: 10px;
+}
+
+li {
+    padding-top: 5px;
+}
+
+.sidebar-footer {
+    font-size: 14px;
+    margin-top: auto;
+    padding: 10px;
+    color: rgb(175, 175, 175);
+    text-align: center;
 }
