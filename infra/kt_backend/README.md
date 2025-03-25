@@ -1,2 +1,2 @@
-# KitsuTrail Backend
+# KitsuTrail Backend : Kuro
 **UNDER CONSTRUCTION**

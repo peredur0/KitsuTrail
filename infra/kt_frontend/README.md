@@ -1,4 +1,4 @@
-# KitsuTrail Frontend
+# KitsuTrail Frontend : Shiro
 Angular frontend application
 
 ## Installation
