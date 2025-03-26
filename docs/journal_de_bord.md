@@ -96,3 +96,15 @@ Résultat en image:
 
 
 > Le travail de ce jour a été principalement HTML et CSS et uniquement sur la barre latérale. Demain on vas essayer de construire la page d'accueil ou la gestion des utilisateurs
+
+
+## 2025-03-25 - Travail sur la page d'accueil et le header
+- Renommage du répertoire Angular de KitsuTrail en Shiro (blanc)
+- Préparation du nom du backend (Kuro)
+
+Actions sur la page d'accueil:
+- Mise en place de boite et des boutons qui vont être utilisée pour permettre de se rendre sur les pages de l'application
+
+## 2025-03-06 Amélioration du code de la page d'accueil
+- Mise en place d'un service unique pour gérer l'affichage et la présence des menus dans la sidebar et la landing-page.
+> Prochaine étape utiliser ce service dans l'affichage avec des ngFor et ngIf. L'objectif est d'avoir un code le plus modulaire possible
