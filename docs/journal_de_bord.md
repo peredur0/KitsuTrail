@@ -108,3 +108,13 @@ Actions sur la page d'accueil:
 ## 2025-03-06 Amélioration du code de la page d'accueil
 - Mise en place d'un service unique pour gérer l'affichage et la présence des menus dans la sidebar et la landing-page.
 > Prochaine étape utiliser ce service dans l'affichage avec des ngFor et ngIf. L'objectif est d'avoir un code le plus modulaire possible
+
+Les menus de la landing page sont maintenant beaucoup plus modulaires.
+Les propriétés de chaque menu sont maintenant gérées dans un service.
+L'affichage se fait avec une boucle @for dans le template html.
+Selon la propriété display du menu je suis capable d'afficher ou non un menu avec l'instruction @if.
+J'ai également utiliser l'instruction *ngFor dans une balise article pour s'occuper de l'affichage des boutons.
+
+Je dois maintenant appliquer du CSS sur ces boutons.
+
+L'étape d'après sera de remplacer le code statique dans la sidebar.

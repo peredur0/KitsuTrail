@@ -7,26 +7,26 @@ import { Menu } from "../models/menu.model";
 export class MenuService {
     menu: Menu[] = [
         {
-            title: "utilisateurs",
+            title: "Gestion des utilisateurs",
             display: true,
             links: [
-                { label: "utilisateurs", path: "/users", disabled: false }
+                { label: "Utilisateurs", path: "users", disabled: false }
             ]
         },
         {
-            title: "fournisseurs",
+            title: "Gestion des fournisseurs",
             display: true,
             links: [
-                { label: "identité", path: "", disabled: true },
-                { label: "service", path: "", disabled: true }
+                { label: "Identité", path: "", disabled: true },
+                { label: "Service", path: "", disabled: true }
             ]
         },
         {
-            title: "Data",
-            display: false,
+            title: "Traitements des données",
+            display: true,
             links: [
-                { label: "journal d'audit", path: "", disabled: true },
-                { label: "tableau de bord", path: "", disabled: true }
+                { label: "Journal d'audit", path: "", disabled: true },
+                { label: "Tableau de bord", path: "", disabled: true }
             ]
         }
     ];
