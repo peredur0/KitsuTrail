@@ -17,8 +17,8 @@ export class MenuService {
             title: "Gestion des fournisseurs",
             display: true,
             links: [
-                { label: "Identité", path: "", disabled: true },
-                { label: "Service", path: "", disabled: true }
+                { label: "Identités", path: "", disabled: true },
+                { label: "Services", path: "", disabled: true }
             ]
         },
         {

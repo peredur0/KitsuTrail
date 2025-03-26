@@ -57,24 +57,24 @@ mat-expansion-panel mat-expansion-panel-header {
     margin-bottom: 0px;
 }
 
-ul {
-    list-style: none;
-    margin-top: 0;
-    padding-left: 10px;
-}
-
-li {
-    padding-top: 5px;
+article{
+    padding: 10px;
 }
 
 a {
     color: gray;
     text-decoration: none;
+
+    &:hover {
+        color: white;
+        transition: 0.3s;
+    }
+
 }
-a:hover {
-    color: white;
-    text-decoration: underline;
-    transition: 0.3s;
+
+a.disabled {
+    text-decoration: line-through;
+    pointer-events: none;
 }
 
 .sidebar-footer {

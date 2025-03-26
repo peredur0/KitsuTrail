@@ -1,7 +1,10 @@
+import { Component, OnInit } from '@angular/core';
 import { CommonModule } from '@angular/common';
-import { Component } from '@angular/core';
 import { RouterModule } from '@angular/router';
 import { MatExpansionModule } from '@angular/material/expansion'
+
+import { Menu } from '../../models/menu.model';
+import { MenuService } from '../../services/menu.service';
 
 @Component({
   selector: 'app-sidebar',
@@ -14,5 +17,12 @@ import { MatExpansionModule } from '@angular/material/expansion'
   templateUrl: './sidebar.component.html',
   styleUrl: './sidebar.component.scss'
 })
-export class SidebarComponent {
+export class SidebarComponent implements OnInit {
+
+  menus!: Menu[];
+  constructor(private menuService: MenuService){}
+
+  ngOnInit(): void {
+    this.menus = this.menuService.getMenu();
+  }
 }

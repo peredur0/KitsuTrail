@@ -118,3 +118,12 @@ J'ai également utiliser l'instruction *ngFor dans une balise article pour s'occ
 Je dois maintenant appliquer du CSS sur ces boutons.
 
 L'étape d'après sera de remplacer le code statique dans la sidebar.
+Le code statique de la sidebar a été replacé par la version modulaire.
+Les menus et la forme des liens sont maintenant gérés de manière centralisée via le service *menu.service*.
+Il est possible de masquer complètement un menu en jouant sur la propriété *display*.
+La propriété *disabled* de liens va voir une action via sur le CSS.
+
+Le résultat à ce stade est:
+![landing page](./img/20250326_landing.png)
+
+> Prochaine étape gérer le header pour qu'il affiche un texte particulier selon la page sur laquelle se trouve l'utilisateur.
