@@ -3,8 +3,9 @@ import { CommonModule } from '@angular/common';
 import { RouterLink } from '@angular/router';
 import { UpperCasePipe } from "@angular/common";
 
-import { MenuService } from '../../services/menu.service';
 import { Menu } from '../../models/menu.model';
+import { MenuService } from '../../services/menu.service';
+import { HeaderService } from '../../services/header.service';
 
 @Component({
   selector: 'app-landing-page',
@@ -20,7 +21,13 @@ import { Menu } from '../../models/menu.model';
 export class LandingPageComponent implements OnInit{
   
   menus!: Menu[];
-  constructor(private menuService: MenuService){}
+  constructor(
+    private menuService: MenuService,
+    private headerService: HeaderService
+  ){
+    this.headerService.setTitle('Bienvenue');
+    this.headerService.setSubtitle('');
+  }
 
 
   ngOnInit(): void {

@@ -23,6 +23,8 @@ Initialement, je compte utiliser les technologies suivantes:
   * MongoDB: base noSQL flexible et facilement transférable dans le cloud (Cloud Atlas)
 - Docker: (Utiliser pour le développement) 
 
+Pour ce projet j'utilise également des plateformes d'IA générative (chatGPT & MistalAI) pour effectuer des recherches ou accélérer le processus de debugging. Aucun code généré par ces plateformes n'est inséré tel quel dans le code.
+
 ## 2025-03-23 - Initialisation du projet
 Démarrage officiel du projet avec la création des répertoires de l'architecture globale du projet avec les répertoires frontend, backend et database.
 J'ai également ajouté ce fichier journal de bord, des fichiers README et une licence MIT pour être complètement OpenSource.
@@ -105,7 +107,7 @@ Résultat en image:
 Actions sur la page d'accueil:
 - Mise en place de boite et des boutons qui vont être utilisée pour permettre de se rendre sur les pages de l'application
 
-## 2025-03-06 Amélioration du code de la page d'accueil
+## 2025-03-26 Amélioration du code de la page d'accueil
 - Mise en place d'un service unique pour gérer l'affichage et la présence des menus dans la sidebar et la landing-page.
 > Prochaine étape utiliser ce service dans l'affichage avec des ngFor et ngIf. L'objectif est d'avoir un code le plus modulaire possible
 
@@ -127,3 +129,18 @@ Le résultat à ce stade est:
 ![landing page](./img/20250326_landing.png)
 
 > Prochaine étape gérer le header pour qu'il affiche un texte particulier selon la page sur laquelle se trouve l'utilisateur.
+
+## 2025-03-27 Travail sur le header
+Le but est de modifier le header dynamiquement en fonction de la page sur laquelle l'utilisateur se trouve.
+Pour ce faire j'ai décidé d'utiliser les signaux.
+> Cela va demander d'ajouter le service gérant les signaux dans tous les composants.
+
+Documentation sur laquelle je me suis appuyé:
+- [https://angular.dev/guide/signals](https://angular.dev/guide/signals)
+- [https://angular.dev/essentials/signals](https://angular.dev/essentials/signals)
+- [https://angular.dev/essentials/templates](https://angular.dev/essentials/templates)
+- [https://angular.fr/signals/](https://angular.fr/signals/)
+
+Pour une meilleure scalabilité, je vais essayer d'ajouter la récupération de l'url pour déterminer à partir du service menu quels éléments sont à afficher.
+
+une piste : [https://angular.fr/routing/location](https://angular.fr/routing/location)

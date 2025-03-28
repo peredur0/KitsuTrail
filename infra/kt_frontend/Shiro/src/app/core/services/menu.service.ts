@@ -5,7 +5,7 @@ import { Menu } from "../models/menu.model";
     providedIn: 'root'
 })
 export class MenuService {
-    menu: Menu[] = [
+    menus: Menu[] = [
         {
             title: "Gestion des utilisateurs",
             display: true,
@@ -32,6 +32,18 @@ export class MenuService {
     ];
 
     getMenu(): Menu[]{
-        return [...this.menu];
+        return [...this.menus];
+    }
+
+    getLabel(element: 'title'| 'subtitle', path: string): string{
+        for (const menu of this.menus) {
+            for (const link of menu.links){
+                if (link.path === path) {
+                    return element === 'title' ? menu.title : link.label
+                }
+            }
+        }
+        console.log(`Error: Failed to find label for ${path}`)
+        return 'Inconnu'
     }
 }

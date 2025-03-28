@@ -1,5 +1,8 @@
 import { Component } from '@angular/core';
 
+import { MenuService } from '../../../../core/services/menu.service';
+import { HeaderService } from '../../../../core/services/header.service';
+
 @Component({
   selector: 'app-users-list',
   imports: [],
@@ -8,4 +11,9 @@ import { Component } from '@angular/core';
 })
 export class UsersListComponent {
 
+  constructor(
+    private menuService: MenuService,
+    private headerService: HeaderService) {
+      this.headerService.setTitle(this.menuService.getLabel('title', 'users'))
+  }
 }
