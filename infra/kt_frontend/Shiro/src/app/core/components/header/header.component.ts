@@ -1,4 +1,6 @@
-import { Component, signal, computed } from '@angular/core';
+import { Component, computed } from '@angular/core';
+import { Location } from '@angular/common';
+
 import { HeaderService } from '../../services/header.service';
 
 @Component({
@@ -11,8 +13,19 @@ import { HeaderService } from '../../services/header.service';
 
 export class HeaderComponent {
 
-  constructor(private headerService: HeaderService){}
+  constructor(
+    private headerService: HeaderService,
+    private location: Location
+  ){}
+
   title = computed(() => this.headerService.title());
   subtitle = computed(() => this.headerService.subtitle())
 
+  goBack(): void {
+    console.log(window.history.length);
+
+    if (window.history.length > 1) {
+      this.location.back();
+    }
+  }
 }

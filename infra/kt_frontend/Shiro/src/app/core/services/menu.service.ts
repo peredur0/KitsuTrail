@@ -5,7 +5,7 @@ import { Menu } from "../models/menu.model";
     providedIn: 'root'
 })
 export class MenuService {
-    menus: Menu[] = [
+    private menus: Menu[] = [
         {
             title: "Gestion des utilisateurs",
             display: true,

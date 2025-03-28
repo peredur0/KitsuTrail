@@ -143,4 +143,24 @@ Documentation sur laquelle je me suis appuyé:
 
 Pour une meilleure scalabilité, je vais essayer d'ajouter la récupération de l'url pour déterminer à partir du service menu quels éléments sont à afficher.
 
-une piste : [https://angular.fr/routing/location](https://angular.fr/routing/location)
+une piste : 
+
+## 2025-03-28 Travail sur la location
+En utilisant la méthode location.back(), j'ai pu ajouter un bouton retour dans le Header.
+J'ai du faire une petite manipulation pour que le retour reste quand même sur l'application, en utilisant la propriété `window.history.length`.
+
+Pour le moment je suis capable d'afficher le path courant, mais je dois importé le module location dans tous les composants dans lequel je souhaite l'utiliser.
+J'aimerais pouvoir utiliser cette capacité pour modifier dynamiquement le contenu du header.
+Le titre dans le header devrait être le nom de section (Gestion des utilisateur) en fonction des valeurs MenuService.
+Le sous titre par contre pourra être codé en dur dans la page ou être variable selon le contenu (informations utilisateur).
+
+Quelques ressources de cette partie:
+- [https://angular.fr/routing/location](https://angular.fr/routing/location)
+- [https://angular.dev/api/common/Location](https://angular.dev/api/common/Location)
+
+
+La mise en page globale est en place pour le header.
+
+Je n'ai pas réussi à terminer complètement le traitement du path courant.
+Je continuerais demain
+
