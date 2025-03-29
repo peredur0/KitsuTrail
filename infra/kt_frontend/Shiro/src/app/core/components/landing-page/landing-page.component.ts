@@ -25,10 +25,8 @@ export class LandingPageComponent implements OnInit{
     private menuService: MenuService,
     private headerService: HeaderService
   ){
-    this.headerService.setTitle("Bienvenue");
-    this.headerService.setSubtitle("Un très long soustitre, mais vraiment long");
+    this.headerService.setSubtitle("Un très long sous titre, mais vraiment long");
   }
-
 
   ngOnInit(): void {
     this.menus = this.menuService.getMenu();

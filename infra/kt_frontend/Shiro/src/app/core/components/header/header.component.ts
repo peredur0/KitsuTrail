@@ -1,7 +1,10 @@
-import { Component, computed } from '@angular/core';
+import { Component, computed, OnDestroy, OnInit } from '@angular/core';
 import { Location } from '@angular/common';
+import { filter, Subscription } from 'rxjs';
+import { NavigationEnd, Router } from '@angular/router';
 
 import { HeaderService } from '../../services/header.service';
+import { MenuService } from '../../services/menu.service';
 
 @Component({
   selector: 'app-header',
@@ -11,20 +14,39 @@ import { HeaderService } from '../../services/header.service';
   styleUrl: './header.component.scss'
 })
 
-export class HeaderComponent {
+export class HeaderComponent implements OnInit, OnDestroy {
+
+  private routerSubscription!: Subscription;
 
   constructor(
+    private menuService: MenuService,
     private headerService: HeaderService,
-    private location: Location
+    private location: Location,
+    private router: Router
   ){}
 
   title = computed(() => this.headerService.title());
   subtitle = computed(() => this.headerService.subtitle())
 
-  goBack(): void {
-    console.log(window.history.length);
+  ngOnInit(): void {
+    this.routerSubscription = this.router.events.pipe(
+      filter(event => event instanceof NavigationEnd)
+    ).subscribe((event: NavigationEnd) => {
+      const segments = event.urlAfterRedirects.split('/');
+      this.headerService.setTitle(
+        this.menuService.getLabel('title', segments[1])
+      );
+    });
+  }
 
-    if (window.history.length > 1) {
+  ngOnDestroy(): void {
+    if( this.routerSubscription ){
+      this.routerSubscription.unsubscribe()
+    }
+  }
+
+  goBack(): void {
+    if ( window.history.length > 1 ) {
       this.location.back();
     }
   }

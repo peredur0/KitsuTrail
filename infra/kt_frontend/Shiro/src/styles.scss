@@ -15,7 +15,10 @@ html {
   ));
 }/* You can add global styles to this file, and also import other style files */
 
-html, body { height: 100%; }
+html, body { 
+  background-color: rgb(170, 170, 170);
+  height: 100%; 
+}
 body { margin: 0; font-family: Roboto, "Helvetica Neue", sans-serif; }
 
 button {
@@ -24,7 +27,8 @@ button {
   margin-top: 5px;
   border: none;
   border-radius: 8px;
-  background-color: white;
+  background-color: rgb(170, 170, 170);
+  //background-color: white;
   cursor: pointer;
   font-size: 18px;
   transition: background 0.3s ease;

@@ -1,7 +1,4 @@
 import { Component, OnInit } from '@angular/core';
-import { Location } from '@angular/common';
-
-import { MenuService } from '../../../../core/services/menu.service';
 import { HeaderService } from '../../../../core/services/header.service';
 
 @Component({
@@ -12,19 +9,11 @@ import { HeaderService } from '../../../../core/services/header.service';
 })
 export class UsersListComponent implements OnInit{
 
-  path!: string;
-
-  constructor(
-    private menuService: MenuService,
-    private headerService: HeaderService,
-    private location: Location
-  ) {
-  }
+  constructor(private headerService: HeaderService) {}
 
   ngOnInit(): void {
-      this.path = this.location.path()
-      this.headerService.setTitle(this.menuService.getLabel('title', 'users'))
-      this.headerService.setSubtitle('')
-  }
 
+    this.headerService.setSubtitle('');
+
+  }
 }

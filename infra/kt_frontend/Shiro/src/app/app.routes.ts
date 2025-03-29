@@ -4,4 +4,5 @@ import { LandingPageComponent } from './core/components/landing-page/landing-pag
 export const routes: Routes = [
     { path: 'users', loadChildren: () => import('./features/users/users.routes').then(m => m.usersRoutes)},
     { path: '', component: LandingPageComponent }
+    //{ path: '**', component: PageNotFoundComponent }
 ];

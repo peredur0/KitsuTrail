@@ -164,3 +164,25 @@ La mise en page globale est en place pour le header.
 Je n'ai pas réussi à terminer complètement le traitement du path courant.
 Je continuerais demain
 
+## 2025-03-29 Travail pour le dynamisme des pages
+Aujourd'hui on va essayer de faire passer la page courante dans le setTitle du header pour récupérer la première page qui correspond à la section (users/Fournisseurs, Data)
+
+J'ai utilisé les snapshots de ActivatedRoute.
+J'ai pu tester l'utilisation de la fonction de mise à jour du header au sein de page principale des utilisateurs.
+Vu que cette page est lancée en lazy-loading, il est nécessaire de passer par pathFromRoot[].
+
+L'idée maintenant est d'exporté les instructions de modification du header dans une fonction de service dédiée.
+Je vais déporté ces instructions dans le service du header.
+
+En définitive, je pense déporter toute l'execution de la mise à jour du header dans le header et laisser chaque module définir éventuellement un sous titre.
+Je regarde cette documentation pour le moment
+- [https://angular.fr/routing/input-binding](https://angular.fr/routing/input-binding)
+
+Finalement, je passe par une subscription sur les évènements de router directement dans le TS du header.
+Je récupère l'URL final après la fin des opérations de navigation.
+
+A ce stade, les titres affichés dans le Header sont totalement autonomes.
+Je laisse la modification du sous titre dans chaque composant.
+Cette opération utilise les signaux.
+
+> A faire un petit résumé des solutions mises en place.
