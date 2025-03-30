@@ -23,7 +23,7 @@ Initialement, je compte utiliser les technologies suivantes:
   * MongoDB: base noSQL flexible et facilement transférable dans le cloud (Cloud Atlas)
 - Docker: (Utiliser pour le développement) 
 
-Pour ce projet j'utilise également des plateformes d'IA générative (chatGPT & MistalAI) pour effectuer des recherches ou accélérer le processus de debugging. Aucun code généré par ces plateformes n'est inséré tel quel dans le code.
+Pour ce projet j'utilise également des plateformes d'IA générative (chatGPT & MistralAI) pour effectuer des recherches ou accélérer le processus de debugging. Aucun code généré par ces plateformes n'est inséré tel quel dans le code.
 
 ## 2025-03-23 - Initialisation du projet
 Démarrage officiel du projet avec la création des répertoires de l'architecture globale du projet avec les répertoires frontend, backend et database.
@@ -186,3 +186,8 @@ Je laisse la modification du sous titre dans chaque composant.
 Cette opération utilise les signaux.
 
 > A faire un petit résumé des solutions mises en place.
+
+## 2025-03-30 Rédaction d'un bilan d'étape
+Voir [20250330_front.md](./progress_summary/20250330_front.md).
+
+**Prochaine étape**: Préparer le POC pour la gestion des utilisateurs et des fournisseurs avant la mise en place d'un backend.

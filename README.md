@@ -10,7 +10,7 @@ Attempt to create a platform for data creation and dashboards
 **UNDER CONSTRUCTION**
 
 ## Documentation
-- A logbook in french is available here: [docs/journal_de_bord.md](./docs/journal_de_bord.md) [FR]
+- A logbooks and progress_summary in french are available in `KitsuTrail/docs` [FR]
 - Backend: [UNDER CONSTRUCTION](./infra/kt_backend/README.md)
 - Frontend: [UNDER CONSTRUCTION](./infra/kt_frontend/README.md)
 - Database: [UNDER CONSTRUCTION](./infra/kt_database/README.md)
