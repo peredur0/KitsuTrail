@@ -1,0 +1,11 @@
+<div class="header-container">
+    <div class="header-info">
+        <h3>{{ title() }}</h3>
+        @if (subtitle()) {
+            <p>{{ subtitle() }}</p>
+        }
+    </div>
+    <div class="header-button">
+        <button (click)="goBack()">Retour</button>
+    </div>
+</div>

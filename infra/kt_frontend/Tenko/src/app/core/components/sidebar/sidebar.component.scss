@@ -1,0 +1,86 @@
+@use '@angular/material' as mat;
+
+.sidebar-container {
+    color: rgb(175, 175, 175);
+    height: 100vh;
+    top: 0;
+    display: flex;
+    flex-direction: column;
+}
+
+.sidebar-header {
+    width: 100%;
+    display: flex;
+    margin-top: 10px;
+    margin-bottom: 50px;
+    gap: 10px;
+    align-items: center;
+}
+
+.logo {
+    width: 120px;
+    height: auto;
+}
+
+.logo-text {
+    display: flex;
+    flex-direction: column;
+    align-items: flex-start;
+}
+
+.logo-title{
+    color: white;
+    justify-content: center;
+    font-size: 28px;
+    font-weight: bold;
+}
+
+.logo-subtitle {
+    font-size: 14px;
+}
+
+.sidebar-menu {
+    display: flex;
+    flex-direction: column;
+    flex-grow: 1;
+    gap: 5px;
+    margin-left: 10px;
+    margin-right: 10px;
+    @include mat.expansion-overrides((
+        container-background-color: black,
+        container-text-color: gray,
+        header-text-color: white,
+    ));
+}
+
+mat-expansion-panel mat-expansion-panel-header {
+    margin-bottom: 0px;
+}
+
+article{
+    padding: 10px;
+}
+
+a {
+    color: gray;
+    text-decoration: none;
+
+    &:hover {
+        color: white;
+        transition: 0.3s;
+    }
+
+}
+
+a.disabled {
+    text-decoration: line-through;
+    pointer-events: none;
+}
+
+.sidebar-footer {
+    font-size: 14px;
+    margin-top: auto;
+    padding: 10px;
+    color: rgb(175, 175, 175);
+    text-align: center;
+}

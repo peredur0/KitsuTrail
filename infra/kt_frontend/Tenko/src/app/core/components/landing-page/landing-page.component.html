@@ -1,0 +1,14 @@
+<div class="landing-page-main">
+    <div class="landing-page-menu">
+        @for (menu of menus; track menu.title) {
+            @if (menu.display) {
+                <div class="landing-page-widget">
+                    <h3>{{ menu.title | uppercase }}</h3>
+                    <article *ngFor="let link of menu.links">
+                        <button [routerLink]="link.path" [disabled]="link.disabled">{{ link.label }}</button>
+                    </article>
+                </div>
+            }
+        }
+    </div>
+</div>
