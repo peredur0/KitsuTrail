@@ -191,3 +191,11 @@ Cette opération utilise les signaux.
 Voir [20250330_front.md](./progress_summary/20250330_front.md).
 
 **Prochaine étape**: Préparer le POC pour la gestion des utilisateurs et des fournisseurs avant la mise en place d'un backend.
+
+
+## 2025-03-31 Mise en place des utilisateurs
+Début de l'implémentation des utilisateurs.
+- Création d'une classe User pour définir les attributs utilisables.
+- Création d'un service pour gérer la liste des utilisateurs
+- Ajout de quelques utilisateurs en dur dans le service
+- Mise en place d'une méthode pour la récupération par id ou par login
