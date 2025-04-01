@@ -199,3 +199,22 @@ Début de l'implémentation des utilisateurs.
 - Création d'un service pour gérer la liste des utilisateurs
 - Ajout de quelques utilisateurs en dur dans le service
 - Mise en place d'une méthode pour la récupération par id ou par login
+
+Les utilisateurs ont pour le moment les attributs suivants:
+- id: version tronquée d'un UUID (généré à la création)
+- createdAt: date de création (généré à la création)
+- firstname: prénom
+- lastname: nom de famille
+- login: str
+- email: information optionnelle
+
+2 méthodes pour set l'email: setEmail & withEmail.
+
+## 2025-04-01 Travail sur les utilisateurs
+Ajout d'une méthode pour normaliser l'affichage du nom d'affichage.
+
+L'affichage de la liste des utilisateurs sera fait sous forme de cartes.
+Peut être en présentant une photo de profil.
+Je prévois également de rajouter une barre de recherche et des filtres.
+
+Chaque utilisateur aura également sa propre page avec les informations relatives à son profil.

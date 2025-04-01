@@ -7,5 +7,6 @@ import { Component } from '@angular/core';
   styleUrl: './user.component.scss'
 })
 export class UserComponent {
-
+  // Will contains the individual user information
+  // All of the attributs and perhaps some stats and logs
 }

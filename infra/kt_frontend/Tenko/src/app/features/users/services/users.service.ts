@@ -6,8 +6,8 @@ import { User } from "../models/user.model";
 })
 export class UsersService {
     private users: User[] = [
-        new User('Triss', 'Merigold', 'triss', new Date),
-        new User('Keira', 'Metz', 'kmetz', new Date).withEmail('km@mail.km')
+        new User('Triss', 'Merigold', 'triss'),
+        new User('Keira', 'Metz', 'kmetz').withEmail('km@mail.km')
     ]
 
     getUsers(): User[] {

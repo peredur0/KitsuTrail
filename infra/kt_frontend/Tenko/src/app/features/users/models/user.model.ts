@@ -2,14 +2,15 @@ export class User {
     
     email?: string;
     id: string;
+    createdAt: Date;
     
     constructor(
         public firstname: string,
         public lastname: string,
         public login: string,
-        public createdAt: Date
     ) {
         this.id = crypto.randomUUID().substring(0,8);
+        this.createdAt = new Date;
     }
 
     setEmail(email: string): void {
@@ -17,7 +18,12 @@ export class User {
     }
 
     withEmail(email: string): User {
-        this.email = email;
-        return this
+        this.setEmail(email);
+        return this;
+    }
+
+    getDisplayName(): string {
+        return `${this.lastname.toUpperCase()} 
+        ${this.firstname.charAt(0).toUpperCase() + this.firstname.slice(1).toLowerCase()}`;
     }
 }
