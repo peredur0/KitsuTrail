@@ -23,7 +23,7 @@ export class User {
     }
 
     getDisplayName(): string {
-        return `${this.lastname.toUpperCase()} 
-        ${this.firstname.charAt(0).toUpperCase() + this.firstname.slice(1).toLowerCase()}`;
+        return `${this.firstname.charAt(0).toUpperCase()}${this.firstname.slice(1).toLowerCase()} ` + 
+        `${this.lastname.toUpperCase()}`;
     }
 }

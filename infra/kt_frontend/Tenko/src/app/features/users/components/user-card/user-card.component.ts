@@ -1,15 +1,26 @@
-import { Component } from '@angular/core';
+import { Component, Input } from '@angular/core';
+import { Router } from '@angular/router';
+import { CommonModule } from '@angular/common';
 
-/**
- * Carte résumé d'un utilisateur
- * Utilisée pour l'affichage dans la liste des utilisateurs : users-list
- */
+import { User } from '../../models/user.model';
+
 @Component({
   selector: 'app-user-card',
-  imports: [],
+  imports: [
+    CommonModule
+  ],
   templateUrl: './user-card.component.html',
   styleUrl: './user-card.component.scss'
 })
 export class UserCardComponent {
+
+  @Input() user!: User;
+
+  constructor(private router: Router){}
+
+  onUserCardClick(): void {
+    console.log(this.user.id);
+    //this.router.navigateByUrl(`users/${this.user.id}`)
+  }
 
 }

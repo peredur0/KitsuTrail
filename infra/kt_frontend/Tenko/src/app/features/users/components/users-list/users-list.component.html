@@ -1,3 +1,6 @@
-@for (user of users; track user.id) {
-    <p>{{ user.getDisplayName() }}</p>
-}
+<div class="search-bar">
+    <p>Futur search bar</p>
+</div>
+<div class="users-list-container">
+    <app-user-card *ngFor="let user of users" [user]="user"/>
+</div>

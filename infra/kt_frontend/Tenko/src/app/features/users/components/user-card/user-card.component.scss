@@ -1,0 +1,31 @@
+.user-card-widget {
+    width: 150px;
+    height: 200px;
+    padding: 10px;
+    border: 2px solid;
+    border-color: black;
+    border-radius: 20px;
+    display: flex;
+    flex-direction: column;
+    align-items: center;
+    background-color: #e6faf7;
+    cursor: pointer;
+    transition: background 0.3s ease;
+
+    &:hover {
+        background-color: #eb6a00d2;
+    }
+}
+
+article {
+    margin-top: 5px;
+    text-align: center;
+}
+
+img {
+    width: 100px;
+    height: 100px;
+    object-fit: cover;
+    border-radius: 50%;
+    margin-bottom: 20px ;
+}

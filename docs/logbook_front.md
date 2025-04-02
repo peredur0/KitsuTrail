@@ -218,3 +218,14 @@ Peut être en présentant une photo de profil.
 Je prévois également de rajouter une barre de recherche et des filtres.
 
 Chaque utilisateur aura également sa propre page avec les informations relatives à son profil.
+
+## 2024-04-02 Trail sur la liste des utilisateurs.
+Les utilisateurs sont maintenant affichés dans des "cartes" de taille fixe dans la liste des utilisateurs.
+J'utilise une grid pour organiser l'affichage des cartes utilisateurs.
+L'instruction `grid-template-columns: repeat(auto-fit, minmax(200px, 1fr));` permet d'avoir une grille avec des colonnes d'une taille minimum de 200px et avec une largeur maximale qui va dépendre de la taille disponible.
+
+La taille des cartes est de 200px et inclus les informations:
+- image de profil
+- Prénom NOM
+Je pense également ajouter le login assez rapidement.
+Les cartes sont clickable et vont amener vers la page de l'utilisateur
