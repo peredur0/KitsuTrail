@@ -19,8 +19,7 @@ export class UserCardComponent {
   constructor(private router: Router){}
 
   onUserCardClick(): void {
-    console.log(this.user.id);
-    //this.router.navigateByUrl(`users/${this.user.id}`)
+    this.router.navigateByUrl(`users/${this.user.id}`)
   }
 
 }
