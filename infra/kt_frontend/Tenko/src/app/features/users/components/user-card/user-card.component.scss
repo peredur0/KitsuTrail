@@ -8,12 +8,12 @@
     display: flex;
     flex-direction: column;
     align-items: center;
-    background-color: #e6faf7;
     cursor: pointer;
     transition: background 0.3s ease;
 
     &:hover {
         background-color: #eb6a00d2;
+        box-shadow: 5px 5px 5px rgb(161, 161, 161);
     }
 }
 
