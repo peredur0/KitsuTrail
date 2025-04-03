@@ -219,7 +219,7 @@ Je prévois également de rajouter une barre de recherche et des filtres.
 
 Chaque utilisateur aura également sa propre page avec les informations relatives à son profil.
 
-## 2024-04-02 Trail sur la liste des utilisateurs.
+## 2025-04-02 Travail sur la liste des utilisateurs.
 Les utilisateurs sont maintenant affichés dans des "cartes" de taille fixe dans la liste des utilisateurs.
 J'utilise une grid pour organiser l'affichage des cartes utilisateurs.
 L'instruction `grid-template-columns: repeat(auto-fit, minmax(200px, 1fr));` permet d'avoir une grille avec des colonnes d'une taille minimum de 200px et avec une largeur maximale qui va dépendre de la taille disponible.
@@ -229,3 +229,15 @@ La taille des cartes est de 200px et inclus les informations:
 - Prénom NOM
 Je pense également ajouter le login assez rapidement.
 Les cartes sont clickable et vont amener vers la page de l'utilisateur
+
+## 2025-04-03 Dynamisation de l'accès aux utilisateurs
+J'ai modifié l'instruction SCSS grid-template-columns pour fixer à 200px la largeur des colonnes.
+Cette organisation me plait plus notamment quand il peu d'utilisateur affiché.
+
+J'ai ajouté la route vers le composant user quand l'utilisateur clique sur une carte.
+Il faut que je trouve un moyen de rentre la définition de la navigation dynamique au niveau de la section.
+Un peu dans le même esprit que ce que j'ai fais pour le header.
+La modification doit se faire dans le composant user-card je pense.
+
+Je vais peut être devoir également modifier mon service users pour retourner des observable plutôt que des list et des objets User.
+J'ai également vu que l'ajout d'un service passe maintenant par l'utilisation d'inject au lieu d'un constructeur.
