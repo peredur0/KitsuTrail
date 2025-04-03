@@ -1,4 +1,4 @@
-import { Component, Input } from '@angular/core';
+import { Component, inject, Input } from '@angular/core';
 import { Router } from '@angular/router';
 import { CommonModule } from '@angular/common';
 
@@ -13,12 +13,11 @@ import { User } from '../../models/user.model';
   styleUrl: './user-card.component.scss'
 })
 export class UserCardComponent {
+  private router = inject(Router)
 
   @Input() user!: User;
 
-  constructor(private router: Router){}
-
   onUserCardClick(): void {
-    this.router.navigateByUrl(`users/${this.user.id}`)
+    this.router.navigate([this.router.url, this.user.id])
   }
 }

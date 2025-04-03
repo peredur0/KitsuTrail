@@ -1,4 +1,8 @@
-import { Component } from '@angular/core';
+import { Component, inject, Input, OnInit } from '@angular/core';
+
+import { UsersService } from '../../services/users.service';
+import { User } from '../../models/user.model';
+import { HeaderService } from '../../../../core/services/header.service';
 
 @Component({
   selector: 'app-user',
@@ -6,7 +10,18 @@ import { Component } from '@angular/core';
   templateUrl: './user.component.html',
   styleUrl: './user.component.scss'
 })
-export class UserComponent {
-  // Will contains the individual user information
-  // All of the attributs and perhaps some stats and logs
+export class UserComponent implements OnInit{
+  private userService = inject(UsersService);
+  private headerService = inject(HeaderService);
+
+  user!: User;
+
+  @Input()
+  set id(userId: string) {
+    this.user = this.userService.getUserFromIdentifier('id', userId);
+  }
+
+  ngOnInit(): void {
+    this.headerService.setSubtitle(this.user.getDisplayName())
+  }
 }

@@ -235,9 +235,20 @@ J'ai modifié l'instruction SCSS grid-template-columns pour fixer à 200px la la
 Cette organisation me plait plus notamment quand il peu d'utilisateur affiché.
 
 J'ai ajouté la route vers le composant user quand l'utilisateur clique sur une carte.
-Il faut que je trouve un moyen de rentre la définition de la navigation dynamique au niveau de la section.
+Il faut que je trouve un moyen de rentrer la définition de la navigation dynamique au niveau de la section.
 Un peu dans le même esprit que ce que j'ai fais pour le header.
 La modification doit se faire dans le composant user-card je pense.
 
 Je vais peut être devoir également modifier mon service users pour retourner des observable plutôt que des list et des objets User.
 J'ai également vu que l'ajout d'un service passe maintenant par l'utilisation d'inject au lieu d'un constructeur.
+
+Le basculement de la liste des utilisateurs à un observable attendra le développement du moteur API.
+Pour le moment, j'ai réussi à rendre dynamique le déplacement vers la page d'un utilisateur en utilisant `router.navigate([router.url,...])`
+
+Le passage de l'attribut id se fait avec `withComponentInputBindind`, cela a nécessité des modifications dans `app.config`. Mais il semblerait que cette méthode soit plus récente que l'utilisation de `ActivatedRoute`.
+- [https://angular.fr/routing/input-binding](https://angular.fr/routing/input-binding)
+
+J'en profite également pour remplacer tous les `constructor` par des `inject`. Mais une passe globale sur le code sera nécessaire pour effectuer tous les remplacements.
+Il semblerait également que `inject`soit plus récent.
+
+> Prochaine étape: le formulaire de création d'un utilisateur.
