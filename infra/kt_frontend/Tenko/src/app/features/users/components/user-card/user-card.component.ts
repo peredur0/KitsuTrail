@@ -21,5 +21,4 @@ export class UserCardComponent {
   onUserCardClick(): void {
     this.router.navigateByUrl(`users/${this.user.id}`)
   }
-
 }

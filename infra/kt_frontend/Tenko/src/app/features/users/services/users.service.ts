@@ -13,12 +13,6 @@ export class UsersService {
         new User('Julian', 'pankratz', 'Jaskier').withEmail('barde@oxenfurt.me'),
         new User('Cirillia', 'Fiona', 'Ciri'),
         new User('Shani', '', ''),
-        new User('Triss', 'Merigold', 'triss'),
-        new User('Keira', 'Metz', 'kmetz').withEmail('km@mail.km'),
-        new User('Yennefer', '', 'Raven').withEmail('ydv@mail.km'),
-        new User('Geralt', 'de riv', 'gégé'),
-        new User('Julian', 'pankratz', 'Jaskier').withEmail('barde@oxenfurt.me'),
-        new User('Cirillia', 'Fiona', 'Ciri')
     ]
 
     getUsers(): User[] {
