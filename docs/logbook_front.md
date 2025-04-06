@@ -256,6 +256,7 @@ Il semblerait également que `inject`soit plus récent.
 ## 2025-04-06 Formulaire de création d'un utilisateur.
 On va continuer avec l'utilisation d'Angular Material avec l'ajout de boite de dialogue.
 - [https://material.angular.io/components/dialog/overview](https://material.angular.io/components/dialog/overview)
+- [https://material.angular.io/components/form-field/examples](https://material.angular.io/components/form-field/examples)
 
 Le bouton pour l'ajout d'un utilisateur a été mis en place au sommet de la liste des utilisateurs. Pour ce faire j'utilise un style de bouton défini dans le module Material `mat-raised-button`. Le click sur ce bouton ouvre une boite de dialogue contenant un formulaire qui doit être dynamique. 
 
@@ -270,6 +271,7 @@ Il y a un validateur sur les champs:
 - email (doit être de la forme email)
 
 Si les validators ne sont pas satisfait, le bouton pour envoyer le formulaire est désactivé.
-A terme j'aimerais afficher un message expliquant si il y a une erreur.
+A terme j'aimerais afficher un message expliquant si il y a une erreur. Pour le moment c'est un échec. 
+Ou alors, je dois séparer chaque champ et j'aurais peut être plus la possibilité de valider tout le formulaire.
 
-A ce stade l'ajout d'un utilisateur envoi simplement les informations du formulaire dans la console. Je dois ajouter une méthode pour créer un nouvel utilisateur et l'ajouter à la liste des utilisateurs actuel.
+On va essayer de terminer pour ce soir avec la finalisation de l'ajout de la création de l'utilisateur.
