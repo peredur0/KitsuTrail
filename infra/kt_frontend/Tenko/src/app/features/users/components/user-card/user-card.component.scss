@@ -12,7 +12,7 @@
     transition: background 0.3s ease;
 
     &:hover {
-        background-color: #eb6a00d2;
+        background-color: #eb6a00;
         box-shadow: 5px 5px 5px rgb(161, 161, 161);
     }
 }
@@ -27,5 +27,5 @@ img {
     height: 100px;
     object-fit: cover;
     border-radius: 50%;
-    margin-bottom: 20px ;
+    margin-bottom: 5px ;
 }

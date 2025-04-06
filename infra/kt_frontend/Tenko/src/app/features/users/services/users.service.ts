@@ -12,7 +12,7 @@ export class UsersService {
         new User('Geralt', 'de riv', 'gégé'),
         new User('Julian', 'pankratz', 'Jaskier').withEmail('barde@oxenfurt.me'),
         new User('Cirillia', 'Fiona', 'Ciri'),
-        new User('Shani', '', ''),
+        new User('Shani', 'F', 'shasha'),
     ]
 
     getUsers(): User[] {
