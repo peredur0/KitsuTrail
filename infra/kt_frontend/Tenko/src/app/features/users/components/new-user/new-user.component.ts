@@ -39,13 +39,11 @@ export class NewUserComponent implements OnInit{
   }
 
   onAddUser(): void {
-    console.log('On ajoute un utilisateur');
-    console.log(this.userForm.value)
+    this.usersService.addNewUser(this.userForm.value);
     this.dialogRef.close();
   }
 
   onNoClick(): void {
-    console.log("No click ou annulé");
     this.dialogRef.close();
   }
 }

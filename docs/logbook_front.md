@@ -275,3 +275,7 @@ A terme j'aimerais afficher un message expliquant si il y a une erreur. Pour le 
 Ou alors, je dois séparer chaque champ et j'aurais peut être plus la possibilité de valider tout le formulaire.
 
 On va essayer de terminer pour ce soir avec la finalisation de l'ajout de la création de l'utilisateur.
+> L'ajout d'un utilisateur est fonctionnel. Il faut maintenant passer par un vrai backend pour gérer la liste des utilisateurs comme un observable
+
+La création d'un utilisateur se déroule de la manière suivante:
+![./img/20250406_user_creation.gif](./img/20250406_user_creation.gif)

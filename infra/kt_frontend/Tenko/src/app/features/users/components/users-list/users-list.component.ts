@@ -35,9 +35,8 @@ export class UsersListComponent implements OnInit{
     const dialogRef = this.dialog.open(NewUserComponent);
 
     dialogRef.afterClosed().subscribe(result => {
-      console.log("New user dialog closed");
       if (result !== undefined) {
-        console.log("Fermeture avec un résultat ?");
+        console.log("Fermeture avec un résultat ");
       }
     });
   }

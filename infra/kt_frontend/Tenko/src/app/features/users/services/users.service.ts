@@ -33,4 +33,18 @@ export class UsersService {
         }
         return foundUser;
     }
+
+    addNewUser(userData: { login: string, firstname: string, lastname: string, email: string }): void {
+        if ( this.users.find(user => user.login === userData.login) ) {
+            throw new Error(`Login ${userData.login} déjà utilisé`);
+        }
+
+        const newUser = new User(userData.firstname, userData.lastname, userData.login).withEmail(userData.email);
+        if ( this.users.find(user => user.id === newUser.id) ) {
+            throw new Error(`ID ${newUser.id} déjà utilisé`);
+        }
+        this.users.push(newUser);
+        console.log(`Nouvel utilisateur ${newUser.login} ajouté`);
+        
+    }
 }
