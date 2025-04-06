@@ -1,4 +1,4 @@
-# KitsuTrail Frontend : Shiro
+# KitsuTrail Frontend : Tenko
 Angular frontend application
 
 ## Installation
@@ -7,7 +7,6 @@ Angular frontend application
 ## Usage
 ```sh
 # Run in develop mode
-cd ./KitsuTrail
 nvm use 18
 ng serve
 ```
