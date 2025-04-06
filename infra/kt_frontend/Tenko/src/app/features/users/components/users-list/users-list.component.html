@@ -1,1 +1,6 @@
-<p>Hello There</p>
+<div class="users-toolbar">
+    <button mat-raised-button (click)="openDialog()">+</button>
+</div>
+<div class="users-list-container">
+    <app-user-card *ngFor="let user of users" [user]="user"/>
+</div>
