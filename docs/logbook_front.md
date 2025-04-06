@@ -252,3 +252,9 @@ J'en profite également pour remplacer tous les `constructor` par des `inject`. 
 Il semblerait également que `inject`soit plus récent.
 
 > Prochaine étape: le formulaire de création d'un utilisateur.
+
+## 2025-04-06 Formulaire de création d'un utilisateur.
+On va continuer avec l'utilisation d'Angular Material avec l'ajout de boite de dialogue.
+- [https://material.angular.io/components/dialog/overview](https://material.angular.io/components/dialog/overview)
+
+Dans un premier temps on va préparer un bouton dans la toolbar de la liste des utilisateurs.
