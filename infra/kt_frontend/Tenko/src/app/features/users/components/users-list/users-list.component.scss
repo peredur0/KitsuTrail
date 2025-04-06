@@ -10,6 +10,7 @@
     flex-direction: row;
 
     button {
+        color: black;
         width: 60px;
         height: 60px;
         font-size: 36px;
@@ -20,6 +21,7 @@
         justify-content: center;
         
         &:hover {
+            background-color: #eb6a00;
             box-shadow: 5px 5px 5px rgb(161, 161, 161);
         }
     }
