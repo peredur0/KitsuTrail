@@ -191,3 +191,91 @@ Cette opération utilise les signaux.
 Voir [20250330_front.md](./progress_summary/20250330_front.md).
 
 **Prochaine étape**: Préparer le POC pour la gestion des utilisateurs et des fournisseurs avant la mise en place d'un backend.
+
+
+## 2025-03-31 Mise en place des utilisateurs
+Début de l'implémentation des utilisateurs.
+- Création d'une classe User pour définir les attributs utilisables.
+- Création d'un service pour gérer la liste des utilisateurs
+- Ajout de quelques utilisateurs en dur dans le service
+- Mise en place d'une méthode pour la récupération par id ou par login
+
+Les utilisateurs ont pour le moment les attributs suivants:
+- id: version tronquée d'un UUID (généré à la création)
+- createdAt: date de création (généré à la création)
+- firstname: prénom
+- lastname: nom de famille
+- login: str
+- email: information optionnelle
+
+2 méthodes pour set l'email: setEmail & withEmail.
+
+## 2025-04-01 Travail sur les utilisateurs
+Ajout d'une méthode pour normaliser l'affichage du nom d'affichage.
+
+L'affichage de la liste des utilisateurs sera fait sous forme de cartes.
+Peut être en présentant une photo de profil.
+Je prévois également de rajouter une barre de recherche et des filtres.
+
+Chaque utilisateur aura également sa propre page avec les informations relatives à son profil.
+
+## 2025-04-02 Travail sur la liste des utilisateurs.
+Les utilisateurs sont maintenant affichés dans des "cartes" de taille fixe dans la liste des utilisateurs.
+J'utilise une grid pour organiser l'affichage des cartes utilisateurs.
+L'instruction `grid-template-columns: repeat(auto-fit, minmax(200px, 1fr));` permet d'avoir une grille avec des colonnes d'une taille minimum de 200px et avec une largeur maximale qui va dépendre de la taille disponible.
+
+La taille des cartes est de 200px et inclus les informations:
+- image de profil
+- Prénom NOM
+Je pense également ajouter le login assez rapidement.
+Les cartes sont clickable et vont amener vers la page de l'utilisateur
+
+## 2025-04-03 Dynamisation de l'accès aux utilisateurs
+J'ai modifié l'instruction SCSS grid-template-columns pour fixer à 200px la largeur des colonnes.
+Cette organisation me plait plus notamment quand il peu d'utilisateur affiché.
+
+J'ai ajouté la route vers le composant user quand l'utilisateur clique sur une carte.
+Il faut que je trouve un moyen de rentrer la définition de la navigation dynamique au niveau de la section.
+Un peu dans le même esprit que ce que j'ai fais pour le header.
+La modification doit se faire dans le composant user-card je pense.
+
+Je vais peut être devoir également modifier mon service users pour retourner des observable plutôt que des list et des objets User.
+J'ai également vu que l'ajout d'un service passe maintenant par l'utilisation d'inject au lieu d'un constructeur.
+
+Le basculement de la liste des utilisateurs à un observable attendra le développement du moteur API.
+Pour le moment, j'ai réussi à rendre dynamique le déplacement vers la page d'un utilisateur en utilisant `router.navigate([router.url,...])`
+
+Le passage de l'attribut id se fait avec `withComponentInputBindind`, cela a nécessité des modifications dans `app.config`. Mais il semblerait que cette méthode soit plus récente que l'utilisation de `ActivatedRoute`.
+- [https://angular.fr/routing/input-binding](https://angular.fr/routing/input-binding)
+
+J'en profite également pour remplacer tous les `constructor` par des `inject`. Mais une passe globale sur le code sera nécessaire pour effectuer tous les remplacements.
+Il semblerait également que `inject`soit plus récent.
+
+> Prochaine étape: le formulaire de création d'un utilisateur.
+
+## 2025-04-06 Formulaire de création d'un utilisateur.
+On va continuer avec l'utilisation d'Angular Material avec l'ajout de boite de dialogue.
+- [https://material.angular.io/components/dialog/overview](https://material.angular.io/components/dialog/overview)
+- [https://material.angular.io/components/form-field/examples](https://material.angular.io/components/form-field/examples)
+
+Le bouton pour l'ajout d'un utilisateur a été mis en place au sommet de la liste des utilisateurs. Pour ce faire j'utilise un style de bouton défini dans le module Material `mat-raised-button`. Le click sur ce bouton ouvre une boite de dialogue contenant un formulaire qui doit être dynamique. 
+
+Pour ce formulaire d'ajout d'utilisateur, j'utilise les modules:
+- FormBuilder
+- FormGroup
+- ReactiveFormsModule
+- Validator
+
+Il y a un validateur sur les champs:
+- login (required)
+- email (doit être de la forme email)
+
+Si les validators ne sont pas satisfait, le bouton pour envoyer le formulaire est désactivé.
+A terme j'aimerais afficher un message expliquant si il y a une erreur. Pour le moment c'est un échec. 
+Ou alors, je dois séparer chaque champ et j'aurais peut être plus la possibilité de valider tout le formulaire.
+
+On va essayer de terminer pour ce soir avec la finalisation de l'ajout de la création de l'utilisateur.
+> L'ajout d'un utilisateur est fonctionnel. Il faut maintenant passer par un vrai backend pour gérer la liste des utilisateurs comme un observable
+
+La création d'un utilisateur se déroule de la manière suivante:
+![./img/20250406_user_creation.gif](./img/20250406_user_creation.gif)
