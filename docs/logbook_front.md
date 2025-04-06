@@ -257,4 +257,19 @@ Il semblerait également que `inject`soit plus récent.
 On va continuer avec l'utilisation d'Angular Material avec l'ajout de boite de dialogue.
 - [https://material.angular.io/components/dialog/overview](https://material.angular.io/components/dialog/overview)
 
-Dans un premier temps on va préparer un bouton dans la toolbar de la liste des utilisateurs.
+Le bouton pour l'ajout d'un utilisateur a été mis en place au sommet de la liste des utilisateurs. Pour ce faire j'utilise un style de bouton défini dans le module Material `mat-raised-button`. Le click sur ce bouton ouvre une boite de dialogue contenant un formulaire qui doit être dynamique. 
+
+Pour ce formulaire d'ajout d'utilisateur, j'utilise les modules:
+- FormBuilder
+- FormGroup
+- ReactiveFormsModule
+- Validator
+
+Il y a un validateur sur les champs:
+- login (required)
+- email (doit être de la forme email)
+
+Si les validators ne sont pas satisfait, le bouton pour envoyer le formulaire est désactivé.
+A terme j'aimerais afficher un message expliquant si il y a une erreur.
+
+A ce stade l'ajout d'un utilisateur envoi simplement les informations du formulaire dans la console. Je dois ajouter une méthode pour créer un nouvel utilisateur et l'ajouter à la liste des utilisateurs actuel.
