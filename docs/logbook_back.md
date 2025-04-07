@@ -20,3 +20,6 @@ Simplement l'apprentissage des tout premiers concept.
 Lancer le serveur et executer les premières requêtes depuis le navigateur ou le swagger.
 
 Je devrais approfondir les grands principes avec le tutoriel officiel [https://fastapi.tiangolo.com/tutorial/](https://fastapi.tiangolo.com/tutorial/).
+
+Fin de soirée arrivé à [https://fastapi.tiangolo.com/tutorial/query-params/](https://fastapi.tiangolo.com/tutorial/query-params/)
+Continuation de l'apprentissage de FastAPI
