@@ -23,3 +23,13 @@ Je devrais approfondir les grands principes avec le tutoriel officiel [https://f
 
 Fin de soirée arrivé à [https://fastapi.tiangolo.com/tutorial/query-params/](https://fastapi.tiangolo.com/tutorial/query-params/)
 Continuation de l'apprentissage de FastAPI
+
+## 2025-04-09 Préparation de l'API KitsuTrail
+J'ai lu pas mal d'article de le documentation officielle.
+Le point qui m'a le plus marqué est l'utilisation de pydantic pour typer fortement les attendus des paramètres ou du body.
+
+Je vais commencer à coder une solution avec une architecture que j'espère modulaire.
+Pour le moment je vais laisser de coté la partie authentification.
+J'y reviendrais peut être plus tard si j'ai le temps.
+
+L'objectif est maintenant d'avoir des méthodes correct pour faire le CRUD sur les users.
