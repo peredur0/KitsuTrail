@@ -33,3 +33,4 @@ Pour le moment je vais laisser de coté la partie authentification.
 J'y reviendrais peut être plus tard si j'ai le temps.
 
 L'objectif est maintenant d'avoir des méthodes correct pour faire le CRUD sur les users.
+On va commencer par faire une base de données SQLite pour stocker les utilisateurs, lors de la phase de développement.
