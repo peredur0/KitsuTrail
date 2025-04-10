@@ -53,3 +53,16 @@ On ajoute également un index sur les champs:
 - lastname
 - email
 L'objectif sera de pouvoir effectuer des recherches d'utilisateur sur ces champs.
+
+Le fichier `init_db.py` dans sqlite permet d'initialiser la base.
+Ci dessous quelques commandes utiles:
+``` 
+$ sqlite3 inari.db
+> .tables
+> .schema users
+> .headers on
+> mode columns
+> SELECT * FROM users;
+```
+
+la table est prête il faut maintenant que le backend récupère ses informations dans la base.
