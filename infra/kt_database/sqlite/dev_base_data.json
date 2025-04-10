@@ -1,0 +1,62 @@
+[
+    {
+        "login": "triss.merigold",
+        "firstname": "Triss",
+        "lastname": "Merigold",
+        "email": "tmeri@aretuza.acc"
+    },
+    {
+        "login": "yen.deven",
+        "firstname": "Yennifer",
+        "lastname": "de Vendenberg",
+        "email": "ydeve@aretuza.acc"
+    },
+    {
+        "login": "keira.metz",
+        "firstname": "Keira",
+        "lastname": "metz",
+        "email": "keira.metz@aretura.acc"
+    },
+    {
+        "login": "gerald.deriv@kaer.sor",
+        "firstname": "Gérald",
+        "lastname": "de Riv",
+        "email": "geral.deriv@kaer.sor"
+    },
+    {
+        "login": "BestDwarf",
+        "firstname": "Zoltan",
+        "lastname": "Chivay",
+        "email": ""
+    },
+    {
+        "login": "jaskier",
+        "firstname": "Julian",
+        "lastname": "Pankratz",
+        "email": "jaskier@litt.oxenfurt.red"
+    },
+    {
+        "login": "tissia.devries",
+        "firstname": "Tissaia",
+        "lastname": "de Vries",
+        "email": "tdevries@aretuza.acc"
+    },
+    {
+        "login": "Regis",
+        "firstname": "Emiel regis",
+        "lastname": "Rohellec",
+        "email": ""
+    },
+    {
+        "login": "shani",
+        "firstname": "shani",
+        "lastname": "",
+        "email": ""
+    },
+    {
+        "login": "vesemir",
+        "firstname": "Vesemir",
+        "lastname": "",
+        "email": "vesemir@kaer.sor"
+    }
+]

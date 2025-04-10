@@ -34,3 +34,22 @@ J'y reviendrais peut être plus tard si j'ai le temps.
 
 L'objectif est maintenant d'avoir des méthodes correct pour faire le CRUD sur les users.
 On va commencer par faire une base de données SQLite pour stocker les utilisateurs, lors de la phase de développement.
+
+## 2025-04-10 Création de la base de données
+Pour le développement, on va rester sur une base SQLlite.
+- [https://docs.python.org/3/library/sqlite3.html](https://docs.python.org/3/library/sqlite3.html)
+
+La première table sera pour les utilisateurs
+- id `TEXT PRIMARY KEY CHECK (length(id) = 8)`
+- login `TEXT NOT NULL UNIQUE`
+- firstname `TEXT`
+- lastname `TEXT`
+- email `TEXT`
+- created_at `DATETIME DEFAULT CURRENT_TIMESTAMP`
+
+On ajoute également un index sur les champs:
+- login
+- firstname
+- lastname
+- email
+L'objectif sera de pouvoir effectuer des recherches d'utilisateur sur ces champs.
