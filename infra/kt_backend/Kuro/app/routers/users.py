@@ -2,7 +2,7 @@
 """
 Module to handle API calls for users
 """
-
+import os
 from fastapi import APIRouter
 
 router = APIRouter(
@@ -12,5 +12,5 @@ router = APIRouter(
 )
 
 @router.get('/')
-def get_users() -> list:
-    return [{'id': 1, 'name': 'rick'}, {'id': 2, 'name': 'morty'}]
+async def get_users() -> list:
+    return [{'id': 1, 'name': 'rick'}, {'id': 2, 'name': os.getcwd()}]

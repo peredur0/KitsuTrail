@@ -9,7 +9,7 @@ from pydantic import BaseModel, EmailStr
 class User(BaseModel):
     id: str
     login: str
-    email: EmailStr | None = None
     firstname: str | None = None
     lastname: str | None = None
+    email: EmailStr | None = None
     created_at: datetime.datetime
