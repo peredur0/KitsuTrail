@@ -66,3 +66,6 @@ $ sqlite3 inari.db
 ```
 
 la table est prête il faut maintenant que le backend récupère ses informations dans la base.
+Un peu de documentation:
+- [https://docs.sqlalchemy.org/en/20/core/engines.html#sqlite](https://docs.sqlalchemy.org/en/20/core/engines.html#sqlite)
+- [https://blog.sqlitecloud.io/sqlite-python-sqlalchemy](https://blog.sqlitecloud.io/sqlite-python-sqlalchemy)
