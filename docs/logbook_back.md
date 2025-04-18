@@ -67,5 +67,17 @@ $ sqlite3 inari.db
 
 la table est prête il faut maintenant que le backend récupère ses informations dans la base.
 Un peu de documentation:
+- [https://fastapi.tiangolo.com/tutorial/sql-databases/](https://fastapi.tiangolo.com/tutorial/sql-databases/)
 - [https://docs.sqlalchemy.org/en/20/core/engines.html#sqlite](https://docs.sqlalchemy.org/en/20/core/engines.html#sqlite)
 - [https://blog.sqlitecloud.io/sqlite-python-sqlalchemy](https://blog.sqlitecloud.io/sqlite-python-sqlalchemy)
+
+## 2025-04-11 Connection fastAPI et SQLite
+Etude des solutions proposée pour la liaison en FastAPI.
+La solution proposée par la documentation officielle est la plus compréhensible.
+L'inconvénient est que tout est dans le même fichier.
+Mais je trouverais un moyen de mettre dans un format modulaire.
+
+Je me demande s'il ne serait pas judicieux que le backend soit en charge de créer les bases qu'il va utiliser. Mais il ne faudrait pas qu'il réinitialise tout l'ensemble à chaque démarrage.
+Pour moi la question se pose aussi de la fermeture de la connexion en cas d'échec. J'ai pas trop compris si une instance peut être ouverte pour le temps de l'execution et fermée avec le backend. Je pense pas que ça soit une bonne pratique.
+
+Je dois également étudier l'abstraction ORM qui peut être mise en place avec BaseModel, SQLModel et Pydantic.

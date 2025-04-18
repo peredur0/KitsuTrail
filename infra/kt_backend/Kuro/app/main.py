@@ -4,8 +4,11 @@ KitsuTrail API main entrypoint
 """
 
 from fastapi import FastAPI
-
 from .routers import users
+
+SQLITE_DB = '../../kt_database/sqlite/inari.db'
+
+
 
 app = FastAPI()
 app.include_router(users.router)
