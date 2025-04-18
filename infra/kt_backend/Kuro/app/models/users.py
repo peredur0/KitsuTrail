@@ -4,12 +4,13 @@ Managing the models used
 """
 
 import datetime
-from pydantic import BaseModel, EmailStr
+from pydantic import EmailStr
+from sqlmodel import SQLModel, Field
 
-class User(BaseModel):
-    id: str
-    login: str
-    firstname: str | None = None
-    lastname: str | None = None
-    email: EmailStr | None = None
-    created_at: datetime.datetime
+class Users(SQLModel, table=True):
+    id: str = Field(primary_key=True)
+    login: str = Field(unique=True, index=True)
+    firstname: str | None = Field(default=None, index=True)
+    lastname: str | None = Field(default=None, index=True)
+    email: EmailStr | None = Field(default=None, index=True)
+    created_at: datetime.datetime = Field()

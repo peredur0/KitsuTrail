@@ -81,3 +81,13 @@ Je me demande s'il ne serait pas judicieux que le backend soit en charge de cré
 Pour moi la question se pose aussi de la fermeture de la connexion en cas d'échec. J'ai pas trop compris si une instance peut être ouverte pour le temps de l'execution et fermée avec le backend. Je pense pas que ça soit une bonne pratique.
 
 Je dois également étudier l'abstraction ORM qui peut être mise en place avec BaseModel, SQLModel et Pydantic.
+
+## 2025-04-18 Reprise suite à une petite pose
+L'objectif maintenant est d'arriver à faire interagir FastAPI avec la base SQLite. On va vraiment se baser la dessus
+- [https://fastapi.tiangolo.com/tutorial/sql-databases/](https://fastapi.tiangolo.com/tutorial/sql-databases/)
+
+C'est finalement assez facile de lier une table sql avec l'outil SQLmodel.
+Il faut définir en amont le model souhaité.
+Pour le moment on récupère bien la liste des users avec une requête GET.
+La prochaine étape est de rendre modulaire le code de fastAPI.
+De cette manière, il sera plus simple d'ajouter des nouvelles tables et des nouveaux accès.
