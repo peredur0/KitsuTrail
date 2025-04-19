@@ -18,7 +18,7 @@ logger = logging.getLogger('uvicorn.error')
 
 _router = APIRouter(
     prefix='/users',
-    tags=['users'],
+    tags=['Users'],
     responses={404: {'description': 'Not found'}}
 )
 Session_dep = Annotated[Session, Depends(get_session)]
@@ -29,7 +29,7 @@ Session_dep = Annotated[Session, Depends(get_session)]
         dependencies=[Depends(check_accept_json)],
         response_model=list[UserPublic]
 )
-def get_users(
+def list_users(
     session: Session_dep,
     offset: int = 0,
     limit: Annotated[int, Query(le=100)] = 100
@@ -75,6 +75,21 @@ def get_user(user_id: str, session: Session_dep):
     if not user:
         raise HTTPException(status_code=404, detail='User not found')
     return user
+
+
+# --- Delete existing user
+@_router.delete(
+        '/{user_id}',
+        dependencies=[Depends(check_accept_json)]
+)
+def delete_user(user_id: str, session: Session_dep) -> dict:
+    user = session.get(UserInDB, user_id)
+    if not user:
+        raise HTTPException(status_code=404, detail='User not found')
+    
+    session.delete(user)
+    session.commit()
+    return {'deleted': True}
 
 
 # === Functions === #

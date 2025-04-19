@@ -127,4 +127,6 @@ Je le fais directement dans le post car je vais utiliser la même date dans les 
 
 Pour les logs d'audit j'aimerais faire en sorte que les deux doivent réussir pour que toutes les infos dans les tables soient consistantes.
 
-Prochaine étape l'update d'un utilisateur ou son delete.
+Petit ajout rapide de la fonction delete user. Pas de difficulté.
+
+Prochaine étape l'update d'un utilisateur.
