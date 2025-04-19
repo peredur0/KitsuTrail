@@ -9,7 +9,7 @@ from sqlmodel import Session, select
 
 from ..utils.sqlite_utils import get_session
 from ..utils.check_utils import check_accept_json
-from ..models.users import Users
+from ..models.user import User
 
 router = APIRouter(
     prefix='/users',
@@ -24,6 +24,6 @@ def get_users(
     session: Session_dep,
     offset: int = 0,
     limit: Annotated[int, Query(le=100)] = 100
-) -> list[Users]:
-    users = session.exec(select(Users).offset(offset).limit(limit)).all()
+) -> list[User]:
+    users = session.exec(select(User).offset(offset).limit(limit)).all()
     return users
