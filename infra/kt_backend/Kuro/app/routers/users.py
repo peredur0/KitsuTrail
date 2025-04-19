@@ -4,9 +4,9 @@ Module to handle API calls for users
 """
 import logging
 
-from fastapi import APIRouter, Depends, Query
 from typing import Annotated
 from sqlmodel import Session, select
+from fastapi import APIRouter, Depends, Query, HTTPException
 
 from utils.sqlite_utils import get_session, check_required_tables
 from utils.check_utils import check_accept_json
@@ -30,6 +30,16 @@ def get_users(
 ) -> list[User]:
     users = session.exec(select(User).offset(offset).limit(limit)).all()
     return users
+
+@_router.get('/{user_id}', dependencies=[Depends(check_accept_json)])
+def get_user(
+    user_id: str,
+    session: Session_dep,
+) -> User:
+    user = session.get(User, user_id)
+    if not user:
+        raise HTTPException(status_code=404, detail='User not found')
+    return user
 
 
 # --- Functions --- #
