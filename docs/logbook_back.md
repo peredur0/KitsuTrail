@@ -91,3 +91,11 @@ Il faut définir en amont le model souhaité.
 Pour le moment on récupère bien la liste des users avec une requête GET.
 La prochaine étape est de rendre modulaire le code de fastAPI.
 De cette manière, il sera plus simple d'ajouter des nouvelles tables et des nouveaux accès.
+
+Une idée complémentaire est d'ajouter un log d'audit directement quand une requête est faite à l'API.
+
+## 2025-04-19 travail sur la gestion des utilisateurs
+J'ai pu déplacer les fonctions relative à la connexion et les actions sur la base de données dans un module externe.
+Prochaine étape est d'ajouter toutes les fonctionnalités CRUD sur les utilisateurs.
+
+Je vais également ajouter une vérification des données du header.

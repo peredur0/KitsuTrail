@@ -1,6 +1,6 @@
 # coding: utf-8
 """
-Managing the models used
+Managing the models used can be table schema or data model
 """
 
 import datetime
