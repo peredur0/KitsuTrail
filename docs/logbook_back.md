@@ -96,6 +96,15 @@ Une idée complémentaire est d'ajouter un log d'audit directement quand une req
 
 ## 2025-04-19 travail sur la gestion des utilisateurs
 J'ai pu déplacer les fonctions relative à la connexion et les actions sur la base de données dans un module externe.
-Prochaine étape est d'ajouter toutes les fonctionnalités CRUD sur les utilisateurs.
 
 Je vais également ajouter une vérification des données du header.
+Cette vérification est pour le moment présente uniquement pour l'acceptation de 'application/json'.
+A terme ça sera utilisé dans la phase d'authentification.
+
+J'ai pas mal travaillé sur la gestion de l'importation des modules user pour le moment.
+Chaque module va contenir une fonction *init_router()* qui va se charger de faire les vérifications d'usage. Comme par exemple la présence de la table.
+Le *main* va également contenir un boucle qui va charger chaque module un par un.
+Si le chargement d'un seul module échoue, les autres ne seront pas impactés et le backend restera disponible.
+> Le seul problème que je n'ai pas encore pu résoudre c'est que lors du lancement du serveur si un module échoue j'ai 2 fois le message. 1 fois au lancement du serveur sans le format logging et une seconde fois lors du chargement du module dans le main avec le bon format. Pour le moment ce n'est pas un problème bloquant.
+
+Prochaine étape est d'ajouter toutes les fonctionnalités CRUD sur les utilisateurs.
