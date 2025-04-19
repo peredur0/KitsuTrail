@@ -108,3 +108,23 @@ Si le chargement d'un seul module échoue, les autres ne seront pas impactés et
 > Le seul problème que je n'ai pas encore pu résoudre c'est que lors du lancement du serveur si un module échoue j'ai 2 fois le message. 1 fois au lancement du serveur sans le format logging et une seconde fois lors du chargement du module dans le main avec le bon format. Pour le moment ce n'est pas un problème bloquant.
 
 Prochaine étape est d'ajouter toutes les fonctionnalités CRUD sur les utilisateurs.
+J'ai ajouté la méthode POST pour pouvoir ajouter un utilisateur dans la base de données.
+J'ai du réorganiser un peu les modèles utilisateurs en fonction de l'utilisation.
+Mais je ne suis pas totalement convaincu de la nécessité:
+Les modèles sont les suivants:
+- UserBase: avec les informations partagées entre tous les types
+    - login, firstname, lastname, email
+- UserCreate: pour récupérer les informations du formulaire de création
+    - mêmes champs que UserBase
+- UserInDB: pour la connexion avec la table en base
+    - UserBase + id + created_at
+- UserPublic: pour l'objet retourné par l'API, et la possibilité de masquer certains champs
+    - UserBase + id + created_at
+
+Le backend s'occupe de générer un nouvel uuid et de vérifier s'il n'est pas déjà utilisé.
+Il se charge également d'ajouter directement la date/heure de création.
+Je le fais directement dans le post car je vais utiliser la même date dans les logs d'audit.
+
+Pour les logs d'audit j'aimerais faire en sorte que les deux doivent réussir pour que toutes les infos dans les tables soient consistantes.
+
+Prochaine étape l'update d'un utilisateur ou son delete.

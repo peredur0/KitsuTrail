@@ -6,6 +6,8 @@ Utils functions for interacting with sqlite
 import sqlalchemy
 import sqlmodel
 
+from models.user import UserInDB
+
 SQLITE_FILE = '../../kt_database/sqlite/inari.db'
 SQLITE_URL = f'sqlite:///{SQLITE_FILE}'
 
@@ -26,3 +28,8 @@ def check_required_tables(tables: list) -> None:
     for table in tables:
         if table not in present_tables:
             raise RuntimeError(f"Missing required table '{table}'")
+
+
+def is_uuid_available(session: sqlmodel.Session, uuid_candidate: str) -> bool:
+    query = sqlmodel.select(UserInDB).where(UserInDB.id == uuid_candidate)
+    return session.exec(query).first() is None
