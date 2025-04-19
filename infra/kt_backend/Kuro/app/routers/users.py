@@ -2,12 +2,13 @@
 """
 Module to handle API calls for users
 """
-import os
+
 from fastapi import APIRouter, Depends, Query
 from typing import Annotated
 from sqlmodel import Session, select
 
 from ..utils.sqlite_utils import get_session
+from ..utils.check_utils import check_accept_json
 from ..models.users import Users
 
 router = APIRouter(
@@ -18,7 +19,7 @@ router = APIRouter(
 
 Session_dep = Annotated[Session, Depends(get_session)]
 
-@router.get('/')
+@router.get('/', dependencies=[Depends(check_accept_json)])
 def get_users(
     session: Session_dep,
     offset: int = 0,
