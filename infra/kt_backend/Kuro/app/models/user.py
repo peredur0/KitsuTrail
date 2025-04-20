@@ -22,7 +22,6 @@ class UserUpdate(SQLModel):
     lastname: str | None = None
     email: EmailStr | None = None
 
-
 class UserInDB(UserBase, table=True):
     __tablename__ = "users"
     id: str = Field(primary_key=True)
@@ -34,4 +33,3 @@ class UserInDB(UserBase, table=True):
 class UserPublic(UserBase):
     id: str
     created_at: datetime.datetime
-

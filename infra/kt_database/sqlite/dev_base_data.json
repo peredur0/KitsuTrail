@@ -27,7 +27,7 @@
         "login": "BestDwarf",
         "firstname": "Zoltan",
         "lastname": "Chivay",
-        "email": ""
+        "email": null
     },
     {
         "login": "jaskier",
@@ -45,18 +45,18 @@
         "login": "Regis",
         "firstname": "Emiel regis",
         "lastname": "Rohellec",
-        "email": ""
+        "email": null
     },
     {
         "login": "shani",
         "firstname": "shani",
-        "lastname": "",
-        "email": ""
+        "lastname": null,
+        "email": null
     },
     {
         "login": "vesemir",
         "firstname": "Vesemir",
-        "lastname": "",
+        "lastname": null,
         "email": "vesemir@kaer.sor"
     }
 ]
