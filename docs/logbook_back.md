@@ -130,3 +130,18 @@ Pour les logs d'audit j'aimerais faire en sorte que les deux doivent réussir po
 Petit ajout rapide de la fonction delete user. Pas de difficulté.
 
 Prochaine étape l'update d'un utilisateur.
+
+## 2025-04-20 Mise à jour d'un utilisateur
+La mise à jour de l'utilisateur est possible maintenant grace à la méthode patch.
+Il est possible de modifier indépendamment chaque champs ou l'ensemble.
+J'ai ajouté un modèle *UserUpdate* qui contient tous les champs modifiables.
+
+On a maintenant une liste d'utilisateur présent dans une base sqlite.
+Les actions possibles:
+- Lister les utilisateurs
+- Créer un nouvel utilisateur
+- Lire un utilisateur existant
+- Supprimer un utilisateur existant
+- Modifier un utilisateur existant
+
+Je pense qu'il est temps de lier le front et le back end.

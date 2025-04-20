@@ -12,7 +12,7 @@ from sqlalchemy.exc import IntegrityError
 
 from utils.sqlite_utils import get_session, check_required_tables
 from utils.check_utils import check_accept_json, generate_id
-from models.user import UserInDB, UserPublic, UserCreate
+from models.user import UserInDB, UserPublic, UserCreate, UserUpdate
 
 logger = logging.getLogger('uvicorn.error')
 
@@ -75,6 +75,30 @@ def get_user(user_id: str, session: Session_dep):
     if not user:
         raise HTTPException(status_code=404, detail='User not found')
     return user
+
+
+# --- Update user
+@_router.patch(
+        '/{user_id}',
+        dependencies=[Depends(check_accept_json)],
+        response_model=UserPublic
+)
+def update_user(user_id: str, user_data: UserUpdate, session: Session_dep):
+    user_db = session.get(UserInDB, user_id)
+    if not user_db:
+        raise HTTPException(status_code=404, detail='User not found')
+    
+    user_new_data = user_data.model_dump(exclude_unset=True)
+    user_db.sqlmodel_update(user_new_data)
+    try:
+        session.add(user_db)
+        session.commit()
+        session.refresh(user_db)
+    except IntegrityError as err:
+        session.rollback()
+        raise HTTPException(status_code=409, detail="Cannot redefine field, login already taken")
+    
+    return user_db
 
 
 # --- Delete existing user
