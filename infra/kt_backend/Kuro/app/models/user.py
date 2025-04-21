@@ -16,11 +16,8 @@ class UserBase(SQLModel):
 class UserCreate(UserBase):
     pass
 
-class UserUpdate(SQLModel):
+class UserUpdate(UserBase):
     login: str | None = None
-    firstname: str | None = None
-    lastname: str | None = None
-    email: EmailStr | None = None
 
 class UserInDB(UserBase, table=True):
     __tablename__ = "users"
