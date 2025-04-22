@@ -1,0 +1,5 @@
+datetime
+fastapi[standard]
+sqlalchemy
+pydantic
+sqlmodel
