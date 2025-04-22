@@ -77,7 +77,7 @@ def get_user(user_id: str, session: Session_dep):
     return user
 
 
-# --- Update user
+# --- Update single user
 @_router.patch(
         '/{user_id}',
         dependencies=[Depends(check_accept_json)],
