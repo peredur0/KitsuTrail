@@ -1,2 +1,3 @@
-# KitsuTrail Database
-**UNDER CONSTRUCTION**
+# KitsuTrail Databases
+
+Name of the database: Inari
