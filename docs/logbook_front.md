@@ -279,3 +279,20 @@ On va essayer de terminer pour ce soir avec la finalisation de l'ajout de la cr�
 
 La création d'un utilisateur se déroule de la manière suivante:
 ![./img/20250406_user_creation.gif](./img/20250406_user_creation.gif)
+
+## 2025-04-23 Liaison front et back
+La récupération des users passe maintenant par l'utilisation de requêtes HTTP.
+J'ai du ajouter un provider globalement dans app.config.ts.
+
+Puis toutes les requêtes sont mises en place dans le service users `users.service.ts`.
+J'ai du retirer la fonction getDisplayName du modèle `users.model.ts`. Elle a été déplacée dans un module annexe `user-utils.ts`.
+
+Maintenant que la récupération des utilisateurs (single ou liste) se fait via des observables, j'ai également du modifier le code qui utilisait ces ressources.
+Les fichiers modifiers sont:
+- user.component(.html|.ts)
+- user-card.component(.html|.ts)
+- users-list.component(.html|.ts)
+
+J'ai eu un peu de mal a passer la version displayName au sous titre du header. L'objet user est maintenant un observable sur lequel il faut faire un pipe et y souscrire le temps que la page est ouverte.
+
+Prochaine étape rétablir la fonction d'ajout de l'utilisateur et le bind sera complet.

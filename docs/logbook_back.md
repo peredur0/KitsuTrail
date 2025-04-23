@@ -145,3 +145,9 @@ Les actions possibles:
 - Modifier un utilisateur existant
 
 Je pense qu'il est temps de lier le front et le back end.
+
+## 2025-04-23 Liaison front et back
+J'ai du faire une petite modification du code de FastAPI pour qu'il accepte les requêtes en provenance du backend.
+J'ai eu un blocage a cause du CORS.
+
+Aucune modification important du backend dans les prochains temps.
