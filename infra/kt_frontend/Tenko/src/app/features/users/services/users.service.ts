@@ -1,31 +1,27 @@
-import { Injectable } from "@angular/core";
+import { Injectable, inject } from "@angular/core";
+import { HttpClient } from "@angular/common/http";
+import { Observable } from "rxjs";
+
 import { User } from "../models/user.model";
 
 @Injectable({
     providedIn: 'root'
 })
 export class UsersService {
-    private users: User[] = [
-        new User('Triss', 'Merigold', 'triss'),
-        new User('Keira', 'Metz', 'kmetz').withEmail('km@mail.km'),
-        new User('Yennefer', 'de VendenBerg', 'Raven').withEmail('ydv@mail.km'),
-        new User('Geralt', 'de riv', 'gégé'),
-        new User('Julian', 'pankratz', 'Jaskier').withEmail('barde@oxenfurt.me'),
-        new User('Cirillia', 'Fiona', 'Ciri'),
-        new User('Shani', 'F', 'shasha'),
-    ]
+    users: User[] = [];
+    private http = inject(HttpClient)
 
-    getUsers(): User[] {
-        return [...this.users]
+    getUsers(): Observable<User[]> {
+        return this.http.get<User[]>('http://localhost:8000/users');
     }
 
-    getUserFromIdentifier(idType: 'login'|'id', userId: string): User {
-        let foundUser: User | undefined;
+    getUserFromIdentifier(idType: 'login'|'id', userId: string): Observable<User> {
+        let foundUser: Observable<User> | undefined;
 
         if (idType === 'id') {
-            foundUser = this.users.find(user => user.id === userId);
+            foundUser = this.http.get<User>(`http://localhost:8000/users/${userId}`)
         } else {
-            foundUser = this.users.find(user => user.login === userId);
+            throw new Error('Search for user by login not implemented yet');
         }
 
         if ( !foundUser ) {
@@ -45,6 +41,5 @@ export class UsersService {
         }
         this.users.push(newUser);
         console.log(`Nouvel utilisateur ${newUser.login} ajouté`);
-        
     }
 }
