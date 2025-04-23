@@ -1,5 +1,6 @@
 import { Component, inject, OnInit } from '@angular/core';
 import { CommonModule } from '@angular/common';
+import { Observable } from 'rxjs';
 import { MatButtonModule } from '@angular/material/button';
 import { MatDialog } from '@angular/material/dialog';
 
@@ -24,11 +25,11 @@ export class UsersListComponent implements OnInit{
   private userService = inject(UsersService);
   readonly dialog = inject(MatDialog);
 
-  users!: User[];
+  users$!: Observable<User[]>;
 
   ngOnInit(): void {
     this.headerService.setSubtitle('');
-    this.users = this.userService.getUsers();
+    this.users$ = this.userService.getUsers();
   }
 
   openDialog(): void {

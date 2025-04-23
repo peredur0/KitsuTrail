@@ -1,6 +1,6 @@
 <section class="user-card-widget" (click)="onUserCardClick()">
     <img class="user-profil-pic" src="assets/default_profil.png" alt="default profil pic">
     <article>{{ user.login }}</article>
-    <article>{{ user.getDisplayName() }}</article>
+    <article>{{ user.firstname }} {{ user.lastname }}</article>
     <article *ngIf="user.email">{{ user.email }}</article>
 </section>

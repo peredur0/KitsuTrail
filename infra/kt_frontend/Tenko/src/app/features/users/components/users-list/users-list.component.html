@@ -2,5 +2,5 @@
     <button mat-raised-button (click)="openDialog()">+</button>
 </div>
 <div class="users-list-container">
-    <app-user-card *ngFor="let user of users" [user]="user"/>
+    <app-user-card *ngFor="let user of users$ | async" [user]="user"/>
 </div>
