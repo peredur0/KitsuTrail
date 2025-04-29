@@ -279,3 +279,97 @@ On va essayer de terminer pour ce soir avec la finalisation de l'ajout de la cr�
 
 La création d'un utilisateur se déroule de la manière suivante:
 ![./img/20250406_user_creation.gif](./img/20250406_user_creation.gif)
+
+## 2025-04-23 Liaison front et back
+La récupération des users passe maintenant par l'utilisation de requêtes HTTP.
+J'ai du ajouter un provider globalement dans app.config.ts.
+
+Puis toutes les requêtes sont mises en place dans le service users `users.service.ts`.
+J'ai du retirer la fonction getDisplayName du modèle `users.model.ts`. Elle a été déplacée dans un module annexe `user-utils.ts`.
+
+Maintenant que la récupération des utilisateurs (single ou liste) se fait via des observables, j'ai également du modifier le code qui utilisait ces ressources.
+Les fichiers modifiers sont:
+- user.component(.html|.ts)
+- user-card.component(.html|.ts)
+- users-list.component(.html|.ts)
+
+J'ai eu un peu de mal a passer la version displayName au sous titre du header. L'objet user est maintenant un observable sur lequel il faut faire un pipe et y souscrire le temps que la page est ouverte.
+
+Prochaine étape rétablir la fonction d'ajout de l'utilisateur et le bind sera complet.
+
+## 2025-04-29 restauration de la fonction d'ajout d'utilisateur
+L'application va maintenant utiliser le endpoint `/users/` pour créer un utilisateur via un post. J'ai donc le code suivant pour addNewUser (users.service.ts):
+```typescript
+return this.http.post<User>('http://localhost:8000/users/', userData);
+```
+
+La validation se fera dans le formulaire. Je dois avouer que j'ai eu besoin de chatGPT pour la modification de la fonction onAddUser().
+J'ai encore du boulot sur les observable.
+Je vais donc détailler chaque instruction de la fonction.
+
+Le début:
+```
+async onAddUser(): Promise<void> {
+    const login = this.userForm.get('login')?.value;
+    if (!login) return;
+```
+onAddUser() devient une asynchrone et va attendre le résultat de plusieurs appels vers le backend.
+La première opération est la récupération du login et un return s'il est absent. (cela ne devrait pas arriver car il y a une validation sur le champs login).
+
+La logique commence maintenant. L'idée est d'aller vérifier si le login est présent dans la base. Si c'est le cas ça veut dire qu'un utilisateur existe déjà, il faut donc invalider le champs login et bloquer l'envoi du post.
+Si on a une erreur 404 ça veut dire qu'on peut créer un nouvel utilisateur.
+```
+try {
+      await firstValueFrom(this.usersService.getUserFromIdentifier('login', login));
+      this.userForm.get('login')?.setErrors({ loginTaken: true });
+```
+Avec l'appel `firstValueFrom` on transforme l'observable retourné par `getUserFromIdentifier` en Promise que l'on va attendre avec await.
+
+```
+catch (error: any) {
+      if (error?.status === 404) {
+        try {
+          await firstValueFrom(this.usersService.addNewUser(this.userForm.value));
+          this.dialogRef.close();
+        } catch (postError: any) {
+          console.error('Failed to create user', postError);
+          alert("Echec de la création de l'utilisateur");
+        }
+```
+Dans le cas où l'utilisateur n'existe pas, on applique la même logique du await sur l'ajout du nouvel utilisateur. Cela nous permet ensuite de capturer les erreurs éventuelles retournées par le backend.
+Si l'ajour fonctionne on peut fermer la fenêtre de dialogue, sinon on lève une alerte.
+
+```
+} else {
+        console.error('Failed to create user', error);
+        alert("Echec de la création de l'utilisateur");
+      }
+    }
+  }
+```
+Enfin on lève une alerte sur n'importe quelle autre erreur
+
+Petit ajout. J'ai souhaité que la liste des utilisateurs se mettent à jours dès qu'un nouvel utilisateur est ajouté.
+Pour ce faire, on commence par définir un Subject (observable et observer) qui va émettre une notification à l'abonné comme quoi il y a eu du changement. Dans `users.service.ts`:
+```
+private usersChanged = new Subject<void>();
+usersChanged$ = this.usersChanged.asObservable();
+
+notifyUsersChanged(){
+        this.usersChanged.next();
+    }
+```
+
+Dans le composant qui gère l'ajout de l'utilisateur on va ajouter la ligne
+```
+this.usersService.notifyUsersChanged();
+```
+qui va envoyer la notification comme quoi les utilisateurs on changé
+
+On récupère cette notification dans `users-list.component`.
+```
+this.userService.usersChanged$.subscribe(() => {
+  this.users$ = this.userService.getUsers();
+})
+```
+

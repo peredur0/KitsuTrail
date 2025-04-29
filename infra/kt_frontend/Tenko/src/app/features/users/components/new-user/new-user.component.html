@@ -5,6 +5,7 @@
         <mat-form-field>
             <mat-label>Login</mat-label>
             <input matInput required placeholder="Nouvel utilisateur" id="login" formControlName="login"/>
+            <mat-error *ngIf="userForm.get('login')?.hasError('loginTaken')">Ce login est déjà utilisé</mat-error>
         </mat-form-field>
         <mat-form-field>
             <mat-label>Prénom</mat-label>
