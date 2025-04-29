@@ -174,3 +174,5 @@ statement = select(UserInDB).where(func.lower(UserInDB.login) == login.lower())
 ```
 
 > Dans la fonction create_user, je me suis ajouté un login qui va échoué pour tester la remontée d'alerte dans le front.
+
+** Fermeture de ce logbook **
