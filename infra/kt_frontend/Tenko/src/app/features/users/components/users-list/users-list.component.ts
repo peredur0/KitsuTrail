@@ -1,6 +1,6 @@
-import { Component, inject, OnInit } from '@angular/core';
+import { Component, inject, OnDestroy, OnInit } from '@angular/core';
 import { CommonModule } from '@angular/common';
-import { Observable } from 'rxjs';
+import { Observable, Subject } from 'rxjs';
 import { MatButtonModule } from '@angular/material/button';
 import { MatDialog } from '@angular/material/dialog';
 
@@ -20,16 +20,21 @@ import { NewUserComponent } from '../new-user/new-user.component';
   templateUrl: './users-list.component.html',
   styleUrl: './users-list.component.scss'
 })
-export class UsersListComponent implements OnInit{
+export class UsersListComponent implements OnInit, OnDestroy{
   private headerService = inject(HeaderService);
   private userService = inject(UsersService);
   readonly dialog = inject(MatDialog);
+  private destroy$ = new Subject<void>();
 
   users$!: Observable<User[]>;
 
   ngOnInit(): void {
     this.headerService.setSubtitle('');
     this.users$ = this.userService.getUsers();
+
+    this.userService.usersChanged$.subscribe(() => {
+      this.users$ = this.userService.getUsers();
+    })
   }
 
   openDialog(): void {
@@ -42,4 +47,8 @@ export class UsersListComponent implements OnInit{
     });
   }
 
+  ngOnDestroy(): void {
+    this.destroy$.next();
+    this.destroy$.complete();
+  }
 }

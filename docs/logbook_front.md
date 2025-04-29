@@ -349,3 +349,27 @@ Si l'ajour fonctionne on peut fermer la fenêtre de dialogue, sinon on lève une
 ```
 Enfin on lève une alerte sur n'importe quelle autre erreur
 
+Petit ajout. J'ai souhaité que la liste des utilisateurs se mettent à jours dès qu'un nouvel utilisateur est ajouté.
+Pour ce faire, on commence par définir un Subject (observable et observer) qui va émettre une notification à l'abonné comme quoi il y a eu du changement. Dans `users.service.ts`:
+```
+private usersChanged = new Subject<void>();
+usersChanged$ = this.usersChanged.asObservable();
+
+notifyUsersChanged(){
+        this.usersChanged.next();
+    }
+```
+
+Dans le composant qui gère l'ajout de l'utilisateur on va ajouter la ligne
+```
+this.usersService.notifyUsersChanged();
+```
+qui va envoyer la notification comme quoi les utilisateurs on changé
+
+On récupère cette notification dans `users-list.component`.
+```
+this.userService.usersChanged$.subscribe(() => {
+  this.users$ = this.userService.getUsers();
+})
+```
+

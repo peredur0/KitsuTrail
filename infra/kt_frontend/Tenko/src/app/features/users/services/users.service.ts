@@ -1,6 +1,6 @@
 import { Injectable, inject } from "@angular/core";
 import { HttpClient } from "@angular/common/http";
-import { Observable } from "rxjs";
+import { Observable, Subject } from "rxjs";
 
 import { User } from "../models/user.model";
 
@@ -9,6 +9,9 @@ import { User } from "../models/user.model";
 })
 export class UsersService {
     private http = inject(HttpClient)
+    private usersChanged = new Subject<void>();
+
+    usersChanged$ = this.usersChanged.asObservable();
 
     getUsers(): Observable<User[]> {
         return this.http.get<User[]>('http://localhost:8000/users/');
@@ -33,5 +36,9 @@ export class UsersService {
         email: string | null
     }): Observable<User> {
         return this.http.post<User>('http://localhost:8000/users/', userData);
+    }
+
+    notifyUsersChanged(){
+        this.usersChanged.next();
     }
 }

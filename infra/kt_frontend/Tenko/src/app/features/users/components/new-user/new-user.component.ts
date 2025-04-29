@@ -52,6 +52,7 @@ export class NewUserComponent implements OnInit{
       if (error?.status === 404) {
         try {
           await firstValueFrom(this.usersService.addNewUser(this.userForm.value));
+          this.usersService.notifyUsersChanged();
           this.dialogRef.close();
         } catch (postError: any) {
           console.error('Failed to add user', postError);
