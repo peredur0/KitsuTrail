@@ -151,3 +151,26 @@ J'ai du faire une petite modification du code de FastAPI pour qu'il accepte les 
 J'ai eu un blocage a cause du CORS.
 
 Aucune modification important du backend dans les prochains temps.
+
+## 2025-04-29 Recherche par login
+Afin de facilité la création des utilisateurs avec des login unique j'ai ajouté un nouveau endpoint pour rechercher un utilisateur via ce champ.
+Le endpoint est `/users/login/USER_LOGIN`.
+
+Pour rendre cette recherche insensible à la casse j'ai découvert la fonction func de sqlalchemy. Elle permet d'appliquer des transformation à un champ de la table.
+Par exemple:
+```
+func.lower(UserInDB.login)
+fait comme
+SELECT LOWER(login) from users
+```
+
+je peux alors effectuer cette recherche dans mon backend
+```python
+statement = select(UserInDB).where(func.lower(UserInDB.login) == login.lower())
+    result = session.exec(statement).first()
+    if not result:
+        raise HTTPException(status_code=404, detail='User not found')
+    return result
+```
+
+> Dans la fonction create_user, je me suis ajouté un login qui va échoué pour tester la remontée d'alerte dans le front.
