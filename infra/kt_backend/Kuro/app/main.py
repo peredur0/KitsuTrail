@@ -8,6 +8,7 @@ import logging
 import importlib
 
 from fastapi import FastAPI
+from fastapi.middleware.cors import CORSMiddleware
 
 sys.path.append(os.path.dirname(os.path.abspath(__file__)))
 
@@ -35,6 +36,18 @@ app = FastAPI(
         'url': 'https://github.com/peredur0/KitsuTrail',
         'email': 'martial.goehry@gmail.com'
     },
+)
+
+allow_origins = [
+    'http://localhost:4200'
+]
+
+app.add_middleware(
+    CORSMiddleware,
+    allow_origins=allow_origins,
+    allow_credentials=True,
+    allow_methods=['*'],
+    allow_headers=['*']
 )
 
 modules = [

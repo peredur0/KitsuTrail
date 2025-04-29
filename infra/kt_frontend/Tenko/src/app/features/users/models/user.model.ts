@@ -21,9 +21,4 @@ export class User {
         this.setEmail(email);
         return this;
     }
-
-    getDisplayName(): string {
-        return `${this.firstname.charAt(0).toUpperCase()}${this.firstname.slice(1).toLowerCase()} ` + 
-        `${this.lastname.toUpperCase()}`;
-    }
 }

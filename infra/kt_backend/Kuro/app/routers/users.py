@@ -9,6 +9,7 @@ from typing import Annotated
 from sqlmodel import Session, select
 from fastapi import APIRouter, Depends, Query, HTTPException
 from sqlalchemy.exc import IntegrityError
+from sqlalchemy import func
 
 from utils.sqlite_utils import get_session, check_required_tables
 from utils.check_utils import check_accept_json, generate_id
@@ -45,6 +46,9 @@ def list_users(
         response_model=UserPublic
 )
 def create_user(user_data: UserCreate, session: Session_dep):
+    if user_data.login == 'foo':
+        raise HTTPException(status_code=542, detail='epic fail')
+
     try:
         new_id = generate_id(session)
     except RuntimeError as err:
@@ -62,6 +66,16 @@ def create_user(user_data: UserCreate, session: Session_dep):
         raise HTTPException(status_code=409, detail="Login already taken")
 
     return new_user
+
+
+# --- Search for users
+@_router.get('/login/{login}', response_model=UserPublic)
+def get_user_by_login(login: str, session: Session_dep):
+    statement = select(UserInDB).where(func.lower(UserInDB.login) == login.lower())
+    result = session.exec(statement).first()
+    if not result:
+        raise HTTPException(status_code=404, detail='User not found')
+    return result
 
 
 # --- Get single user

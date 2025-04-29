@@ -1,1 +1,3 @@
-<p>{{ user.firstname }} {{ user.lastname }}</p>
+<div class="user-page" *ngIf="user$ | async as user">
+    <p>{{ user.firstname }} {{ user.lastname }}</p>
+</div>
