@@ -41,7 +41,7 @@ export class MenuService {
                 if ( !path ) {
                     return 'Bienvenue';
                 }
-                if ( link.path === path ) {
+                if ( link.path?.split('/')[0] === path.split('/')[0] ) {;
                     return element === 'title' ? menu.title : link.label;
                 }
             }

@@ -1,4 +1,5 @@
 import { Injectable } from "@angular/core";
+import { Observable, of } from "rxjs";
 
 import { Provider } from "../models/providers.model";
 
@@ -17,7 +18,8 @@ export class ProvidersService {
         new Provider(8, 'sp', 'OAuth2', 'Pastaman')
     ]
 
-    getProviders(type: 'idp'|'sp'): Provider[] {
-        return [...this.providers.filter(provider => provider.type === type)]
+    getProviders(type: 'idp'|'sp'): Observable<Provider[]> {
+        const filteredProviders = this.providers.filter(provider => provider.type === type);
+        return of(filteredProviders);
     }
 }
