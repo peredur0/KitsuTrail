@@ -1,0 +1,46 @@
+# Todo list
+
+Ce document reprend certains éléments qui ont été laissé de coté pour le moment car jugé comme non prioritaire.
+
+## Frontend
+**core**
+* Ajouter un système d'authentification
+    - 2025/04/30 > ?
+
+**feature/users**
+
+* Amélioration de la page de chaque utilisateur
+    - 2025/04/30 > ?
+
+* Ajouter un bouton de suppression d'un utilisateur
+    - 2025/04/30 > ?
+
+* Ajouter une barre de recherche pour filtrer les utilisateur
+    - 2025/04/30 > ?
+
+* Ajouter des actions sur sélection multiple
+    - 2025/04/30 > ?
+
+* Gérer l'ajout d'avatar personnalisé pour chaque utilisateur
+    - 2025/04/30 > ?
+
+
+**feature/providers**
+
+* Améliorer l'affichage de la liste des providers
+    - 2025/04/30 > ?
+
+* Ajouter la possibilité d'ajouter/supprimer des fournisseurs 
+    - 2025/04/30 > ?
+
+## Backend
+
+* Prise en charge de l'authentification
+    - 2025/04/30 > ?
+
+* Gestion des fournisseurs dans l'API
+    - 2025/04/30 > ?
+
+## Infrastructure
+* Mise en place d'un reverse proxy pour https
+* Mise en place d'un déploiement de production via docker compose
