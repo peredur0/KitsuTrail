@@ -373,3 +373,4 @@ this.userService.usersChanged$.subscribe(() => {
 })
 ```
 
+** Fermeture de ce logbook **
