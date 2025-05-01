@@ -17,8 +17,8 @@ export class MenuService {
             title: "Gestion des fournisseurs",
             display: true,
             links: [
-                { label: "Identités", path: "providers/idp", disabled: true },
-                { label: "Services", path: "providers/sp", disabled: true }
+                { label: "Identités", path: "providers/idp", disabled: false },
+                { label: "Services", path: "providers/sp", disabled: false }
             ]
         },
         {
@@ -41,7 +41,7 @@ export class MenuService {
                 if ( !path ) {
                     return 'Bienvenue';
                 }
-                if ( link.path === path ) {
+                if ( link.path?.split('/')[0] === path.split('/')[0] ) {;
                     return element === 'title' ? menu.title : link.label;
                 }
             }

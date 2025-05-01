@@ -1,0 +1,16 @@
+.provider-line {
+    display: flex;
+    flex-direction: row;
+    justify-content: left;
+    gap: 20px;
+    margin: 20px;
+    padding: 10px;
+    border: 2px solid;
+    border-color: black;
+    border-radius: 10px;
+    box-shadow: 5px 5px 5px rgb(161, 161, 161);
+}
+
+.info-widget {
+    width: 100%;
+}
