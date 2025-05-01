@@ -7,6 +7,9 @@ Ce document reprend certains éléments qui ont été laissé de coté pour le m
 * Ajouter un système d'authentification
     - 2025/04/30 > ?
 
+* Ajouter une page pour l'erreur 404
+    - 2025/05/01 > ?
+
 **feature/users**
 
 * Amélioration de la page de chaque utilisateur
