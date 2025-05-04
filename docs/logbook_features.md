@@ -57,20 +57,43 @@ Les raisons d'un échec peuvent être:
 - insufficient_rights
 
 Première ébauche de champs:
-| nom            | type      | nullable | valeurs possibles          | description                      |
-|----------------|-----------|----------|----------------------------|----------------------------------|
-| audit_id       | INTEGER   | required | 1                          | identifiant de l'évènement       |
-| timestamp      | TIMESTAMP | required | 2025-05-04 15:35:10:000000 | date heure de l'évènement        |
-| categorie      | STRING    | required | management, autorisation   | type d'évènement                 |
-| correlation_id | STRING    | required | (SHA256)                   | relation entre plusieurs actions |
-| action         | STRING    | required | (cf actions)               | évènement logger                 |
-| login_id       | STRING    | required | e0e150a4                   | utilisateur concerné             |
-| result         | STRING    | required | success, fail              | résultat de l'action             |
-| reason         | STRING    | nullable | (cf raisons)               | raison d'un échec                |
-| details        | STRING    | nullable | (cf details)               | informations complémentaires     |
-| provider_id    | INTEGER   | nullable | 1                          | identifiant du provider          |
+| nom         | type      | nullable | valeurs possibles          | description                      |
+|-------------|-----------|----------|----------------------------|----------------------------------|
+| audit_id    | STRING    | required | (uuid.uuid4())[:8]         | identifiant de l'évènement       |
+| timestamp   | TIMESTAMP | required | 2025-05-04 15:35:10:000000 | date heure de l'évènement        |
+| categorie   | STRING    | required | management, autorisation   | type d'évènement                 |
+| trace_id    | STRING    | required | (uuid.uuid4())[:8]         | relation entre plusieurs actions |
+| action      | STRING    | required | (cf actions)               | évènement logger                 |
+| user_id     | STRING    | nullable | e0e150a4                   | utilisateur concerné             |
+| result      | STRING    | required | success, fail              | résultat de l'action             |
+| reason      | STRING    | nullable | (cf raisons)               | raison d'un échec                |
+| details     | STRING    | nullable | (cf details)               | informations complémentaires     |
+| provider_id | INTEGER   | nullable | 1                          | identifiant du provider          |
 
 Lors de récupération des logs il devrait être possible de faire la liaison avec les infos IDP et SP.
 Finalement je pense que la mise en place des provider en base va arriver plus vite que prévue.
 
+Les providers sont maintenant gérés directement depuis la base de données.
+On a simplement ajouter des requêtes GET niveau API pour gérer la récupération des providers.
 
+J'ai également préparé la table d'audit.
+En utilisant les utilisateurs actuellement créé, on a commencé à remplir la base d'audit.
+Maintenant je dois trouver un moyen de remplir cette table avec des activités.
+
+Avec le schéma actuel, je vois les éléments suivant:
+- les events `access_request` seront toujours en success
+- les events `access_reply` peuvent échouer dans les cas suivants:
+    * unknown_user              (inconnu dans KT)
+    * account_locked            (bloqué dans KT)
+    * missing_rights            (manquant dans KT)
+    * (authentication_failed)   (échec avec IDP => découle d'`authentication_reply`)
+    * authentication_timeout    (absence de `authentication_reply`)
+- les events `authentication_request` seront toujours en success
+- les events `authentication_reply peuvent échouer dans les cas suivants:
+    * unknown_user              (inconnu coté IDP)
+    * account_locked            (bloquer coté IDP)
+    * wrong_credentials         (mauvais password)
+    * missing_rights            (configuration IDP)
+    * timeout                   (pas de réponse de l'utilisateur)
+
+> Il faut maintenant faire un script qui va prendre en compte ces cas et les users/providers présent en base pour avoir quelque chose de cohérent.
