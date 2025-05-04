@@ -1,0 +1,10 @@
+[
+    {"type": "idp", "protocol": "SAML", "name": "Kitsu SSO"},
+    {"type": "idp", "protocol": "Internal", "name": "Kitsu repository"},
+    {"type": "idp", "protocol": "LDAP", "name": "Kitsu AD"},
+    {"type": "sp", "protocol": "SAML", "name": "Atlassia"},
+    {"type": "sp", "protocol": "OIDC", "name": "Entra App"},
+    {"type": "sp", "protocol": "SAML", "name": "Skyline"},
+    {"type": "sp", "protocol": "OAuth2", "name": "Slock"},
+    {"type": "sp", "protocol": "OAuth2", "name": "Pastaman"}
+]
