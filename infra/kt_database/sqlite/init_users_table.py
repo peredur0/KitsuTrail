@@ -1,6 +1,6 @@
 # coding: utf-8
 """
-Init the test database
+Init the user table in SQLite DB
 """
 import uuid
 import json
@@ -24,7 +24,7 @@ def random_date():
 
 
 if __name__ == '__main__':
-    print("Init of dev database")
+    print("Init of dev database - step users")
     connection = sqlite3.connect('inari.db')
     cursor = connection.cursor()
     cursor.execute(f'DROP TABLE IF EXISTS {USERS_TABLE}')
@@ -44,7 +44,7 @@ if __name__ == '__main__':
     cursor.execute('CREATE INDEX idx_lastname ON users(lastname)')
     cursor.execute('CREATE INDEX idx_email ON users(email)')
 
-    with open('./dev_base_data.json', 'r') as file:
+    with open('./dev_base_users.json', 'r') as file:
         data = json.load(file)
         for user in data:
             tmp_user = (
@@ -63,4 +63,4 @@ if __name__ == '__main__':
 
     connection.commit()
     connection.close()
-    print('Init dev db end')
+    print('Init dev database - step users: end')
