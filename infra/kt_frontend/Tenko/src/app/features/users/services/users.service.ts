@@ -8,7 +8,7 @@ import { User } from "../models/user.model";
     providedIn: 'root'
 })
 export class UsersService {
-    private http = inject(HttpClient)
+    private http = inject(HttpClient);
     private usersChanged = new Subject<void>();
 
     usersChanged$ = this.usersChanged.asObservable();

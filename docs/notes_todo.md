@@ -44,7 +44,7 @@ Ce document reprend certains éléments qui ont été laissé de coté pour le m
     - 2025/04/30 > ?
 
 * Gestion des fournisseurs dans l'API
-    - 2025/04/30 > ?
+    - 2025/04/30 > 2025/05/04
 
 ## Infrastructure
 * Mise en place d'un reverse proxy pour https

@@ -1,4 +1,5 @@
-import { Injectable } from "@angular/core";
+import { Injectable, inject } from "@angular/core";
+import { HttpClient } from "@angular/common/http";
 import { Observable, of } from "rxjs";
 
 import { Provider } from "../models/providers.model";
@@ -7,19 +8,9 @@ import { Provider } from "../models/providers.model";
     providedIn: 'root'
 })
 export class ProvidersService {
-    private providers: Provider[] = [
-        new Provider(1, 'idp', 'SAML', 'Kitsu SSO'),
-        new Provider(2, 'idp', 'Internal', 'Kitsu repository'),
-        new Provider(3, 'idp', 'LDAP', 'Kitsu AD'),
-        new Provider(4, 'sp', 'SAML', 'Atlassian'),
-        new Provider(5, 'sp', 'OIDC', 'Entra App'),
-        new Provider(6, 'sp', 'SAML', 'Skyline'),
-        new Provider(7, 'sp', 'OAuth2', 'Slock'),
-        new Provider(8, 'sp', 'OAuth2', 'Pastaman')
-    ]
+    private http = inject(HttpClient);
 
     getProviders(type: 'idp'|'sp'): Observable<Provider[]> {
-        const filteredProviders = this.providers.filter(provider => provider.type === type);
-        return of(filteredProviders);
+        return this.http.get<Provider[]>(`http://localhost:8000/api/v1/providers/${type}`)
     }
 }
