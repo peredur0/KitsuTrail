@@ -14,7 +14,7 @@ sys.path.append(os.path.dirname(os.path.abspath(__file__)))
 
 logger = logging.getLogger('uvicorn.error')
 
-version = '0.0.1'
+version = '0.1.0'
 description = """
 Kuro API server is managing the data related to the KitsuTrail project.
 
@@ -24,6 +24,10 @@ Kuro API server is managing the data related to the KitsuTrail project.
 * **Read a single user**
 * **Update a single user**
 * **Delete a single user**
+
+## Providers
+* **Read list of services providers**
+* **Read list of identity providers**
 """
 
 app = FastAPI(
@@ -51,7 +55,8 @@ app.add_middleware(
 )
 
 modules = [
-    {'name': 'users', 'path': 'routers.users'}
+    {'name': 'users', 'path': 'routers.v1.users'},
+    {'name': 'providers', 'path': 'routers.v1.providers'}
 ]
 
 for module in modules:
