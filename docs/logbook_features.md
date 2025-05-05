@@ -97,3 +97,51 @@ Avec le schéma actuel, je vois les éléments suivant:
     * timeout                   (pas de réponse de l'utilisateur)
 
 > Il faut maintenant faire un script qui va prendre en compte ces cas et les users/providers présent en base pour avoir quelque chose de cohérent.
+
+## 2025-05-05 Réflexion sur le format des audit logs
+Je pense que le format de l'audit log de management est bon.
+Cependant, le niveau de détail pour la phase d'accès est trop important.
+Les logs que j'ai proposé ressemblent plus à des logs applicatifs qu'à des logs d'audit.
+
+Il faudrait aussi que toutes les informations soient présentes même si un IDP ou un utilisateur sont supprimé.
+Par exemple on doit être en mesure de connaître l'utilisation d'un login, même si l'utilisateur a été créé puis supprimé.
+
+Après réflexion, je pense partir sur les champs suivants:
+
+| nom               | type      | nullable | valeurs possibles          | description                      |
+|-------------------|-----------|----------|----------------------------|----------------------------------|
+| timestamp         | TIMESTAMP | required | 2025-05-04 15:35:10:000000 | date heure de l'évènement        |
+| audit_id          | STRING    | required | (uuid.uuid4())[:8]         | identifiant de l'évènement       |
+| user_id           | STRING    | nullable | e0e150a4                   | utilisateur concerné             |
+| user_login        | STRING    | nullable | triss.merigold             | login de l'utilisateur           |
+| provider_type     | STRING    | nullable | idp, sp                    | type de provider                 |
+| provider_id       | INTEGER   | nullable | 1                          | identifiant du provider          |
+| provider_name     | STRING    | nullable | Kitsu SSO                  | nom d'affichage du provider      |
+| provider_protocol | STRING    | nullable | SAML, OIDC, ...            | protocol utilisé                 |
+| trace_id          | STRING    | required | (uuid.uuid4())[:8]         | relation entre plusieurs actions |
+| source_ip         | STRING    | nullable | 145.168.154.1              | source de la requête             |
+| source_admin      | STRING    | nullable | system                     | admin à la source de l'event     |
+| category          | STRING    | required | management, autorisation   | type d'évènement                 |
+| action            | STRING    | required | (cf actions)               | évènement journalisé             |
+| result            | STRING    | required | success, fail              | résultat de l'action             |
+| reason            | STRING    | nullable | (cf raisons)               | raison d'un échec                |
+| info              | STRING    | nullable | (cf info )                 | informations complémentaires     |
+
+**catégories/actions**:
+- management
+    * create_user, update_user, delete_user
+- autorisation:
+    * authentification - action auprès d'un IDP
+    * access - action auprès d'un SP
+    * logout - action auprès d'un IDP ou d'un SP
+
+**results/reasons**:
+- success
+- fail:
+    * unknown_user
+    * account_locked
+    * missing_rights
+    * timeout
+    * wrong_credentials
+
+Il va falloir reprendre la table avec ces inputs
