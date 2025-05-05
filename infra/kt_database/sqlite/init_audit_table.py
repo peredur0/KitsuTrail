@@ -4,8 +4,8 @@ Init the audit log table in SQLite DB
 """
 
 import uuid
-import hashlib
 import sqlite3
+import datetime
 
 AUDIT_TABLE = 'audit_logs'
 
@@ -73,6 +73,41 @@ if __name__ == '__main__':
                 (:timestamp, :audit_id, :user_id, :user_login, :trace_id, :source_ip, 
                 :source_admin, :category, :action, :result)
         ''', entry)
+    connection.commit()
+
+    cursor.execute(f'SELECT MIN(created_at) FROM users')
+    start_time = datetime.datetime.fromisoformat(cursor.fetchone()[0])
+    start_time.replace(hour=0, minute=0, second=0)
+    
+    cursor.execute(f'SELECT id, type, protocol, name FROM providers')
+    providers = cursor.fetchall()
+
+    for provider in providers:
+        start_time = start_time + datetime.timedelta(minutes=30)
+        entry = {
+            'timestamp': start_time.isoformat(),
+            'audit_id': str(uuid.uuid4())[:8], 
+            'provider_type': provider[1],
+            'provider_id': provider[0],
+            'provider_name': provider[3],
+            'provider_protocol': provider[2],
+            'trace_id': str(uuid.uuid4())[:8],
+            'source_ip': '127.0.0.1',
+            'source_admin': 'init-system',
+            'category': 'management',
+            'action': 'create_provider',
+            'result': 'success'
+        }
+
+        connection.execute(f'''
+            INSERT INTO {AUDIT_TABLE}
+                (timestamp, audit_id, provider_type, provider_id, provider_name,
+                provider_protocol, trace_id, source_ip, source_admin, category, action, result)
+            VALUES
+                (:timestamp, :audit_id, :provider_type, :provider_id, :provider_name, 
+                :provider_protocol, :trace_id, :source_ip, :source_admin, :category, :action, :result)
+        ''', entry)
+
     connection.commit()
 
     print('Generate random activity')

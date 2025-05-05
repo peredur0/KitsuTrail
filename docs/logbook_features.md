@@ -146,4 +146,5 @@ Après réflexion, je pense partir sur les champs suivants:
 
 Il va falloir reprendre la table avec ces inputs
 
-La table a été reprise, maintenant je dois ajouter des activités à ces utilisateurs.
+La table a été reprise, j'ai également ajouté la création des IDP et SP dans les logs d'audit. 
+Maintenant je dois ajouter des activités à ces utilisateurs.
