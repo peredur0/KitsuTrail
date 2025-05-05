@@ -17,26 +17,34 @@ if __name__ == '__main__':
     cursor.execute(f'DROP TABLE IF EXISTS {AUDIT_TABLE}')
     cursor.execute(f'''
         CREATE TABLE IF NOT EXISTS {AUDIT_TABLE}(
-            audit_id TEXT NOT NULL,
             timestamp DATETIME NOT NULL,
-            categorie TEXT NOT NULL,
-            trace_id TEXT NOT NULL,
-            action TEXT NOT NULL,
+            audit_id TEXT NOT NULL,
             user_id TEXT,
+            user_login TEXT,
+            provider_type STRING,
+            provider_id INTEGER,
+            provider_name STRING,
+            provider_protocol STRING,
+            trace_id TEXT NOT NULL,
+            source_ip TEXT,
+            source_admin TEXT,
+            category TEXT NOT NULL,
+            action TEXT NOT NULL,
             result TEXT,
             reason TEXT,
-            details TEXT,
-            provider_id INTEGER
+            info TEXT
         )
     ''')
     cursor.execute(f'CREATE UNIQUE INDEX idx_audit_id ON {AUDIT_TABLE}(audit_id)')
     cursor.execute(f'CREATE INDEX idx_timestamp ON {AUDIT_TABLE}(timestamp)')
-    cursor.execute(f'CREATE INDEX idx_categorie ON {AUDIT_TABLE}(categorie)')
+    cursor.execute(f'CREATE INDEX idx_category ON {AUDIT_TABLE}(category)')
     cursor.execute(f'CREATE INDEX idx_trace_id ON {AUDIT_TABLE}(trace_id)')
     cursor.execute(f'CREATE INDEX idx_action ON {AUDIT_TABLE}(action)')
     cursor.execute(f'CREATE INDEX idx_result ON {AUDIT_TABLE}(result)')
     cursor.execute(f'CREATE INDEX idx_user_id ON {AUDIT_TABLE}(user_id)')
     cursor.execute(f'CREATE INDEX idx_provider_id ON {AUDIT_TABLE}(provider_id)')
+    cursor.execute(f'CREATE INDEX idx_provider_type ON {AUDIT_TABLE}(provider_type)')
+    cursor.execute(f'CREATE INDEX idx_provider_protocol ON {AUDIT_TABLE}(provider_protocol)')
 
     connection.commit()
 
@@ -45,15 +53,25 @@ if __name__ == '__main__':
     users = cursor.fetchall()
 
     for user in users:
-        entry = (str(uuid.uuid4())[:8], user[2], 'management',
-                 str(uuid.uuid4())[:8], 'create_user', user[0],
-                 'success', f'{{"login": "{user[1]}"}}'
-        )
+        entry = {
+            'timestamp': user[2], 
+            'audit_id': str(uuid.uuid4())[:8], 
+            'user_id': user[0],
+            'user_login': user[1],
+            'trace_id': str(uuid.uuid4())[:8],
+            'source_ip': '127.0.0.1',
+            'source_admin': 'init-system',
+            'category': 'management',
+            'action': 'create_user',
+            'result': 'success'
+        }
         connection.execute(f'''
             INSERT INTO {AUDIT_TABLE} 
-                (audit_id, timestamp, categorie, trace_id, 
-                 action, user_id, result, details)
-            VALUES (?, ?, ?, ?, ?, ?, ?, ?)
+                (timestamp, audit_id, user_id, user_login, trace_id, source_ip, 
+                source_admin, category, action, result)
+            VALUES 
+                (:timestamp, :audit_id, :user_id, :user_login, :trace_id, :source_ip, 
+                :source_admin, :category, :action, :result)
         ''', entry)
     connection.commit()
 

@@ -145,3 +145,5 @@ Après réflexion, je pense partir sur les champs suivants:
     * wrong_credentials
 
 Il va falloir reprendre la table avec ces inputs
+
+La table a été reprise, maintenant je dois ajouter des activités à ces utilisateurs.
