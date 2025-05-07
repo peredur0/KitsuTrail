@@ -10,10 +10,10 @@ import datetime
 AUDIT_TABLE = 'audit_logs'
 
 
-if __name__ == '__main__':
-    print('Init of dev database - step audit logs')
-    connection = sqlite3.connect('inari.db')
-    cursor = connection.cursor()
+def init_table():
+    """
+    Drop/create the table
+    """
     cursor.execute(f'DROP TABLE IF EXISTS {AUDIT_TABLE}')
     cursor.execute(f'''
         CREATE TABLE IF NOT EXISTS {AUDIT_TABLE}(
@@ -48,11 +48,15 @@ if __name__ == '__main__':
 
     connection.commit()
 
-    print('Adding first audit logs')
-    cursor.execute(f'SELECT id, login, created_at FROM users')
-    users = cursor.fetchall()
 
-    for user in users:
+def users_audit_logs(cursor):
+    """
+    Create the user creation logs based on inplace creation dates
+    """
+    cursor.execute(f'SELECT id, login, created_at FROM users')
+    _users = cursor.fetchall()
+
+    for user in _users:
         entry = {
             'timestamp': user[2], 
             'audit_id': str(uuid.uuid4())[:8], 
@@ -74,15 +78,22 @@ if __name__ == '__main__':
                 :source_admin, :category, :action, :result)
         ''', entry)
     connection.commit()
+    return _users
 
+
+def providers_audit_logs():
+    """
+    Create provider creation before the first user creation
+    """
     cursor.execute(f'SELECT MIN(created_at) FROM users')
     start_time = datetime.datetime.fromisoformat(cursor.fetchone()[0])
     start_time.replace(hour=0, minute=0, second=0)
+    start_time = start_time - datetime.timedelta(days=1)
     
     cursor.execute(f'SELECT id, type, protocol, name FROM providers')
-    providers = cursor.fetchall()
+    _providers = cursor.fetchall()
 
-    for provider in providers:
+    for provider in _providers:
         start_time = start_time + datetime.timedelta(minutes=30)
         entry = {
             'timestamp': start_time.isoformat(),
@@ -109,6 +120,18 @@ if __name__ == '__main__':
         ''', entry)
 
     connection.commit()
+    return _providers
+
+
+if __name__ == '__main__':
+    print('Init of dev database - step audit logs')
+    connection = sqlite3.connect('inari.db')
+    cursor = connection.cursor()
+    init_table(cursor)
+
+    print('Adding first audit logs')
+    users = users_audit_logs()
+    providers = providers_audit_logs()
 
     print('Generate random activity')
     nb_events = 100
