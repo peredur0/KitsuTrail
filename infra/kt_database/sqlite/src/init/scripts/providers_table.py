@@ -9,7 +9,7 @@ import sqlite3
 PROVIDERS_TABLE = 'providers'
 
 
-if __name__ == '__main__':
+def init():
     print('Init of dev database - step providers')
     connection = sqlite3.connect('inari.db')
     cursor = connection.cursor()
@@ -27,7 +27,7 @@ if __name__ == '__main__':
     cursor.execute('CREATE INDEX idx_protocol ON providers(protocol)')
     cursor.execute('CREATE INDEX idx_name ON providers(name)')
 
-    with open('./dev_base_providers.json', 'r') as file:
+    with open('./src/init/dev_data/dev_base_providers.json', 'r') as file:
         data = json.load(file)
         for provider in data:
             cursor.execute(f'''

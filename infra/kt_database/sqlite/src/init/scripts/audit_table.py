@@ -4,13 +4,17 @@ Init the audit log table in SQLite DB
 """
 
 import uuid
+import random
 import sqlite3
 import datetime
 
+from src.modules import activities
+
 AUDIT_TABLE = 'audit_logs'
+MIN_TO_MS = 60000
 
-
-def init_table():
+def init_table(conn) -> None:
+    connection, cursor = conn
     """
     Drop/create the table
     """
@@ -49,10 +53,11 @@ def init_table():
     connection.commit()
 
 
-def users_audit_logs(cursor):
+def users_audit_logs(conn) -> None:
     """
     Create the user creation logs based on inplace creation dates
     """
+    connection, cursor = conn
     cursor.execute(f'SELECT id, login, created_at FROM users')
     _users = cursor.fetchall()
 
@@ -81,10 +86,11 @@ def users_audit_logs(cursor):
     return _users
 
 
-def providers_audit_logs():
+def providers_audit_logs(conn: tuple) -> None:
     """
     Create provider creation before the first user creation
     """
+    connection, cursor = conn
     cursor.execute(f'SELECT MIN(created_at) FROM users')
     start_time = datetime.datetime.fromisoformat(cursor.fetchone()[0])
     start_time.replace(hour=0, minute=0, second=0)
@@ -123,18 +129,49 @@ def providers_audit_logs():
     return _providers
 
 
-if __name__ == '__main__':
+def activity_audit_logs(user: tuple, providers_list: list[tuple]) -> None:
+    """
+    Generate activities for a user
+    """
+    use_cases = [
+        activities.auth_ok_access_ok
+    ]
+    start_ts = datetime.datetime.fromisoformat(user[2])
+    start_ts = start_ts + datetime.timedelta(minutes=1)
+    
+    while start_ts < datetime.datetime.now():
+        use_case = random.choice(use_cases)
+        data = use_case(start_ts, user, providers_list)
+        
+        print(f"Activités : {data['activities']}")
+        start_ts = data['end_ts']
+        if (
+            ((start_ts.hour > 6 and start_ts.hour < 10) or 
+            (start_ts.hour > 13 and start_ts.hour < 15)) and
+            (not start_ts.weekday() in (5, 6))
+        ):
+            delta = datetime.timedelta(
+                milliseconds=random.randint(1*MIN_TO_MS, 5*MIN_TO_MS)
+            )
+        else:
+            delta = datetime.timedelta(hours=random.randint(1,3))
+        
+        start_ts = start_ts + delta
+
+
+def init():
     print('Init of dev database - step audit logs')
     connection = sqlite3.connect('inari.db')
     cursor = connection.cursor()
-    init_table(cursor)
+    conn = (connection, cursor)
+    init_table(conn)
 
     print('Adding first audit logs')
-    users = users_audit_logs()
-    providers = providers_audit_logs()
+    users = users_audit_logs(conn)
+    providers = providers_audit_logs(conn)
 
     print('Generate random activity')
-    nb_events = 100
+    activity_audit_logs(users[0], providers)
 
     connection.close()
     print('Init dev database - step audit logs: end')

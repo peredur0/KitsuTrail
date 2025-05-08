@@ -15,15 +15,15 @@ def random_date():
     """
     Generate a random datetime
     """
-    start = datetime.datetime(2020, 1, 1)
-    end = datetime.datetime(2025, 4, 1)
+    start = datetime.datetime(2025, 3, 1)
+    end = datetime.datetime(2025, 5, 1)
     delta = end - start
     random_days = random.randint(0, delta.days)
     random_secs = random.randint(0, 86400)
     return start + datetime.timedelta(days=random_days, seconds=random_secs)
 
 
-if __name__ == '__main__':
+def init():
     print("Init of dev database - step users")
     connection = sqlite3.connect('inari.db')
     cursor = connection.cursor()
@@ -44,7 +44,7 @@ if __name__ == '__main__':
     cursor.execute('CREATE INDEX idx_lastname ON users(lastname)')
     cursor.execute('CREATE INDEX idx_email ON users(email)')
 
-    with open('./dev_base_users.json', 'r') as file:
+    with open('./src/init/dev_data/dev_base_users.json', 'r') as file:
         data = json.load(file)
         for user in data:
             tmp_user = (
