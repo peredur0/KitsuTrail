@@ -62,5 +62,6 @@ def init():
             print(f"User added - {user.get('login')}")
 
     connection.commit()
+    cursor.close()
     connection.close()
     print('Init dev database - step users: end')

@@ -36,5 +36,6 @@ def init():
             ''', provider)
     
     connection.commit()
+    cursor.close()
     connection.close()
     print('Init dev database - step providers: end')
