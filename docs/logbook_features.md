@@ -140,7 +140,7 @@ Après réflexion, je pense partir sur les champs suivants:
 - fail:
     * unknown_user
     * account_locked
-    * missing_rights
+    * permission_denied
     * timeout
     * wrong_credentials
 
@@ -148,3 +148,61 @@ Il va falloir reprendre la table avec ces inputs
 
 La table a été reprise, j'ai également ajouté la création des IDP et SP dans les logs d'audit. 
 Maintenant je dois ajouter des activités à ces utilisateurs.
+
+## 2025-05-06 Préparation des cas utilisateurs
+La préparation des audits log pour l'activité des utilisateurs va comprendre plusieurs scenarii.
+
+Rappel des `action` de la catégorie `autorisation`:
+* *authentication* - action sur un IDP
+* *access* - action sur un SP
+
+`result`: *success* | *fail*
+
+`reason` quand l'action fail:
+* *unknown_user*
+    * access seul > info = user inconnu dans KT
+    * authentication (F) + access (F) > info = user unknown dans l'IDP
+    * authentication (T) + access (F) > info = user unknown dans le SP
+
+* *locked*
+    * access seul > info = locked dans KT
+    * authentication (F) + access (F) > info = user locked dans l'IDP
+    * authentication (T) + access (F) > info = user locked dans le SP
+
+* *timeout*
+    * authentication (F) + access(F) > info = no user did not authenticate
+
+* *permission_denied*
+    * authentication (F) + access (F) > blocage IDP > info = IDP: detail dans info
+        * *details*
+            * role_missing
+            * group_missing
+            * attribut_mismatch
+            * wrong_credentials
+    * authentication (T) + access (F) > blocage SP > info = SP: detail dans info
+        * *details*
+            * role_missing
+            * group_missing
+            * attribut_mismatch
+
+
+Voici les spécifications:
+- Les premières actions commencent après la création de l'utilisateur ou du provider
+- L'échec de l'authentification entraîne l'échec de l'accès, la reason et l'info ruissellent sur le logs d'accès
+- Le trace_id lie une authentification avec plus demande d'accès (simulation de session)
+- Si un access log est seul c'est que le blocage ou l'erreur est intervenue sur KT
+- Même si une authentification est réussie, l'accès au SP peut échouer
+- Pic de connexion à 8h et 13h
+- Activité majoritaire entre 7h et 18 les jours de semaine
+- Activité limitée le week end
+
+Cas à générer:
+1. auth OK - access_1 OK
+2. auth OK - access_1 OK, access_2 NOK, ..., access_x OK (timeframe 5 minutes)
+3. auth OK - access_1 NOK
+5. access NOK
+6. auth NOK - access_1 NOK
+
+Pour faciliter la génération des logs j'ai organisé un peu mieux les modules dans la parte bdd sqlite.
+
+Il me reste à traiter uniquement le cas ou l'accès échoue directement parce que l'utilisateur n'existe pas ou est bloqué sur la plateforme.

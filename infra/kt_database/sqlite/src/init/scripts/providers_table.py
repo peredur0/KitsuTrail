@@ -34,6 +34,7 @@ def init():
                 INSERT INTO {PROVIDERS_TABLE} (type, protocol, name)
                 VALUES (:type, :protocol, :name)
             ''', provider)
+            print(f"Provider added - {provider['name']}")
     
     connection.commit()
     cursor.close()

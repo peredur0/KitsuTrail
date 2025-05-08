@@ -74,7 +74,7 @@ def users_audit_logs(conn) -> None:
             'action': 'create_user',
             'result': 'success'
         }
-        connection.execute(f'''
+        cursor.execute(f'''
             INSERT INTO {AUDIT_TABLE} 
                 (timestamp, audit_id, user_id, user_login, trace_id, source_ip, 
                 source_admin, category, action, result)
@@ -116,7 +116,7 @@ def providers_audit_logs(conn: tuple) -> None:
             'result': 'success'
         }
 
-        connection.execute(f'''
+        cursor.execute(f'''
             INSERT INTO {AUDIT_TABLE}
                 (timestamp, audit_id, provider_type, provider_id, provider_name,
                 provider_protocol, trace_id, source_ip, source_admin, category, action, result)
@@ -129,13 +129,12 @@ def providers_audit_logs(conn: tuple) -> None:
     return _providers
 
 
-def activity_audit_logs(user: tuple, providers_list: list[tuple]) -> None:
+def activity_audit_logs(conn: tuple, user: tuple, providers_list: list[tuple]) -> None:
     """
     Generate activities for a user
     """
-    use_cases = [
-        activities.auth_ok_access_ok
-    ]
+    connection, cursor = conn
+    use_cases = [activities.auth_ok, activities.auth_ok, activities.auth_nok]
     start_ts = datetime.datetime.fromisoformat(user[2])
     start_ts = start_ts + datetime.timedelta(minutes=1)
     
@@ -143,7 +142,17 @@ def activity_audit_logs(user: tuple, providers_list: list[tuple]) -> None:
         use_case = random.choice(use_cases)
         data = use_case(start_ts, user, providers_list)
         
-        print(f"Activités : {data['activities']}")
+        keys = data['activities'][0].keys()
+        try:
+            cursor.executemany(
+                f'''INSERT INTO {AUDIT_TABLE} ({', '.join(keys)})
+                    VALUES ({', '.join([':'+key for key in keys])})
+                ''',
+                data['activities']
+            )
+        except sqlite3.IntegrityError:
+            continue
+
         start_ts = data['end_ts']
         if (
             ((start_ts.hour > 6 and start_ts.hour < 10) or 
@@ -158,6 +167,60 @@ def activity_audit_logs(user: tuple, providers_list: list[tuple]) -> None:
         
         start_ts = start_ts + delta
 
+    connection.commit() 
+
+
+def monitoring_activity(conn: tuple, providers_list: list[tuple]) -> None:
+    """
+    Generate activities like clients monitoring the platform
+    """
+    connection, cursor = conn
+    users = [
+        ('monitoring', '145.5.187.3'),
+        ('vpn_user', '52.62.72.83'), 
+        ('test', '184.254.8.1')
+    ]
+    cursor.execute(f'SELECT MIN(created_at) FROM users')
+    start_time = datetime.datetime.fromisoformat(cursor.fetchone()[0])
+    start_time.replace(hour=0, minute=0, second=0)
+
+    sp_list = [provider for provider in providers_list if provider[1] == 'sp']
+
+    while start_time < datetime.datetime.now():
+        for user in users:
+            provider = random.choice(sp_list)
+            event = {
+                'timestamp': start_time,
+                'audit_id': str(uuid.uuid4())[:8],
+                'user_login': user[0],
+                'provider_id': provider[0],
+                'provider_type': provider[1],
+                'provider_protocol': provider[2],
+                'provider_name': provider[3],
+                'trace_id': str(uuid.uuid4())[:8],
+                'source_ip': user[1],
+                'category': 'autorisation',
+                'action': 'access',
+                'result': 'fail',
+                'reason': 'unknown_user',
+                'info': 'Unknown in KT'
+            }
+
+            keys = event.keys()
+            try:
+                cursor.execute(
+                    f'''INSERT INTO {AUDIT_TABLE} ({', '.join(keys)})
+                        VALUES ({', '.join([':'+key for key in keys])})
+                    ''',
+                    event
+                )
+            except sqlite3.IntegrityError:
+                continue
+        
+        start_time = start_time + datetime.timedelta(minutes=5)            
+
+    connection.commit()
+
 
 def init():
     print('Init of dev database - step audit logs')
@@ -171,7 +234,15 @@ def init():
     providers = providers_audit_logs(conn)
 
     print('Generate random activity')
-    activity_audit_logs(users[0], providers)
+    for user in users:
+        print(f'Generating activities for {user[1]}')
+        activity_audit_logs(conn, user, providers)
+    print('Users activity generation end')
 
+    print('Generate connection attempt with unknown user')
+    monitoring_activity(conn, providers)
+
+    
+    cursor.close()
     connection.close()
     print('Init dev database - step audit logs: end')
