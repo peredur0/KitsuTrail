@@ -63,16 +63,17 @@ def auth_ok(start_ts: datetime.datetime, user: tuple, providers: list[tuple]) ->
             provider = random.choice(idp_list)
             action = 'authentication'
             result = 'success'
-            reason = None
-            info = None
         else:
             provider = random.choice(sp_list)
             action = 'access'
-
             result = random.choice(['success', 'success', 'fail'])
-            if result == 'fail':
-                reason = random.choice(list(reason_info.keys()))
-                info = random.choice(reason_info.get(reason))
+
+        if result == 'fail':
+            reason = random.choice(list(reason_info.keys()))
+            info = random.choice(reason_info.get(reason))
+        else:
+            reason = None
+            info = None
 
         event = {
             'timestamp': start_ts,
@@ -154,13 +155,37 @@ def auth_nok(start_ts: datetime.datetime, user: tuple, providers: list[tuple]) -
     return {'end_ts': start_ts, 'activities': activities}
 
 
-
 def access_nok(start_ts: datetime.datetime, user: tuple, providers: list[tuple]) -> list:
     """
-    Generate log when the user is blocked in KT
+    Generate log when the user is blocked by KT
 
-    Retuns:
+    Returns:
         list:
-
     """
-    pass
+    reason_info = {
+        'account_locked': ['Account locked in KT'],
+        'permission_denied': ['profile_missing'],
+    }
+    sp = random.choice([provider for provider in providers if provider[1] == 'sp'])
+    reason = random.choice(list(reason_info.keys()))
+    info = random.choice(reason_info.get(reason))
+
+    event = {
+        'timestamp': start_ts,
+        'audit_id': str(uuid.uuid4())[:8],
+        'user_id': user[0],
+        'user_login': user[1],
+        'provider_id': sp[0],
+        'provider_type': sp[1],
+        'provider_protocol': sp[2],
+        'provider_name': sp[3],
+        'trace_id': str(uuid.uuid4())[:8],
+        'source_ip': str(ipaddress.IPv4Address(random.getrandbits(32))),
+        'category': 'autorisation',
+        'action': 'access',
+        'result': 'fail',
+        'reason': reason,
+        'info': info
+    }
+    start_ts = start_ts + datetime.timedelta(minutes=1)
+    return {'end_ts': start_ts, 'activities': [event]}

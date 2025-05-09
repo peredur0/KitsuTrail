@@ -134,7 +134,11 @@ def activity_audit_logs(conn: tuple, user: tuple, providers_list: list[tuple]) -
     Generate activities for a user
     """
     connection, cursor = conn
-    use_cases = [activities.auth_ok, activities.auth_ok, activities.auth_nok]
+    use_cases = [
+        activities.auth_ok, activities.auth_ok, activities.auth_ok,
+        activities.auth_nok,
+        activities.access_nok
+    ]
     start_ts = datetime.datetime.fromisoformat(user[2])
     start_ts = start_ts + datetime.timedelta(minutes=1)
     
