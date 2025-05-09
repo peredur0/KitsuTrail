@@ -206,3 +206,26 @@ Cas à générer:
 Pour faciliter la génération des logs j'ai organisé un peu mieux les modules dans la parte bdd sqlite.
 
 Il me reste à traiter uniquement le cas ou l'accès échoue directement parce que l'utilisateur n'existe pas ou est bloqué sur la plateforme.
+
+## 2025-05-09 Fin de la génération d'activité
+Au bout de plusieurs jours de réflexion, j'ai enfin terminer le travail sur la génération automatique d'activité pour les traces d'audit.
+
+Dans une premier temps, j'ai rapproché les créations d'utilisateurs, de plusieurs années à quelques mois.
+Pour la partie développement c'est amplement suffisant.
+
+L'initialisation de la table d'audit se déroule en plusieurs temps:
+1. Génération des logs de création des utilisateurs, avec la date created_at dans la table user
+2. Génération des logs de création de providers
+    Le premier provider est systématiquement créé à minuit la veille de la création du premier utilisateur.
+    Cela permet d'éviter des incohérences avec un SP utilisé avant sa création.
+    J'ai ajouté un delta de 30 minutes entre chaque nouvelle création. Techniquement aucun provider ne sera créé après le premier utilisateur
+3. Génération des logs d'activité par utilisateur
+    - L'activité de chaque utilisateur commencera 1 minute après sa création (created_at)
+    - La fréquence d'activité devrait être plus forte en jours de semaine entre 6h et 10h et entre 13h et 15h. Une activité toutes les 1 à 5 minutes contre toutes les 1 à 3 heures hors de ces période. Cela devrait simuler une activité de travail journalière et hebdomadaire.
+    - Il y a 3 chances sur 5 que l'authentification se passe bien.
+4. Génération de logs de monitoring
+    - Il arrive parfois que des clients souhaitent monitoring la présence du service d'authentification en utilisant des comptes inconnu à interval régulier. Il y a donc 3 user_inconnu de la plateforme que tentent une authentification toutes les 5 minutes
+
+Dans tous les cas, la génération d'activité ne va pas plus loin que le moment où le processus a été lancé.
+
+> Prochaine étape, développer la partie API pour la récupération des données d'audit. Je peux éventuellement penser à ajouter un module de stats dans l'API

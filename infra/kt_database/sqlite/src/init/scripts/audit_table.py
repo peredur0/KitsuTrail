@@ -47,6 +47,7 @@ def init_table(conn) -> None:
     cursor.execute(f'CREATE INDEX idx_result ON {AUDIT_TABLE}(result)')
     cursor.execute(f'CREATE INDEX idx_user_id ON {AUDIT_TABLE}(user_id)')
     cursor.execute(f'CREATE INDEX idx_provider_id ON {AUDIT_TABLE}(provider_id)')
+    cursor.execute(f'CREATE INDEX idx_provider_name ON {AUDIT_TABLE}(provider_name)')
     cursor.execute(f'CREATE INDEX idx_provider_type ON {AUDIT_TABLE}(provider_type)')
     cursor.execute(f'CREATE INDEX idx_provider_protocol ON {AUDIT_TABLE}(provider_protocol)')
 
