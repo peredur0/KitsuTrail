@@ -7,7 +7,7 @@ import logging
 
 from typing import Annotated
 from sqlmodel import Session, select
-from fastapi import APIRouter, Depends, HTTPException
+from fastapi import APIRouter, Depends
 
 from utils.sqlite_utils import get_session, check_required_tables
 from utils.check_utils import check_accept_json
@@ -22,7 +22,11 @@ _router = APIRouter(
 Session_dep = Annotated[Session, Depends(get_session)]
 
 # --- Get IDP
-@_router.get('/idp')
+@_router.get(
+        '/idp',
+        dependencies=[Depends(check_accept_json)],
+        response_model=list[Provider]
+)
 def list_idp(session: Session_dep):
     return session.exec(select(Provider).where(Provider.type == 'idp')).all()
 
