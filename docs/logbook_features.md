@@ -251,7 +251,7 @@ Pour celui là, je pense utiliser des informations de requêtes dans le body en 
 ```json
 {
     "filter": {
-        "timestamp": {
+        "time_range": {
             "start": "YYYY-MM-DD HH:MM:SS",
             "end": "YYYY-MM-DD HH:MM:SS",
         },
@@ -260,7 +260,6 @@ Pour celui là, je pense utiliser des informations de requêtes dans le body en 
     },
     "per_page": 50,
     "page": 2,
-    "fields": ["timestamp", "user_id", "provider_type", "provider_name"]
 } 
 ``` 
 Cela va donner la requête SQL suivante
@@ -282,3 +281,9 @@ Notes:
 - Il faudra que je fasse attention à la gestion de la casse.
 
 Petit détail pour l'utilisation d'un ORM via SQLAlchemy, il faut obligatoirement une clé primaire, le grand gagnant est audit_id.
+
+La partie récupération des audits backend est terminée.
+J'ai majoritairement utilisé le BaseModel de `pydantic` pour construire les objets.
+Cet outil semble assez puissant pour ajouter une vérification de type et la construction d'objet avec des schéma de données bien définissable.
+
+Prochaine étape récupérer la liste des audit log dans l'interface graphique.

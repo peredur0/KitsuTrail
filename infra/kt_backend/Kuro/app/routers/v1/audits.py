@@ -7,11 +7,11 @@ import logging
 
 from typing import Annotated
 from sqlmodel import Session, select
-from fastapi import APIRouter, Depends
+from fastapi import APIRouter, Depends, HTTPException
 
 from utils.sqlite_utils import get_session, check_required_tables
 from utils.check_utils import check_accept_json
-from models.audit_log import AuditLog
+from models.audit_log import AuditLog, AuditFilter
 
 logger = logging.getLogger('uvicorn.error')
 
@@ -21,14 +21,45 @@ _router = APIRouter(
 )
 Session_dep = Annotated[Session, Depends(get_session)]
 
+FILTER_FIELDS = [
+    'trace_id', 'action', 'result', 'user_id',
+    'provider_id', 'provider_name', 'provider_type',
+    'provider_protocol'
+]
+
+
 # --- Get entries
-@_router.get(
+@_router.post(
     '/',
     dependencies=[Depends(check_accept_json)],
     response_model=list[AuditLog]
 )
-def get_entries():
-    pass
+def get_entries(filter_body: AuditFilter, session: Session_dep):
+    query = select(AuditLog)
+
+    filter = filter_body.filter
+
+    time_range = getattr(filter, 'time_range', None)
+    if not time_range:
+        raise HTTPException(status_code=400, detail='Missing time_range field')
+    try:
+        query = query.where(
+            AuditLog.timestamp >= time_range.start,
+            AuditLog.timestamp <= time_range.end
+        )
+    except AttributeError:
+        raise HTTPException(status_code=400, detail='Missing start or end in time_range')
+
+    for field in FILTER_FIELDS:
+        values = getattr(filter, field, None)
+        if values:
+            query = query.where(getattr(AuditLog, field).in_(values))
+    
+    offset = (filter_body.page - 1) * filter_body.per_page
+    query = query.offset(offset).limit(filter_body.per_page)
+    
+    return session.exec(query).all()
+
 
 # === Functions === #
 def init_router():
