@@ -22,7 +22,7 @@ def init_table(conn) -> None:
     cursor.execute(f'''
         CREATE TABLE IF NOT EXISTS {AUDIT_TABLE}(
             timestamp DATETIME NOT NULL,
-            audit_id TEXT NOT NULL,
+            audit_id TEXT PRIMARY KEY,
             user_id TEXT,
             user_login TEXT,
             provider_type STRING,

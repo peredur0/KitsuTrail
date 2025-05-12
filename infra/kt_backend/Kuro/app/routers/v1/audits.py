@@ -1,0 +1,42 @@
+# coding: utf-8
+"""
+Module to handle API calls for audit logs
+"""
+
+import logging
+
+from typing import Annotated
+from sqlmodel import Session, select
+from fastapi import APIRouter, Depends
+
+from utils.sqlite_utils import get_session, check_required_tables
+from utils.check_utils import check_accept_json
+from models.audit_log import AuditLog
+
+logger = logging.getLogger('uvicorn.error')
+
+_router = APIRouter(
+    prefix='/api/v1/audit',
+    tags=['Audit']
+)
+Session_dep = Annotated[Session, Depends(get_session)]
+
+# --- Get entries
+@_router.get(
+    '/',
+    dependencies=[Depends(check_accept_json)],
+    response_model=list[AuditLog]
+)
+def get_entries():
+    pass
+
+# === Functions === #
+def init_router():
+    try:
+        check_required_tables(['audit_logs'])
+    except RuntimeError as err:
+        logger.critical('Failed to load module audit_logs - %s', err)
+        raise err
+
+    logger.info('Module ready - audit logs (v1)')
+    return _router

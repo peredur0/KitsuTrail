@@ -229,3 +229,56 @@ L'initialisation de la table d'audit se déroule en plusieurs temps:
 Dans tous les cas, la génération d'activité ne va pas plus loin que le moment où le processus a été lancé.
 
 > Prochaine étape, développer la partie API pour la récupération des données d'audit. Je peux éventuellement penser à ajouter un module de stats dans l'API
+
+## 2025-05-12 Accès aux audit long depuis l'API
+Pour pouvoir accéder aux log d'audit depuis l'interface graphique il va falloir développer le endpoint correspondant.
+
+La recherche doit être possible selon les index mis en place dans la base. On pourra alors chercher sur les champs suivants:
+- timestamp: entre 2 dates heures
+- *Valeurs dans une liste*:
+    - category
+    - trace_id
+    - action
+    - result
+    - user_id
+    - provider_id
+    - provider_name
+    - provider_type
+    - provider_protocol
+Si présent chaque field sera ajouter avec un AND dans le WHERE de la requête SQL. Afin de limiter également les résultats je pense ajouter les informations limit et offset pour tenter de gérer la pagination mais en optionnel.
+
+Pour celui là, je pense utiliser des informations de requêtes dans le body en json, qui aura a peut près cette forme
+```json
+{
+    "filter": {
+        "timestamp": {
+            "start": "YYYY-MM-DD HH:MM:SS",
+            "end": "YYYY-MM-DD HH:MM:SS",
+        },
+        "category": ["autorisation"],
+        "provider_protocol": ["SAML", "OIDC"]
+    },
+    "per_page": 50,
+    "page": 2,
+    "fields": ["timestamp", "user_id", "provider_type", "provider_name"]
+} 
+``` 
+Cela va donner la requête SQL suivante
+```sql
+SELECT
+    *
+FROM 
+    audit_logs
+WHERE
+    timestamp >= "YYYY-MM-DD HH:MM:SS" AND  -- start
+    timestamp <= "YYYY-MM-DD HH:MM:SS" AND  -- end
+    category in ("autorisation") AND
+    provider_type in ("SAML", "OIDC")
+LIMIT 50
+OFFSET 100 -- per_page * page
+```
+
+Notes:
+- Il faudra que je fasse attention à la gestion de la casse.
+
+Petit détail pour l'utilisation d'un ORM via SQLAlchemy, il faut obligatoirement une clé primaire, le grand gagnant est audit_id.
