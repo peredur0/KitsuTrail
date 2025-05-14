@@ -287,3 +287,17 @@ J'ai majoritairement utilisé le BaseModel de `pydantic` pour construire les obj
 Cet outil semble assez puissant pour ajouter une vérification de type et la construction d'objet avec des schéma de données bien définissable.
 
 Prochaine étape récupérer la liste des audit log dans l'interface graphique.
+
+## 2025-05-13 Affichage des logs dans le Tenko (front)
+La récupération des logs d'audit reprend les principes déjà mis en place pour la récupération des users et des providers.
+
+Pas de nouveauté de ce point de vue.
+
+Pour le moment le filtre est complètement intégrer dans la requête de base.
+La prochaine étape sera de faire en sorte que ce filtre soit plus personnalisable.
+
+## 2025-05-14 Généralisation du filtre des log d'audit
+Pour le filtre, j'ai pu convertir les modèles du backend en interface pour le front.
+
+Prochaine étape faire le tableau, je pense que je vais utiliser le composant table de material/@angular
+[https://material.angular.dev/components/table/overview](https://material.angular.dev/components/table/overview)

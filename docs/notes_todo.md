@@ -10,6 +10,9 @@ Ce document reprend certains éléments qui ont été laissé de coté pour le m
 * Ajouter une page pour l'erreur 404
     - 2025/05/01 > ?
 
+* Globaliser le host:port pour l'accès API
+    - 2025/05/14 > ?
+
 **feature/users**
 
 * Amélioration de la page de chaque utilisateur
