@@ -301,3 +301,29 @@ Pour le filtre, j'ai pu convertir les modèles du backend en interface pour le f
 
 Prochaine étape faire le tableau, je pense que je vais utiliser le composant table de material/@angular
 [https://material.angular.dev/components/table/overview](https://material.angular.dev/components/table/overview)
+
+Le tableau a été réalisé de manière complètement statique.
+J'ai eu un peu de mal à utiliser mon observable comme source de données pour le tableau.
+`[dataSource]` de `mat-table` n'accepte pas les tableaux vides. Par définition un observable est d'abord vide.
+La solution est de s'abonner à l'observable dans le html avec async et un as le tout encapsuler avec un ngIf.
+```     
+<ng-container *ngIf="auditLogs$ | async as auditLogs">
+```     
+
+J'ai pu uniformiser le format d'affichage des timestamp avec DatePipe.
+
+## 2025-05-15 Réflexion sur les tableaux
+Techniquement, j'aimerais pouvoir ajouter un tableau d'activités dans la page de chaque utilisateur et de chaque provider.
+Pour le tableau dans le Journal d'audit, j'aurais besoin d'ajouter:
+- une gestion des dates/heures
+- la définition des filtres
+- contrôle de la pagination
+- affichage de certaines colonnes
+
+De base, `@angular/material` permet d'utiliser une source `MatTableDataSource` qui pour permettre de gérer facilement les filtres, et la pagination.
+Mais pour ce faire il faut charger l'ensemble des données. Dans notre cas, on gère ces éléments dans le backend. 
+Ca ne marche dont pas pour nous ici.
+
+J'ai vu qu'il est possible de gérer dynamiquement l'affichage des colonnes via une boucle for.
+A ce stade, je réfléchis comment déléguer les opérations du tableau à un module dédié et réutilisable.
+Je peux éventuellement utiliser les services et les signaux pour faire passer les informations des modules vers le tableau.
