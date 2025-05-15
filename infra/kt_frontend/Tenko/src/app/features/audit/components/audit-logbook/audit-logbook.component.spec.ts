@@ -1,6 +1,6 @@
 import { ComponentFixture, TestBed } from '@angular/core/testing';
 
-import { AuditLogListComponent } from './audit-log-list.component';
+import { AuditLogListComponent } from './audit-logbook.component';
 
 describe('AuditLogListComponent', () => {
   let component: AuditLogListComponent;
