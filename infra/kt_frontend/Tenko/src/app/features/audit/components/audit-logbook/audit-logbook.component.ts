@@ -1,5 +1,5 @@
 import { Component, inject, OnInit } from '@angular/core';
-import { CommonModule } from '@angular/common';
+import { CommonModule, DatePipe } from '@angular/common';
 import { MatTableModule } from '@angular/material/table' 
 
 import { HeaderService } from '../../../../core/services/header.service';
@@ -12,12 +12,13 @@ import { AuditFilter } from '../../models/filter.model';
   selector: 'app-audit-logbook',
   imports: [
     CommonModule,
+    DatePipe,
     MatTableModule
   ],
   templateUrl: './audit-logbook.component.html',
   styleUrl: './audit-logbook.component.scss'
 })
-export class AuditLogListComponent implements OnInit {
+export class AuditLogBookComponent implements OnInit {
   private headerService = inject(HeaderService);
   private auditService = inject(AuditService);
 
