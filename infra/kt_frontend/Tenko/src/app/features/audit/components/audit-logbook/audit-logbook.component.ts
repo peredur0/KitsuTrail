@@ -1,4 +1,6 @@
-import { Component, inject, OnInit } from '@angular/core';
+import { Component, inject, OnDestroy, OnInit } from '@angular/core';
+import { MatButtonModule } from '@angular/material/button';
+import { MatDialog } from '@angular/material/dialog';
 
 import { HeaderService } from '../../../../core/services/header.service';
 import { AuditFilter } from '../../models/filter.model';
@@ -7,12 +9,13 @@ import { AuditTableComponent } from '../audit-table/audit-table.component';
 @Component({
   selector: 'app-audit-logbook',
   imports: [
-    AuditTableComponent
+    AuditTableComponent,
+    MatButtonModule
   ],
   templateUrl: './audit-logbook.component.html',
   styleUrl: './audit-logbook.component.scss'
 })
-export class AuditLogBookComponent implements OnInit {
+export class AuditLogBookComponent implements OnInit, OnDestroy {
   private headerService = inject(HeaderService);
 
   auditFilter!: AuditFilter;
@@ -30,4 +33,10 @@ export class AuditLogBookComponent implements OnInit {
       }
     };
   }
+
+  openFilter(): void {}
+
+  openColumns(): void {}
+
+  ngOnDestroy(): void {}
 }

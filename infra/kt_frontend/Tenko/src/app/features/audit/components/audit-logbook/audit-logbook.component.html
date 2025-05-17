@@ -1,1 +1,8 @@
-<app-audit-table [auditFilter]="auditFilter" [selectedColumns]="selectedColumns"/>
+<div class="audit-toolbar">
+    <button mat-raised-button (click)="openFilter()">Filter</button>
+    <button mat-raised-button (click)="openColumns()">Columns</button>
+</div>
+<hr />
+<div class="audit-table">
+    <app-audit-table [auditFilter]="auditFilter" [selectedColumns]="selectedColumns"/>
+</div>

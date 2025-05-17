@@ -1,5 +1,5 @@
 import { Component, inject, Input, OnChanges, SimpleChanges } from '@angular/core';
-import { CommonModule, DatePipe } from '@angular/common';
+import { CommonModule } from '@angular/common';
 import { MatTableModule } from '@angular/material/table';
 import { Observable } from 'rxjs';
 
@@ -12,7 +12,6 @@ import { AuditColumn } from '../../models/columns.model';
   selector: 'app-audit-table',
   imports: [
     CommonModule,
-    DatePipe,
     MatTableModule
   ],
   templateUrl: './audit-table.component.html',
