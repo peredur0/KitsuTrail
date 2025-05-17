@@ -1,5 +1,5 @@
 export class AuditEntry {
-    timestamp?: Date;
+    timestamp!: Date;
     audit_id?: string;
     user_id?: string;
     user_login?: string;

@@ -1,37 +1,26 @@
 import { Component, inject, OnInit } from '@angular/core';
-import { CommonModule, DatePipe } from '@angular/common';
-import { MatTableModule } from '@angular/material/table' 
 
 import { HeaderService } from '../../../../core/services/header.service';
-import { AuditService } from '../../services/audit.service';
-import { Observable } from 'rxjs';
-import { AuditEntry } from '../../models/audit.model';
 import { AuditFilter } from '../../models/filter.model';
+import { AuditTableComponent } from '../audit-table/audit-table.component';
 
 @Component({
   selector: 'app-audit-logbook',
   imports: [
-    CommonModule,
-    DatePipe,
-    MatTableModule
+    AuditTableComponent
   ],
   templateUrl: './audit-logbook.component.html',
   styleUrl: './audit-logbook.component.scss'
 })
 export class AuditLogBookComponent implements OnInit {
   private headerService = inject(HeaderService);
-  private auditService = inject(AuditService);
 
-  auditLogs$!: Observable<AuditEntry[]>;
-  auditFilter?: AuditFilter;
-
-  displayColumns: string[] = [
-    'timestamp', 'audit_id', 'action', 'user_login', 'result'
-  ];
+  auditFilter!: AuditFilter;
+  selectedColumns!: string[];
 
   ngOnInit(): void {    
     this.headerService.setSubtitle("Journal d'audit")
-
+    this.selectedColumns = ['timestamp', 'action', 'user_login', 'result'];
     this.auditFilter = {
       filter: {
         time_range: {
@@ -39,7 +28,6 @@ export class AuditLogBookComponent implements OnInit {
           end: '2025-05-10 00:00:00'
         }
       }
-    }
-    this.auditLogs$ = this.auditService.getAuditLogs(this.auditFilter)
+    };
   }
 }

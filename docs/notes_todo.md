@@ -41,6 +41,11 @@ Ce document reprend certains éléments qui ont été laissé de coté pour le m
 * Ajouter la possibilité d'ajouter/supprimer des fournisseurs 
     - 2025/04/30 > ?
 
+**feature/audit**
+
+* Gérer le cas ou l'id de la colonne n'est pas définie dans selectedColumns
+    - 2025/05/17 > ?
+
 ## Backend
 
 * Prise en charge de l'authentification
@@ -52,7 +57,10 @@ Ce document reprend certains éléments qui ont été laissé de coté pour le m
 * Vérifier la clause limit pour la récupération des audits
     - 2025/05/12 > ?
 
-## Infrastructure
+* Retourner le nombre d'entrée et la nombre de page
+    - 2025/05/17 > ?
+
+# Infrastructure
 * Mise en place d'un reverse proxy pour https
     - 2025/04/30 > ?
 * Mise en place d'un déploiement de production via docker compose

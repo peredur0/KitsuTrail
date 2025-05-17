@@ -1,4 +1,4 @@
-import { Component, inject, Input, OnDestroy, OnInit, Signal } from '@angular/core';
+import { Component, inject, Input, OnDestroy, OnInit } from '@angular/core';
 import { CommonModule } from '@angular/common';
 import { map, Observable, Subject, takeUntil } from 'rxjs';
 

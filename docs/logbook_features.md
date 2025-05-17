@@ -327,3 +327,12 @@ Ca ne marche dont pas pour nous ici.
 J'ai vu qu'il est possible de gérer dynamiquement l'affichage des colonnes via une boucle for.
 A ce stade, je réfléchis comment déléguer les opérations du tableau à un module dédié et réutilisable.
 Je peux éventuellement utiliser les services et les signaux pour faire passer les informations des modules vers le tableau.
+
+##  2025-05-17 Travail sur le tableau
+Le tableau d'audit a été déplacé dans son propre composant.
+En argument il va prendre le filtre à appliquer ainsi que les colonnes à afficher. Ces éléments seront géré directement dans les composants appelant le tableau.
+
+Autre modification majeure. Maintenant le tableau contient toutes les colonnes retournées par l'appel API. Elles sont toutes initialisées via une boucle for mais seules celles dont l'id est dans selectedColumns sera affichée.
+
+Dans le cas de changement de champs cela implique de modifier `columns` dans `audit-table.component.ts`.
+
