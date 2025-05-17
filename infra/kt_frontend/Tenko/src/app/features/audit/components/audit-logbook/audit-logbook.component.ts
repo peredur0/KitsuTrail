@@ -1,6 +1,5 @@
 import { Component, inject, OnDestroy, OnInit } from '@angular/core';
 import { MatButtonModule } from '@angular/material/button';
-import { MatDialog } from '@angular/material/dialog';
 
 import { HeaderService } from '../../../../core/services/header.service';
 import { AuditFilter } from '../../models/filter.model';

@@ -27,22 +27,22 @@ export class AuditTableComponent implements OnChanges{
   ];
 
   columns: AuditColumn<AuditEntry>[] = [
-    new AuditColumn('timestamp', 'Date', (e) => new Date(e.timestamp).toLocaleString()),
+    new AuditColumn('timestamp', 'Date/heure', (e) => new Date(e.timestamp).toLocaleString()),
     new AuditColumn('audit_id', 'Audit ID', 'audit_id'),
-    new AuditColumn('user_id', 'User ID', 'user_id'),
+    new AuditColumn('user_id', 'ID Utilisateur', 'user_id'),
     new AuditColumn('user_login', 'Login', 'user_login'),
-    new AuditColumn('provider_type', 'Provider type', 'provider_type'),
-    new AuditColumn('provider_id', 'Provider id', 'provider_id'),
-    new AuditColumn('provider_name', 'Provider name', 'provider_name'),
+    new AuditColumn('provider_type', 'Type fournisseur', 'provider_type'),
+    new AuditColumn('provider_id', 'ID Fournisseur', 'provider_id'),
+    new AuditColumn('provider_name', 'Fournisseur', 'provider_name'),
     new AuditColumn('provider_protocol', 'Protocol', 'provider_protocol'),
     new AuditColumn('trace_id', 'Trace', 'trace_id'),
     new AuditColumn('source_ip', 'IP', 'source_ip'),
-    new AuditColumn('source_admin', 'Requester', 'source_admin'),
-    new AuditColumn('category', 'Event category', 'category'),
+    new AuditColumn('source_admin', 'Initiateur', 'source_admin'),
+    new AuditColumn('category', "Type d'évènement", 'category'),
     new AuditColumn('action', 'Action', 'action'),
-    new AuditColumn('result', 'Result', 'result'),
-    new AuditColumn('reason', 'Reason', 'reason'),
-    new AuditColumn('info', 'More info', 'info')
+    new AuditColumn('result', 'Résultat', 'result'),
+    new AuditColumn('reason', 'Raison', 'reason'),
+    new AuditColumn('info', "Plus d'info", 'info')
   ];
   
   ngOnChanges(changes: SimpleChanges): void {
