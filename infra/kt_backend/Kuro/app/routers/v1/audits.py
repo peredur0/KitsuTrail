@@ -13,6 +13,8 @@ from utils.sqlite_utils import get_session, check_required_tables
 from utils.check_utils import check_accept_json
 from models.audit_log import AuditLog, AuditFilter
 
+from sqlalchemy.dialects import postgresql
+
 logger = logging.getLogger('uvicorn.error')
 
 _router = APIRouter(
@@ -24,7 +26,7 @@ Session_dep = Annotated[Session, Depends(get_session)]
 FILTER_FIELDS = [
     'trace_id', 'action', 'result', 'user_id',
     'provider_id', 'provider_name', 'provider_type',
-    'provider_protocol'
+    'provider_protocol', 'category'
 ]
 
 
@@ -57,6 +59,10 @@ def get_entries(filter_body: AuditFilter, session: Session_dep):
     
     offset = (filter_body.page - 1) * filter_body.per_page
     query = query.offset(offset).limit(filter_body.per_page)
+
+    compiled = query.compile(dialect=postgresql.dialect(),
+                             compile_kwargs={"literal_binds": True})
+    logger.debug(compiled)
     
     return session.exec(query).all()
 

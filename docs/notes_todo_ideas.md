@@ -1,4 +1,4 @@
-# Todo list
+# Todo & Ideas list
 
 Ce document reprend certains éléments qui ont été laissé de coté pour le moment car jugé comme non prioritaire.
 
@@ -45,6 +45,9 @@ Ce document reprend certains éléments qui ont été laissé de coté pour le m
 
 * Gérer le cas ou l'id de la colonne n'est pas définie dans selectedColumns
     - 2025/05/17 > ?
+
+* Ajouter un marqueur dans le filtre est défini dans `audit-logbook`
+    - 2025/05/20 > ?
 
 ## Backend
 

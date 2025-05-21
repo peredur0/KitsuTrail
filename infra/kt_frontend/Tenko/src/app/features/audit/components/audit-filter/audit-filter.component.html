@@ -1,0 +1,23 @@
+<h2 mat-dialog-title>Filtres d'audits</h2>
+<mat-dialog-content>
+    <h3>Sélections</h3>
+    <form [formGroup]="filterForm">
+        <mat-form-field>
+            <mat-label>Catégories</mat-label>
+            <mat-select id="categories" formControlName="categories" multiple>
+                <mat-option *ngFor="let cat of availableCategories" [value]="cat">{{ cat }}</mat-option>
+            </mat-select>
+        </mat-form-field>
+        <mat-form-field>
+            <mat-label>Actions</mat-label>
+            <mat-select id="actions" formControlName="actions" multiple>
+                <mat-option *ngFor="let action of availableActions" [value]="action">{{ action }}</mat-option>
+            </mat-select>
+        </mat-form-field>
+    </form>
+</mat-dialog-content>
+<mat-dialog-actions align="end">
+    <button mat-button class="action-button" (click)="onNoClick()">Annuler</button>
+    <button mat-button class="action-button" (click)="onReset()">Réinitialiser</button>
+    <button mat-button class="action-button" (click)="onFilter()">Appliquer</button>
+</mat-dialog-actions>

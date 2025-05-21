@@ -1,5 +1,3 @@
-<div *ngIf="(auditLogs$ | async)?.length === 0">No DATA</div>
-
 <ng-container *ngIf="auditLogs$ | async as auditLogs">
     <table mat-table [dataSource]="auditLogs" class="mat-elevation-z8">
         @for (column of columns; track column) {
@@ -12,3 +10,5 @@
         <tr mat-row *matRowDef="let entry; columns: selectedColumns"></tr>
     </table>
 </ng-container>
+
+<div class="message-containter" *ngIf="(auditLogs$ | async)?.length === 0">No DATA</div>

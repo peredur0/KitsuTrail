@@ -32,6 +32,7 @@ class AuditLog(SQLModel, table=True):
 class QueryFilter(BaseModel):
     time_range: TimeRangeFilter
     trace_id: list[str] | None = None
+    category: list[str] | None = None
     action: list[str] | None = None
     result: list[str] | None = None
     user_id: list[str] | None = None

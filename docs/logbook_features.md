@@ -336,3 +336,150 @@ Autre modification majeure. Maintenant le tableau contient toutes les colonnes r
 
 Dans le cas de changement de champs cela implique de modifier `columns` dans `audit-table.component.ts`.
 
+## 2025-05-20 Mise en place de la sélection du filtre (journal d'audit)
+La session de travail a porté sur la mise en place d'un filtre coté frontend dans la page du journal d'audit.
+Le but était de permettre à un utilisateur de sélectionner des filtres via l'interface et de mettre à jour le tableau des logs en fonction.
+
+La page parente est dans `audit-logbook.component.ts` où on avait déjà ajouté 2 boutons (Filtres & Colonnes).
+Ici les actions se portent que sur Filtres. Mais le même principe sera appliquer pour Colonnes.
+
+Le bouton Filter déclenche l'ouverture d'un `dialog` contenant le formulaire `audit-filter.component.ts`.
+A la fermeture du formulaire on récupère les nouvelles valeurs et on met à jour le filtre.
+Le filtre est passé en input au composant dans `audit-table.component.ts`. Ce composant écoute les changement du filtre pour refaire si besoin la requête au backend.
+Temps que l'utilisateur est sur le journal d'audit, on conserve la valeur du filtre appliqué et on le redonne au formulaire pour afficher les paramètres courants.
+
+Au niveau du code ça donne les éléments suivants.
+
+Dans `audit-logbook.component.ts`:
+```typescript
+export class AuditLogBookComponent implements OnInit{
+  //...
+  readonly dialog = inject(MatDialog);
+
+  auditFilter!: AuditFilter;
+
+  currentFilter: FilterFormData = {     // Interface FilterFormData dédiée pour les valeurs du formulaire
+    actions: [],                        // filtre vide
+    categories: []                      // ajouter dessous les nouveaux champs à filtrer
+  }
+  //...
+  ngOnInit(): void {    
+    //...
+    this.buildAuditFilter();    // Initialisation du filtre vide au démarrage
+  }
+
+  private buildAuditFilter() { // Fonction pour la construction du filtre
+    const filterData = this.currentFilter;
+    this.auditFilter = {
+      filter: {
+        time_range: {
+          start: '2025-05-01 00:00:00',
+          end: '2025-05-10 00:00:00'
+        },
+        action: filterData.actions,
+        category: filterData.categories
+      }
+    }
+  }
+
+  openFilter(): void {
+    const dialogRef = this.dialog.open(AuditFilterComponent, {
+      data: this.currentFilter  // Envoi des paramètres du filtres présent à dialog
+    });
+
+    dialogRef.afterClosed().subscribe((result: FilterFormData | undefined) => {
+      if (result) {     // Récupération des résultat à la fermeture du formulaire
+        this.currentFilter = result;
+        this.buildAuditFilter()
+      }
+    })
+  }
+}
+```
+
+Dans `filter.model.ts`:
+```typescript
+export interface FilterFormData {
+    actions: string[];
+    categories: string[]; // ajouter dessous les nouveaux champs à filtrer
+}
+```
+
+Dans `audit-filter.component.ts`:
+```typescript
+export class AuditFilterComponent implements OnInit{
+  filterForm!: FormGroup;
+  availableActions = ['access', 'authentication', 'create_user'];
+  availableCategories = ['autorisation', 'management'];
+  
+  readonly dialogRef = inject(MatDialogRef<AuditFilterComponent>);
+  private formBuilder = inject(FormBuilder);
+  private filterData: FilterFormData | null = inject(MAT_DIALOG_DATA); // Récupération du currentFilter
+
+  ngOnInit(): void {
+    this. filterForm = this.formBuilder.group({
+      actions: [this.filterData?.actions ?? []],        // Initialisation des valeurs (currentFilter)
+      categories: [this.filterData?.categories ?? []]
+    });
+  }
+
+  onNoClick(): void {
+    this.dialogRef.close();
+  }
+
+  onFilter(): void {
+    const actions = this.filterForm.get('actions')?.value;
+    const categories = this.filterForm.get('categories')?.value;
+    this.dialogRef.close({      // Retourner les données à la page parente
+      actions: actions,
+      categories: categories
+    });
+  }
+
+  onReset(): void {
+    this.filterData = null;     // vider filter data
+    this.filterForm.reset();    // Reset le formulaire
+    this.dialogRef.close({      // Retourner les données à l'appelant
+      actions: [],
+      categories: []
+    });
+  }
+}
+```
+
+Pour rappel, le filtre dans `audit-table.component.ts` est utilisé dans un `ngOnChanges` qui va réagir aux changements de la valeur d'auditFilter
+```typescript
+export class AuditTableComponent implements OnChanges{
+  private auditService = inject(AuditService);
+  auditLogs$!: Observable<AuditEntry[]>;
+  
+  @Input() auditFilter!: AuditFilter
+  //...
+  ngOnChanges(changes: SimpleChanges): void {
+    if (changes['auditFilter'] && this.auditFilter) {
+      this.auditLogs$ = this.auditService.getAuditLogs(this.auditFilter)
+    }
+  }
+}
+```
+
+Initialement, je n'avais pas prévu de mettre en place un filtre sur les catégories, mais l'ajouter m'a permis de me rendre compte de toutes les modifications à mettre en oeuvre dans ce cas.
+- Frontend - `audit-filter`:
+    - hmtl: `form-field`
+    - ts: `filterForm`
+    - ts: fonctions appelées par les boutons
+- Frontend - `audit-logbook`:
+    - ts: `currentFilter`
+    - ts: `buildFilter`
+- Frontend - `filter.models`:
+    - ts: `FilterFormData`
+- Backend - `models`:
+    - py: `QueryFilter`
+- Backend - `audit`:
+    - py: `FILTER_FIELDS`
+
+
+Prochaines étapes: 
+1. Mettre en place le filtering pour tous les champs avec index
+2. Permettre la sélection des colonnes
+3. Gérer la pagination
