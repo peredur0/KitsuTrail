@@ -483,3 +483,38 @@ Prochaines étapes:
 1. Mettre en place le filtering pour tous les champs avec index
 2. Permettre la sélection des colonnes
 3. Gérer la pagination
+
+## 2025-05-21 Mise en place de la sélection des colonnes
+Documentations:
+- [https://material.angular.dev/components/checkbox/examples](https://material.angular.dev/components/checkbox/examples)
+- [https://angular.fr/reactive-forms/form-array](https://angular.fr/reactive-forms/form-array)
+
+
+J'ai cherché un moyen d'afficher via une boucle for les différentes colonnes possibles.
+L'utilisation de form-array ne m'a pas convaincu.
+Cela correspond plus à la génération d'une liste dynamique dans le cadre de l'interaction avec l'utilisateur.
+Je me suis donc rabattu sur la création d'une liste en dur. Cette liste est utilisée pour générer dynamiquement les formControl. Petit bonus la liste des colonnes sélectionnée est conservée au niveau du parent, on peut donc la réinjecter à l'ouverture du dialog.
+
+```typescript
+ngOnInit(): void {
+  const controls: Record<string, FormControl<boolean|null>> = this.availableColumns.reduce(
+    (acc, column) => {
+      acc[column.id] = new FormControl(!!this.columnsData.includes(column.id));
+      return acc;
+    },
+    {} as Record<string, FormControl<boolean|null>>
+  );
+  this.columnForm = this.formBuilder.group(controls);    
+}
+```
+
+La conversion de l'objet retourné par le formulaire se fait avec l'instruction suivante:
+```typescript
+onSubmit(): void {
+  const selectedColumns = Object.entries(this.columnForm.value)
+    .filter(([_, isChecked]) => isChecked)
+    .map(([columnId]) => columnId)    
+  
+    this.dialogRef.close(selectedColumns);
+}
+```
