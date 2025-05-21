@@ -6,6 +6,7 @@ import { HeaderService } from '../../../../core/services/header.service';
 import { AuditFilter, FilterFormData } from '../../models/filter.model';
 import { AuditTableComponent } from '../audit-table/audit-table.component';
 import { AuditFilterComponent } from '../audit-filter/audit-filter.component';
+import { ColumnsFilterComponent } from '../columns-filter/columns-filter.component';
 
 @Component({
   selector: 'app-audit-logbook',
@@ -28,10 +29,11 @@ export class AuditLogBookComponent implements OnInit{
   }
 
   selectedColumns!: string[];
+  currentColumns: string[] = ['timestamp', 'action', 'user_login', 'result']
 
   ngOnInit(): void {    
     this.headerService.setSubtitle("Journal d'audit");
-    this.selectedColumns = ['timestamp', 'action', 'user_login', 'result'];
+    this.buildColumnsSelection();
     this.buildAuditFilter();
   }
 
@@ -57,11 +59,26 @@ export class AuditLogBookComponent implements OnInit{
     dialogRef.afterClosed().subscribe((result: FilterFormData | undefined) => {
       if (result) {
         this.currentFilter = result;
-        this.buildAuditFilter()
+        this.buildAuditFilter();
       }
     })
   }
 
-  openColumns(): void {}
+  private buildColumnsSelection () {
+    this.selectedColumns = this.currentColumns;
+  }
+
+  openColumns(): void {
+    const dialogRef = this.dialog.open(ColumnsFilterComponent, {
+      data: this.currentColumns
+    });
+
+    dialogRef.afterClosed().subscribe((result: string[] | undefined) => {
+      if (result) {
+        this.currentColumns = result;
+        this.buildColumnsSelection();
+      }
+    })
+  }
 
 }

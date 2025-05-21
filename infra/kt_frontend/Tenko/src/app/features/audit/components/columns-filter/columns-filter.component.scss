@@ -1,0 +1,18 @@
+mat-dialog-actions {
+    display: flex;
+    flex-direction: row;
+    padding: 16px 24px;
+    gap: 5px;
+}
+
+.action-button {
+    width: 100px;
+    text-align: center;
+    color: black;
+}
+
+.checkbox-grid {
+    display: grid;
+    grid-template-columns: repeat(2, 1fr);
+    gap: 10px;
+}

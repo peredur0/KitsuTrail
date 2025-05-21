@@ -21,10 +21,8 @@ export class AuditTableComponent implements OnChanges{
   private auditService = inject(AuditService);
   auditLogs$!: Observable<AuditEntry[]>;
   
-  @Input() auditFilter!: AuditFilter
-  @Input() selectedColumns?: string[] = [
-    'timestamp', 'audit_id', 'action', 'user_login', 'result'
-  ];
+  @Input() auditFilter!: AuditFilter;
+  @Input() selectedColumns!: string[];
 
   columns: AuditColumn<AuditEntry>[] = [
     new AuditColumn('timestamp', 'Date/heure', (e) => new Date(e.timestamp).toLocaleString()),

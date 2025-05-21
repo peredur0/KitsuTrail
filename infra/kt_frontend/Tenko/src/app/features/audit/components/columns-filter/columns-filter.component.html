@@ -1,0 +1,15 @@
+<h2 mat-dialog-title>Sélection des colonnes</h2>
+<mat-dialog-content>
+    <form [formGroup]="columnForm">
+        <div class="checkbox-grid">
+            @for (column of availableColumns; track column.id){
+                <mat-checkbox [formControlName]="column.id">{{ column.name }}</mat-checkbox>
+            }
+        </div>
+    </form>
+</mat-dialog-content>
+<mat-dialog-actions align="end">
+    <button mat-button class="action-button" (click)="onSubmit()">Appliquer</button>
+    <button mat-button class="action-button" (click)="onNoClick()">Annuler</button>
+    <button mat-button class="action-button" (click)="onReset()">Réinitialiser</button>
+</mat-dialog-actions>

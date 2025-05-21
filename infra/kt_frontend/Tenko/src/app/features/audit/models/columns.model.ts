@@ -12,3 +12,8 @@ export class AuditColumn<T> {
         return String(row[this.accessor])
     }
 }
+
+export interface ColumnSelect {
+    id: string;
+    name: string;
+}

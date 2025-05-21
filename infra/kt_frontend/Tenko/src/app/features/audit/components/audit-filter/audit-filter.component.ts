@@ -6,6 +6,7 @@ import { MatButtonModule } from '@angular/material/button';
 import { MAT_DIALOG_DATA, MatDialogActions, MatDialogContent, MatDialogRef, MatDialogTitle } from '@angular/material/dialog';
 import { MatFormFieldModule } from '@angular/material/form-field';
 import { MatSelectModule } from '@angular/material/select'
+
 import { FilterFormData } from '../../models/filter.model';
 
 @Component({
@@ -33,7 +34,7 @@ export class AuditFilterComponent implements OnInit{
   private filterData: FilterFormData | null = inject(MAT_DIALOG_DATA);
 
   ngOnInit(): void {
-    this. filterForm = this.formBuilder.group({
+    this.filterForm = this.formBuilder.group({
       actions: [this.filterData?.actions ?? []],
       categories: [this.filterData?.categories ?? []]
     });
