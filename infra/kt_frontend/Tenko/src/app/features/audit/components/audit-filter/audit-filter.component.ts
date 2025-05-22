@@ -44,18 +44,20 @@ export class AuditFilterComponent implements OnInit{
 
   readonly separatorKeysCodes: number[] = [ENTER, COMMA];
   readonly filterLogins = signal<string[]>([]);
+  readonly providerNames = signal<string[]>([])
 
   ngOnInit(): void {
     this.filterLogins.set(this.filterData?.user_login ?? []);
+    this.providerNames.set(this.filterData?.provider_name ?? []);
 
     this.filterForm = this.formBuilder.group({
       categories: [this.filterData?.categories ?? []],
       actions: [this.filterData?.actions ?? []],
       results: [this.filterData?.results ?? []],
       trace_id: [this.filterData?.trace_id ?? []],
-      user_login: [this.filterLogins],
+      user_login: [this.filterLogins()],
       user_id: [this.filterData?.user_id ?? []],
-      provider_name: [this.filterData?.provider_name ?? []],
+      provider_name: [this.providerNames()],
       provider_types: [this.filterData?.provider_type ?? []],
       provider_protocols: [this.filterData?.provider_protocol ?? []],
     });
@@ -74,8 +76,8 @@ export class AuditFilterComponent implements OnInit{
       user_login: this.filterForm.get('user_login')?.value,
       user_id: this.filterForm.get('user_id')?.value,
       provider_name: this.filterForm.get('provider_name')?.value,
-      provider_type: this.filterForm.get('provider_type')?.value,
-      provider_protocol: this.filterForm.get('provider_protocol')?.value,
+      provider_type: this.filterForm.get('provider_types')?.value,
+      provider_protocol: this.filterForm.get('provider_protocols')?.value,
     });
   }
 
@@ -84,17 +86,32 @@ export class AuditFilterComponent implements OnInit{
     this.filterForm.reset();
   }
 
-  addLogin(event: MatChipInputEvent): void {
+  addElement(event: MatChipInputEvent, field: string): void {
     const value = (event.value || '').trim();
+
     if (value) {
-      this.filterLogins.update(logins => [...logins, value])
+      if (field === 'login') {
+        this.filterLogins.update(logins => [...logins, value]);
+        this.filterForm.get('user_login')?.setValue(this.filterLogins());
+      } else if (field === 'provider') {
+        this.providerNames.update(names => [...names, value]);
+        this.filterForm.get('provider_name')?.setValue(this.providerNames());
+      } else {
+        throw new Error(`Unknown field ${field} - trying to insert ${value}`)
+      }
     }
     event.chipInput!.clear();
-    this.filterForm.get('user_login')?.setValue(this.filterLogins());
   }
 
-  removeLogin(login: string): void {
-    this.filterLogins.update(logins => logins.filter(l => l !== login));
-    this.filterForm.get('user_login')?.setValue(this.filterLogins());
+  removeElement(value: string, field: string): void {
+    if (field === 'login'){
+      this.filterLogins.update(logins => logins.filter(l => l !== value));
+      this.filterForm.get('user_login')?.setValue(this.filterLogins());
+    } else if (field === 'provider') {
+      this.filterLogins.update(names => names.filter(n => n !== value));
+      this.filterForm.get('provider_name')?.setValue(this.providerNames());
+    } else {
+        throw new Error(`Unknown field ${field} - trying to insert ${value}`)
+    }
   }
 }

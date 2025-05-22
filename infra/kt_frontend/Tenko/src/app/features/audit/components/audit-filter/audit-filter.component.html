@@ -35,9 +35,9 @@
 
         <mat-form-field>
             <mat-label>Login</mat-label>
-            <mat-chip-grid #chipGrid aria-label="Login">
+            <mat-chip-grid #chipGridLogin aria-label="Login">
                 @for (login of filterLogins(); track login){
-                    <mat-chip-row (removed)="removeLogin(login)">
+                    <mat-chip-row (removed)="removeElement(login, 'login')">
                         {{ login }}
                         <button class="remove-item" matChipRemove>
                             <mat-icon>cancel</mat-icon>
@@ -45,15 +45,35 @@
                     </mat-chip-row>
                 }
                 <input 
-                    [matChipInputFor]="chipGrid" 
+                    [matChipInputFor]="chipGridLogin" 
                     [matChipInputSeparatorKeyCodes]="separatorKeysCodes"
                     [matChipInputAddOnBlur]="true"
-                    (matChipInputTokenEnd)="addLogin($event)"
+                    (matChipInputTokenEnd)="addElement($event, 'login')"
                     placeholder="Ajouter un login"
                 />
             </mat-chip-grid>
         </mat-form-field>
-
+        
+        <mat-form-field>
+            <mat-label>Fournisseur</mat-label>
+            <mat-chip-grid #chipGridProvider aria-label="Fournisseur">
+                @for (name of providerNames(); track name){
+                    <mat-chip-row (removed)="removeElement(name, 'provider')">
+                        {{ name }}
+                        <button class="remove-item" matChipRemove>
+                            <mat-icon>cancel</mat-icon>
+                        </button>
+                    </mat-chip-row>
+                }
+                <input 
+                    [matChipInputFor]="chipGridProvider" 
+                    [matChipInputSeparatorKeyCodes]="separatorKeysCodes"
+                    [matChipInputAddOnBlur]="true"
+                    (matChipInputTokenEnd)="addElement($event, 'provider')"
+                    placeholder="Ajouter un fournisseur"
+                />
+            </mat-chip-grid>
+        </mat-form-field>
     </form>
 </mat-dialog-content>
 <mat-dialog-actions align="end">

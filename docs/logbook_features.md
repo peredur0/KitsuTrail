@@ -518,3 +518,93 @@ onSubmit(): void {
     this.dialogRef.close(selectedColumns);
 }
 ```
+
+## 2025-05-22 Travail sur les filtres pour la table d'audit
+Documentation: [https://material.angular.dev/components/chips/overview](https://material.angular.dev/components/chips/overview)
+
+Pour certains champs du filtre, il n'est pas possible ou pertinent de mettre une sélection multiple.
+C'est le cas pour:
+- user_login
+- user_id
+- trace_id
+- provider_name
+
+Pour ces champs, je passe par un type de champ: les *chips*.
+Ce champs permet de gérer une liste de string issue d'un input.
+La modification de la liste passe par l'utilisation d'un signal.
+
+Techniquement pour user_login ça se passe ainsi:
+```typescript
+export class AuditFilterComponent implements OnInit{
+  //...
+  readonly separatorKeysCodes: number[] = [ENTER, COMMA]; // séparateur d'éléments
+  readonly filterLogins = signal<string[]>([]); // liste hébergeant les choix
+  //...
+  
+  ngOnInit(): void {
+    this.filterLogins.set(this.filterData?.user_login ?? []); // initialisation selon la valeur du parent
+
+    this.filterForm = this.formBuilder.group({
+      //...
+      user_login: [this.filterLogins()],
+      //...
+    })
+  onFilter(): void {
+    this.dialogRef.close({
+      //...
+      user_login: this.filterForm.get('user_login')?.value, // récupération de la liste
+      //...
+    });
+  }
+
+  addLogin(event: MatChipInputEvent): void {  // ajoute le nouvel item
+    const value = (event.value || '').trim();
+    if (value) {
+      this.filterLogins.update(logins => [...logins, value])
+    }
+    event.chipInput!.clear();   // nettoie l'input
+    this.filterForm.get('user_login')?.setValue(this.filterLogins()); // met à jour le filterForm
+  }
+
+  removeLogin(login: string): void {
+    this.filterLogins.update(logins => logins.filter(l => l !== login));
+    this.filterForm.get('user_login')?.setValue(this.filterLogins());
+  }
+}
+```
+
+Et la le code html
+```html
+<mat-form-field>
+    <mat-label>Login</mat-label>
+    <mat-chip-grid #chipGrid aria-label="Login">
+        @for (login of filterLogins(); track login){  <!-- boucle sur les valeurs ajoutée dans le signal -->
+            <mat-chip-row (removed)="removeLogin(login)">
+                {{ login }}
+                <button class="remove-item" matChipRemove>
+                    <mat-icon>cancel</mat-icon>
+                </button>
+            </mat-chip-row>
+        }
+        <input 
+            [matChipInputFor]="chipGrid" 
+            [matChipInputSeparatorKeyCodes]="separatorKeysCodes"
+            [matChipInputAddOnBlur]="true"
+            (matChipInputTokenEnd)="addLogin($event)"
+            placeholder="Ajouter un login"
+        />
+    </mat-chip-grid>
+</mat-form-field>
+```
+
+Lors de cette passe j'ai pu ajouter les filtres suivants:
+- Sélection multiple
+  - Résultats
+  - Types de fournisseur
+  - Protocols
+- Chip
+  - Login
+  - Fournisseur (name)
+
+> Prochaine étape la pagination, avec [https://material.angular.dev/components/paginator/overview](https://material.angular.dev/components/paginator/overview)
+
