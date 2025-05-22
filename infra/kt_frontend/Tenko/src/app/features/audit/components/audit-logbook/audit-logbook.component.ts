@@ -25,7 +25,14 @@ export class AuditLogBookComponent implements OnInit{
 
   currentFilter: FilterFormData = {
     actions: [],
-    categories: []
+    categories: [],
+    results: [],
+    trace_id: [],
+    user_login: [],
+    user_id: [],
+    provider_name: [],
+    provider_type: [],
+    provider_protocol: []
   }
 
   selectedColumns!: string[];
@@ -46,7 +53,14 @@ export class AuditLogBookComponent implements OnInit{
           end: '2025-05-10 00:00:00'
         },
         action: filterData.actions,
-        category: filterData.categories
+        category: filterData.categories,
+        result: filterData.results,
+        trace_id: filterData.trace_id,
+        user_login: filterData.user_login,
+        user_id: filterData.user_id,
+        provider_name: filterData.provider_name,
+        provider_type: filterData.provider_type,
+        provider_protocol: filterData.provider_protocol
       }
     }
   }

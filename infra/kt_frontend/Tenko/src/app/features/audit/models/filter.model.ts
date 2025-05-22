@@ -10,6 +10,7 @@ export interface QueryFilter {
     action?: string[];
     result?: string[];
     user_id?: string[];
+    user_login?: string[];
     provider_id?: number[];
     provider_name?: string[];
     provider_type?: string[];
@@ -25,4 +26,11 @@ export interface AuditFilter {
 export interface FilterFormData {
     actions: string[];
     categories: string[];
+    results: string[];
+    trace_id: string[];
+    user_login: string[];
+    user_id: string[];
+    provider_name: string[];
+    provider_type: string[];
+    provider_protocol: string[];
 }

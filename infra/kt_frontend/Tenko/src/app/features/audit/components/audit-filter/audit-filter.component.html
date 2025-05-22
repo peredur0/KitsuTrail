@@ -14,6 +14,46 @@
                 <mat-option *ngFor="let action of availableActions" [value]="action">{{ action }}</mat-option>
             </mat-select>
         </mat-form-field>
+        <mat-form-field>
+            <mat-label>Résultats</mat-label>
+            <mat-select id="results" formControlName="results" multiple>
+                <mat-option *ngFor="let res of availableResults" [value]="res">{{ res }}</mat-option>
+            </mat-select>
+        </mat-form-field>
+        <mat-form-field>
+            <mat-label>Types de fournisseur</mat-label>
+            <mat-select id="provider_types" formControlName="provider_types" multiple>
+                <mat-option *ngFor="let pType of availableProviderTypes" [value]="pType">{{ pType }}</mat-option>
+            </mat-select>
+        </mat-form-field>
+        <mat-form-field>
+            <mat-label>Protocols</mat-label>
+            <mat-select id="provider_protocols" formControlName="provider_protocols" multiple>
+                <mat-option *ngFor="let proto of availableProviderProtocols" [value]="proto">{{ proto }}</mat-option>
+            </mat-select>
+        </mat-form-field>
+
+        <mat-form-field>
+            <mat-label>Login</mat-label>
+            <mat-chip-grid #chipGrid aria-label="Login">
+                @for (login of filterLogins(); track login){
+                    <mat-chip-row (removed)="removeLogin(login)">
+                        {{ login }}
+                        <button class="remove-item" matChipRemove>
+                            <mat-icon>cancel</mat-icon>
+                        </button>
+                    </mat-chip-row>
+                }
+                <input 
+                    [matChipInputFor]="chipGrid" 
+                    [matChipInputSeparatorKeyCodes]="separatorKeysCodes"
+                    [matChipInputAddOnBlur]="true"
+                    (matChipInputTokenEnd)="addLogin($event)"
+                    placeholder="Ajouter un login"
+                />
+            </mat-chip-grid>
+        </mat-form-field>
+
     </form>
 </mat-dialog-content>
 <mat-dialog-actions align="end">
