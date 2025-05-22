@@ -36,6 +36,7 @@ class QueryFilter(BaseModel):
     action: list[str] | None = None
     result: list[str] | None = None
     user_id: list[str] | None = None
+    user_login: list[str] | None = None
     provider_id: list[int] | None = None
     provider_name: list[str] | None = None
     provider_type: list[str] | None = None

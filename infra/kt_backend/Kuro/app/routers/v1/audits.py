@@ -24,7 +24,7 @@ _router = APIRouter(
 Session_dep = Annotated[Session, Depends(get_session)]
 
 FILTER_FIELDS = [
-    'trace_id', 'action', 'result', 'user_id',
+    'trace_id', 'action', 'result', 'user_id', 'user_login',
     'provider_id', 'provider_name', 'provider_type',
     'provider_protocol', 'category'
 ]
@@ -59,6 +59,7 @@ def get_entries(filter_body: AuditFilter, session: Session_dep):
     
     offset = (filter_body.page - 1) * filter_body.per_page
     query = query.offset(offset).limit(filter_body.per_page)
+    query = query.order_by(AuditLog.timestamp.desc())
 
     compiled = query.compile(dialect=postgresql.dialect(),
                              compile_kwargs={"literal_binds": True})
