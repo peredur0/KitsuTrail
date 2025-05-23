@@ -16,3 +16,15 @@ export class AuditEntry {
     reason?: string;
     info?: string;
 }
+
+export class AuditReplyMeta {
+    total_items!: number;
+    total_page!: number;
+    page!: number;
+    items_in_page!: number;
+}
+
+export class AuditReply {
+    items!: AuditEntry[];
+    metadata!: AuditReplyMeta;
+}

@@ -49,6 +49,9 @@ Ce document reprend certains éléments qui ont été laissé de coté pour le m
 * Ajouter un marqueur dans le filtre est défini dans `audit-logbook`
     - 2025/05/20 > ?
 
+* Gérer les filtres avec une section avancée masquée
+    - 2025/05/23 > ?
+
 ## Backend
 
 * Prise en charge de l'authentification

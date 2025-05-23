@@ -1,10 +1,12 @@
 import { Component, inject, Input, OnChanges, SimpleChanges } from '@angular/core';
 import { CommonModule } from '@angular/common';
+import { Observable, tap } from 'rxjs';
+
 import { MatTableModule } from '@angular/material/table';
-import { Observable } from 'rxjs';
+import { PageEvent, MatPaginatorModule } from '@angular/material/paginator'
 
 import { AuditService } from '../../services/audit.service';
-import { AuditEntry } from '../../models/audit.model';
+import { AuditEntry, AuditReply } from '../../models/audit.model';
 import { AuditFilter } from '../../models/filter.model';
 import { AuditColumn } from '../../models/columns.model';
 
@@ -12,14 +14,22 @@ import { AuditColumn } from '../../models/columns.model';
   selector: 'app-audit-table',
   imports: [
     CommonModule,
-    MatTableModule
+    MatTableModule,
+    MatPaginatorModule
   ],
   templateUrl: './audit-table.component.html',
   styleUrl: './audit-table.component.scss'
 })
 export class AuditTableComponent implements OnChanges{
   private auditService = inject(AuditService);
-  auditLogs$!: Observable<AuditEntry[]>;
+  auditReply$!: Observable<AuditReply>;
+  entries: AuditEntry[] = [];
+  totalItems!: number;
+  
+  pageSize =  20;
+  pageIndex = 0;
+  pageSizeOptions = [10, 20, 50];
+
   
   @Input() auditFilter!: AuditFilter;
   @Input() selectedColumns!: string[];
@@ -45,7 +55,24 @@ export class AuditTableComponent implements OnChanges{
   
   ngOnChanges(changes: SimpleChanges): void {
     if (changes['auditFilter'] && this.auditFilter) {
-      this.auditLogs$ = this.auditService.getAuditLogs(this.auditFilter)
+      this.loadData();
     }
+  }
+
+  loadData(): void {
+    this.auditFilter.page = this.pageIndex + 1;
+    this.auditFilter.per_page = this.pageSize;
+    this.auditReply$ = this.auditService.getAuditLogs(this.auditFilter).pipe(
+      tap((reply: AuditReply) => {
+        this.entries = reply.items;
+        this.totalItems = reply.metadata.total_items;
+      })
+    );
+  }
+
+  onPageEvent(event: PageEvent): void {
+    this.pageIndex = event.pageIndex;
+    this.pageSize = event.pageSize;
+    this.loadData();
   }
 }

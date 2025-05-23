@@ -608,3 +608,77 @@ Lors de cette passe j'ai pu ajouter les filtres suivants:
 
 > Prochaine étape la pagination, avec [https://material.angular.dev/components/paginator/overview](https://material.angular.dev/components/paginator/overview)
 
+## 2025-05-23 Mise en place de la pagination
+Le travail du jour va se porter sur la mise en place de la pagination pour le tableau d'audit
+
+Je pense que l'opération se fera directement dans le composant audit-logbook et une modification coté backend sera sûrement nécessaire.
+
+Finalement la mise en place de la pagination est ce qui m'a semblé le moins compliquer à mettre en oeuvre.
+
+Dans un premier temps, j'ai modifié le backend pour qu'il retourne des métadonnées de pagination en plus des données.
+Ca donne ça:
+```json
+{
+  "items": [
+    "..."
+  ],
+  "metadata": {
+    "total_items": 0,
+    "total_page": 0,
+    "page": 0,
+    "items_in_page": 0
+  }
+}
+```
+
+Au niveau du frontend, j'ai du effectuer les modifications suivantes:
+- Ajout du nouveau modèle correspondant à la réponse attendue
+- Mise à jour du modèle attendu pour le service *audit-service*
+- Modification de la récupération des données
+```typescript
+  auditReply$!: Observable<AuditReply>;   // modification de l'observable
+  entries: AuditEntry[] = [];   // les logs d'audit sont dans cette liste
+  totalItems!: number;   // information nécessaire à la pagination
+  
+  // pagination par défaut
+  pageSize =  20;
+  pageIndex = 0;
+  pageSizeOptions = [10, 20, 50];
+  
+  // logique de chargement des données déplacée dans cette fonction
+  loadData(): void {
+    // Mise à jour du filtre
+    this.auditFilter.page = this.pageIndex + 1;   
+    this.auditFilter.per_page = this.pageSize;
+
+    // Récupération des données via API
+    this.auditReply$ = this.auditService.getAuditLogs(this.auditFilter).pipe(
+      tap((reply: AuditReply) => {
+        this.entries = reply.items;
+        this.totalItems = reply.metadata.total_items;
+      })
+    );
+  }
+
+  onPageEvent(event: PageEvent): void {
+    // Récupération des actions de pagination
+    this.pageIndex = event.pageIndex;
+    this.pageSize = event.pageSize;
+    this.loadData();
+  }
+```
+
+```html
+<mat-paginator #paginator
+    (page)="onPageEvent($event)"
+    [length]="totalItems"
+    [pageSize]="pageSize"
+    [pageSizeOptions]="pageSizeOptions"
+    [pageIndex]="pageIndex"
+    showFirstLastButtons="true">
+</mat-paginator>
+```
+
+> Prochaine étape la gestion du range de recherche
+
+

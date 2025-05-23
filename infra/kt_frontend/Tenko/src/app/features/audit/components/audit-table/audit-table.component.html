@@ -1,5 +1,13 @@
-<ng-container *ngIf="auditLogs$ | async as auditLogs">
-    <table mat-table [dataSource]="auditLogs" class="mat-elevation-z8">
+<ng-container *ngIf="auditReply$ | async as auditLogs">
+    <mat-paginator #paginator
+        (page)="onPageEvent($event)"
+        [length]="totalItems"
+        [pageSize]="pageSize"
+        [pageSizeOptions]="pageSizeOptions"
+        [pageIndex]="pageIndex"
+        showFirstLastButtons="true">
+    </mat-paginator>
+    <table mat-table [dataSource]="entries" class="mat-elevation-z8">
         @for (column of columns; track column) {
             <ng-container [matColumnDef]="column.columnDef">
                 <th mat-header-cell *matHeaderCellDef>{{column.header}}</th>
@@ -11,4 +19,4 @@
     </table>
 </ng-container>
 
-<div class="message-containter" *ngIf="(auditLogs$ | async)?.length === 0">No DATA</div>
+<div class="message-containter" *ngIf="entries.length === 0">No DATA</div>

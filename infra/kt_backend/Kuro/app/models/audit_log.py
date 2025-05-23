@@ -57,5 +57,5 @@ class QueryFilter(BaseModel):
 
 class AuditFilter(BaseModel):
     filter: QueryFilter
-    per_page: int | None = 50
+    per_page: int | None = 20
     page: int | None = 1
