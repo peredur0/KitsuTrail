@@ -29,6 +29,18 @@ class AuditLog(SQLModel, table=True):
     info: str = Field()
 
 
+class AuditLogMeta(BaseModel):
+    total_items: int
+    total_page: int
+    page: int
+    items_in_page: int
+
+
+class AuditLogPublic(BaseModel):
+    items: list[AuditLog]
+    metadata: AuditLogMeta
+
+
 class QueryFilter(BaseModel):
     time_range: TimeRangeFilter
     trace_id: list[str] | None = None
