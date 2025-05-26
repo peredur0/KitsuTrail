@@ -18,7 +18,7 @@ from models.user import UserInDB, UserPublic, UserCreate, UserUpdate
 logger = logging.getLogger('uvicorn.error')
 
 _router = APIRouter(
-    prefix='/users',
+    prefix='/api/v1/users',
     tags=['Users'],
     responses={404: {'description': 'Not found'}}
 )
@@ -138,5 +138,5 @@ def init_router():
         logger.critical('Failed to load module users - %s', err)
         raise err
     
-    logger.info('Module ready - users')
+    logger.info('Module ready - users (v1)')
     return _router

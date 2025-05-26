@@ -1,0 +1,17 @@
+.audit-toolbar{
+    display: flex;
+    flex-direction: row;
+    gap: 20px;
+
+    button {
+        color: black;
+        display: flex;
+        align-items: center;
+        justify-content: center;
+        
+        &:hover {
+            background-color: #eb6a00;
+            box-shadow: 5px 5px 5px rgb(161, 161, 161);
+        }
+    }
+}
