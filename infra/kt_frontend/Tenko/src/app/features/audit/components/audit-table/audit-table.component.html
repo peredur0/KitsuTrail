@@ -1,0 +1,22 @@
+<ng-container *ngIf="auditReply$ | async as auditLogs">
+    <mat-paginator #paginator
+        (page)="onPageEvent($event)"
+        [length]="totalItems"
+        [pageSize]="pageSize"
+        [pageSizeOptions]="pageSizeOptions"
+        [pageIndex]="pageIndex"
+        showFirstLastButtons="true">
+    </mat-paginator>
+    <table mat-table [dataSource]="entries" class="mat-elevation-z8">
+        @for (column of columns; track column) {
+            <ng-container [matColumnDef]="column.columnDef">
+                <th mat-header-cell *matHeaderCellDef>{{column.header}}</th>
+                <td mat-cell *matCellDef="let entry">{{column.getValue(entry)}}</td>
+            </ng-container>
+        }
+        <tr mat-header-row *matHeaderRowDef="selectedColumns"></tr>
+        <tr mat-row *matRowDef="let entry; columns: selectedColumns"></tr>
+    </table>
+</ng-container>
+
+<div class="message-containter" *ngIf="entries.length === 0">No DATA</div>

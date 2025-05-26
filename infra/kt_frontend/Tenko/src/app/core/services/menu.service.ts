@@ -25,8 +25,9 @@ export class MenuService {
             title: "Traitements des données",
             display: true,
             links: [
-                { label: "Journal d'audit", path: "logs", disabled: true },
-                { label: "Tableau de bord", path: "dashboard", disabled: true }
+                { label: "Journal d'audit", path: "audit/logs", disabled: false },
+                { label: "Tableau de bord", path: "audit/dashboard", disabled: true },
+                { label: "Reports", path: 'audit/reports', disabled: true }
             ]
         }
     ];

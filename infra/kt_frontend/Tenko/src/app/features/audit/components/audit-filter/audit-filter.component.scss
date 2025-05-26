@@ -1,0 +1,24 @@
+mat-dialog-actions {
+    display: flex;
+    flex-direction: row;
+    padding: 16px 24px;
+    gap: 5px;
+}
+
+.action-button {
+    width: 100px;
+    text-align: center;
+    color: black;
+}
+
+mat-form-field {
+    width: 100%;
+}
+
+.form-group {
+    margin-bottom: 10px;
+}
+
+.remove-item {
+    background-color: transparent;
+}

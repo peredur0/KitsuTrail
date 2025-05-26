@@ -1,0 +1,46 @@
+<h2 mat-dialog-title>Sélection de la période de travail</h2>
+<form [formGroup]="timeRangeForm">
+    <mat-dialog-content>
+        <div class="date-time-widget">
+            <h3>Début</h3>
+            <mat-form-field>
+               <mat-label>Date de début</mat-label> 
+               <input matInput [matDatepicker]="startPicker" formControlName="startDate" />
+               <mat-hint>AAAA/MM/JJ</mat-hint>
+               <mat-datepicker-toggle matIconSuffix [for]="startPicker" />
+               <mat-datepicker #startPicker />
+            </mat-form-field>
+            <mat-form-field>
+                <mat-label>Heure de début</mat-label>
+                <input matInput [matTimepicker]="startTimePicker" formControlName="startTime"/>
+                <mat-timepicker-toggle matIconSuffix [for]="startTimePicker" />
+                <mat-timepicker #startTimePicker />
+            </mat-form-field>
+        </div>
+        
+        <div class="date-time-widget">
+            <h3>Fin</h3>
+            <mat-form-field>
+               <mat-label>Date de fin</mat-label> 
+               <input matInput [matDatepicker]="endPicker" formControlName="endDate" />
+               <mat-hint>AAAA/MM/JJ</mat-hint>
+               <mat-datepicker-toggle matIconSuffix [for]="endPicker" />
+               <mat-datepicker #endPicker />
+            </mat-form-field>
+            <mat-form-field>
+                <mat-label>Heure de fin</mat-label>
+                <input matInput [matTimepicker]="endTimePicker" formControlName="endTime" />
+                <mat-timepicker-toggle matIconSuffix [for]="endTimePicker" />
+                <mat-timepicker #endTimePicker />
+            </mat-form-field>
+        </div>
+
+    </mat-dialog-content>
+</form>
+<mat-error *ngIf="timeRangeForm.errors?.['invalidRange']">
+    La date de début doit être antérieure à la date de fin.
+</mat-error>
+<mat-dialog-actions align="end">
+    <button mat-button class="action-button" (click)="onNoClick()">Annuler</button>
+    <button mat-button class="action-button" (click)="onSubmit()" [disabled]="timeRangeForm.invalid">Appliquer</button>
+</mat-dialog-actions>

@@ -8,22 +8,22 @@ import { User } from "../models/user.model";
     providedIn: 'root'
 })
 export class UsersService {
-    private http = inject(HttpClient)
+    private http = inject(HttpClient);
     private usersChanged = new Subject<void>();
 
     usersChanged$ = this.usersChanged.asObservable();
 
     getUsers(): Observable<User[]> {
-        return this.http.get<User[]>('http://localhost:8000/users/');
+        return this.http.get<User[]>('http://localhost:8000/api/v1/users/');
     }
 
     getUserFromIdentifier(idType: 'login'|'id', userId: string): Observable<User> {
         let foundUser: Observable<User> | null;
 
         if (idType === 'id') {
-            foundUser = this.http.get<User>(`http://localhost:8000/users/${userId}`)
+            foundUser = this.http.get<User>(`http://localhost:8000/api/v1/users/${userId}`)
         } else {
-            foundUser = this.http.get<User>(`http://localhost:8000/users/login/${userId}`)
+            foundUser = this.http.get<User>(`http://localhost:8000/api/v1/users/login/${userId}`)
         }
 
         return foundUser;
@@ -35,7 +35,7 @@ export class UsersService {
         lastname: string | null,
         email: string | null
     }): Observable<User> {
-        return this.http.post<User>('http://localhost:8000/users/', userData);
+        return this.http.post<User>('http://localhost:8000/api/v1/users/', userData);
     }
 
     notifyUsersChanged(){
