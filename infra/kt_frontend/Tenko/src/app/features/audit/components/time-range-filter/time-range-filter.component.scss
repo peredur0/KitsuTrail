@@ -1,0 +1,27 @@
+mat-dialog-content {
+    display: flex;
+    gap: 1rem;
+    justify-content: space-between;
+}
+
+.date-time-widget {
+    flex: 1;
+}
+
+mat-dialog-actions {
+    display: flex;
+    flex-direction: row;
+    padding: 16px 24px;
+    gap: 5px;
+}
+
+.action-button {
+    width: 100px;
+    text-align: center;
+    color: black;
+}
+
+mat-error {
+    justify-content: center;
+    padding: 10px;
+}

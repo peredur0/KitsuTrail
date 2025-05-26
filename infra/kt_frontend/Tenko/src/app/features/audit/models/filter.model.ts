@@ -1,3 +1,5 @@
+import { Timestamp } from "rxjs";
+
 export interface TimeRangeFilter {
     start: string;
     end: string;
@@ -33,4 +35,9 @@ export interface FilterFormData {
     provider_name: string[];
     provider_type: string[];
     provider_protocol: string[];
+}
+
+export interface FilterTimeRange {
+    start: string;
+    end: string;
 }

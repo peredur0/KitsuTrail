@@ -1,4 +1,5 @@
 <div class="audit-toolbar">
+    <button mat-raised-button (click)="openTimeRange()">Période du {{ currentTimeRange.start }} au {{ currentTimeRange.end }}</button>
     <button mat-raised-button (click)="openFilter()">Filtres</button>
     <button mat-raised-button (click)="openColumns()">Colonnes</button>
 </div>

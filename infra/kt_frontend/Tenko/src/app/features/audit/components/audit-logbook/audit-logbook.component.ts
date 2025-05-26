@@ -3,10 +3,11 @@ import { MatButtonModule } from '@angular/material/button';
 import { MatDialog } from '@angular/material/dialog';
 
 import { HeaderService } from '../../../../core/services/header.service';
-import { AuditFilter, FilterFormData } from '../../models/filter.model';
+import { AuditFilter, FilterFormData, FilterTimeRange, TimeRangeFilter } from '../../models/filter.model';
 import { AuditTableComponent } from '../audit-table/audit-table.component';
 import { AuditFilterComponent } from '../audit-filter/audit-filter.component';
 import { ColumnsFilterComponent } from '../columns-filter/columns-filter.component';
+import { TimeRangeFilterComponent } from '../time-range-filter/time-range-filter.component';
 
 @Component({
   selector: 'app-audit-logbook',
@@ -37,6 +38,11 @@ export class AuditLogBookComponent implements OnInit{
 
   selectedColumns!: string[];
   currentColumns: string[] = ['timestamp', 'action', 'user_login', 'result']
+  
+  currentTimeRange: FilterTimeRange = {
+    start: "2025-05-01 00:00:00",
+    end: "2025-05-05 00:00:00"
+  };
 
   ngOnInit(): void {    
     this.headerService.setSubtitle("Journal d'audit");
@@ -46,12 +52,10 @@ export class AuditLogBookComponent implements OnInit{
 
   private buildAuditFilter() {
     const filterData = this.currentFilter;
+
     this.auditFilter = {
       filter: {
-        time_range: {
-          start: '2025-05-01 00:00:00',
-          end: '2025-05-10 00:00:00'
-        },
+        time_range: this.currentTimeRange,
         action: filterData.actions,
         category: filterData.categories,
         result: filterData.results,
@@ -62,7 +66,7 @@ export class AuditLogBookComponent implements OnInit{
         provider_type: filterData.provider_type,
         provider_protocol: filterData.provider_protocol
       }
-    }
+    };
   }
 
   openFilter(): void {
@@ -75,10 +79,10 @@ export class AuditLogBookComponent implements OnInit{
         this.currentFilter = result;
         this.buildAuditFilter();
       }
-    })
+    });
   }
 
-  private buildColumnsSelection () {
+  private buildColumnsSelection(): void {
     this.selectedColumns = this.currentColumns;
   }
 
@@ -92,7 +96,20 @@ export class AuditLogBookComponent implements OnInit{
         this.currentColumns = result;
         this.buildColumnsSelection();
       }
-    })
+    });
+  }
+
+  openTimeRange(): void {
+    const dialogRef = this.dialog.open(TimeRangeFilterComponent, {
+      data: this.currentTimeRange
+    });
+
+    dialogRef.afterClosed().subscribe((result: TimeRangeFilter | undefined) => {
+      if (result) {
+        this.currentTimeRange = result;
+        this.buildAuditFilter();
+      }
+    });
   }
 
 }
