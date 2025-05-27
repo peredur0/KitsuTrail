@@ -84,6 +84,8 @@ export class AuditFilterComponent implements OnInit{
   onReset(): void {
     this.filterData = null;
     this.filterForm.reset();
+    this.filterLogins.set([]);
+    this.providerNames.set([]);
   }
 
   addElement(event: MatChipInputEvent, field: string): void {
