@@ -208,7 +208,7 @@ Pour faciliter la génération des logs j'ai organisé un peu mieux les modules 
 Il me reste à traiter uniquement le cas ou l'accès échoue directement parce que l'utilisateur n'existe pas ou est bloqué sur la plateforme.
 
 ## 2025-05-09 Fin de la génération d'activité
-Au bout de plusieurs jours de réflexion, j'ai enfin terminer le travail sur la génération automatique d'activité pour les traces d'audit.
+Au bout de plusieurs jours de réflexion, j'ai enfin terminé le travail sur la génération automatique d'activité pour les traces d'audit.
 
 Dans une premier temps, j'ai rapproché les créations d'utilisateurs, de plusieurs années à quelques mois.
 Pour la partie développement c'est amplement suffisant.
