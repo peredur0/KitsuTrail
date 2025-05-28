@@ -12,7 +12,10 @@
     * Connexion FastAPI et SQLite
     * Opération sur les utilisateurs
 
-3. logbook_feat_providers.md - 2025/04/29 >
+3. logbook_feat.md - 2025/04/29 > 2025/05/27
+    * Mise en place des providers
+    * Simulation de l'activité (audit log)
+    * Visualisation des audit logs
 
 ## Progress summary
 1. 20250330_front.md
@@ -20,3 +23,6 @@
 
 2. 20250420_back.md
     * Base du backend
+
+3. 20250526_features.md
+    * Fournisseurs & audit-logs
