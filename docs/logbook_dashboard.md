@@ -19,3 +19,8 @@ Durant cette phase je vois les développement suivants:
 2. Service pour l'aggregation des données
 3. Intégration construction du tableau de bord
 4. Service pour la génération continue des données de simulation (optionnel)
+
+## 2025-05-28 Migration postgres
+Pour le fun, j'ai décidé de renommer la base SQLite Zenko.
+La base PSQL prendra le nom d'Inari.
+

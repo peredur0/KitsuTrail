@@ -1,0 +1,12 @@
+services:
+    inari:
+        image: postgres:16.9
+        container_name: inari-db
+        restart: unless-stopped
+        environment:
+            - POSTGRES_PASSWORD=${PSQL_PASSWORD}
+        ports:
+            - "5432:5432"
+        volumes:
+            - ./kt_database/Inari/pgdata:/var/lib/postgresql/data
+            - ./kt_database/Inari/src/init/init.sql:/docker-entrypoint-initdb.d/init.sql
