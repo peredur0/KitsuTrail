@@ -25,7 +25,7 @@ def random_date():
 
 def init():
     print("Init of dev database - step users")
-    connection = sqlite3.connect('inari.db')
+    connection = sqlite3.connect('zenko.db')
     cursor = connection.cursor()
     cursor.execute(f'DROP TABLE IF EXISTS {USERS_TABLE}')
     cursor.execute(f'''

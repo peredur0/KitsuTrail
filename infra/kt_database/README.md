@@ -6,7 +6,7 @@ Name of the database: Inari
 
 ### SQLite table (dev)
 ```
-cd ./sqlite
+cd ./Zenko
 python3 ./main.py
 ```
-> should create a file named inari.db
+> should create a file named zenko.db
