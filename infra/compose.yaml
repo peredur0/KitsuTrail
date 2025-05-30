@@ -9,4 +9,4 @@ services:
             - "5432:5432"
         volumes:
             - ./kt_database/Inari/pgdata:/var/lib/postgresql/data
-            - ./kt_database/Inari/src/init/init.sql:/docker-entrypoint-initdb.d/init.sql
+            - ./kt_database/Inari/init.sql:/docker-entrypoint-initdb.d/init.sql

@@ -3,3 +3,4 @@ fastapi[standard]
 sqlalchemy
 pydantic
 sqlmodel
+psycopg2
