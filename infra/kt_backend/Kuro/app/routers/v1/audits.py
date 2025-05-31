@@ -9,7 +9,7 @@ from typing import Annotated
 from sqlmodel import Session, select, func
 from fastapi import APIRouter, Depends, HTTPException
 
-from utils.sqlite_utils import get_session, check_required_tables
+from utils.database_utils import get_session, check_required_tables
 from utils.check_utils import check_accept_json
 from models.audit_log import AuditLog, AuditFilter, AuditLogMeta, AuditLogPublic
 
