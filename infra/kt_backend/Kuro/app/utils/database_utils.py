@@ -28,6 +28,9 @@ elif MODE == 'sqlite':
             'check_same_thread': False
         }
     )
+else:
+    print(f"Unknown bd mode {MODE}", file=sys.stderr)
+    sys.exit(1)
 
 
 def get_session() -> sqlmodel.orm.session:
