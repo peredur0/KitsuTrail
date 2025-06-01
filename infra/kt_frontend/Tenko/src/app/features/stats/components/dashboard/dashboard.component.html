@@ -1,1 +1,6 @@
-<p>dashboard works!</p>
+<div class="dashboard-header">
+    <button (click)="onRefresh()">Rafraîchir</button>
+    <ng-container *ngIf="currentState$ | async as state">
+        <app-current-state [state]="state" />
+    </ng-container>
+</div>

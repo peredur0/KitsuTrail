@@ -68,11 +68,11 @@ Rafraîchissement régulier
     ```
 - nombre d'IDP en place / répartition par protocol
     ```sql
-    SELECT protocol, COUNT(*) FROM providers WHERE type = 'idp' GROUP BY protocol;
+    SELECT COUNT(*) FROM providers WHERE type = 'idp';
     ```
 - nombre de SP en place / répartition par protocol
     ```sql
-    SELECT protocol, COUNT(*) FROM providers WHERE type = 'sp' GROUP BY protocol;
+    SELECT COUNT(*) FROM providers WHERE type = 'sp';
     ```
 - nombre de sessions actuelle active (auth il y a moins de 5 minutes)
     ```sql
@@ -128,20 +128,52 @@ Rafraîchissement régulier
 
 - Utilisateurs avec le plus d'erreur (auth/access fail)
     ```sql
-    SELECT user_login, COUNT(*) AS failure 
+    SELECT user_login, reason, COUNT(*) AS failure 
     FROM audit_logs 
-    WHERE timestamp >= NOW() - INTERVAL '2 days' 
+    WHERE timestamp >= NOW() - INTERVAL '72 hours' 
         AND user_id IS NOT NULL 
         AND result = 'fail' 
-    GROUP BY user_login 
-    ORDER by failure DESC LIMIT 5;
+    GROUP BY user_login, reason 
+    ORDER by failure DESC;
     ```
 - Activité par fournisseurs (plus actif au moins actif)
     ```sql
+    SELECT
+        provider_type,
+        provider_name,
+        COUNT(*) FILTER (WHERE result = 'success') AS success,
+        COUNT(*) FILTER (WHERE result = 'fail') AS failure,
+        COUNT(*) AS total
+    FROM audit_logs
+    WHERE timestamp >= NOW() - INTERVAL '1 hours'
+        AND user_id IS NOT NULL
+        AND provider_id IS NOT NULL
+    GROUP BY provider_type, provider_id, provider_name
+    ORDER BY total DESC;
     ```
 
 - Tentative de brute force (unknown_user)
     ```sql
+    SELECT 
+        user_login, 
+        provider_type, 
+        provider_name,
+        provider_protocol,
+        source_ip,
+        COUNT(*) AS attempt
+    FROM audit_logs
+    WHERE timestamp >= NOW() - INTERVAL '3 days'
+        AND result = 'fail'
+        AND reason = 'unknown_user'
+        AND user_id IS NULL
+    GROUP BY
+        user_login,
+        provider_type,
+        provider_id,
+        provider_name,
+        provider_protocol,
+        source_ip
+    ORDER by attempt DESC; 
     ```
 
 **Évolution**:
@@ -160,5 +192,103 @@ Cela est plus pour suivre l'évolution de l'activité
 - Utilisateurs actif
 
 - Brute force
+
+Je commence à avoir une idée des données que je vais présenter dans le tableau de bord. Je dois m'intéresser maintenant à la forme qu'elles doivent prendre pour adapter mes requêtes
+
+## 2025-06-01 Préparation du format du tableau de bord
+L'idée pour cette session est de tenter de mettre en place le layout du tableau de bord.
+
+On commence par un header du tableau de bord qui va contenir un bouton pour rafraîchir les données de la page.
+Ce header va également contenir des petites cartes avec certaines données courantes de la plateforme:
+* Sessions actives - comptage des authentification réalisées il y a un certain temps (en dev 3 jours sinon 5 minutes)
+* Utilisateurs actifs - comptage des utilisateur ayant réaliser une authentification il y a un certain temps
+* Utilisateurs total - comptage de la taille de la table users à l'instant T
+* Fournisseurs d'identité - comptage des IDP
+* Fournisseurs de service - comptage des SP
+
+On a commencé par définir un endpoint qui va retourner ces informations via API
+```python
+def get_current_state(session: Session_dep):
+    total_users = session.exec(select(func.count()).select_from(UserInDB)).one()
+    total_idp = session.exec(
+        select(func.count()).select_from(Provider).where(Provider.type == 'idp')
+    ).one()
+    total_sp = session.exec(
+        select(func.count()).select_from(Provider).where(Provider.type == 'sp')
+    ).one()
+
+    delta = datetime.timedelta(days=3)
+    time_limit = datetime.datetime.now(datetime.timezone.utc) - delta
+    active_user_stmt = (
+        select(func.count(func.distinct(AuditLog.user_id))).where(
+            AuditLog.timestamp >= time_limit,
+            AuditLog.action == 'access',
+            AuditLog.result == 'success'
+        )
+    )
+    active_users = session.exec(active_user_stmt).one()
+
+    active_sessions_stmt = (
+        select(func.count(func.distinct(AuditLog.trace_id))).where(
+            AuditLog.timestamp >= time_limit,
+            AuditLog.action == 'authentication',
+            AuditLog.result == 'success'
+        )
+    )
+    active_sessions = session.exec(active_sessions_stmt).one()
+
+    return {
+        'active_sessions': active_sessions,
+        'active_users': active_users,
+        'total_users': total_users,
+        'total_idp': total_idp,
+        'total_sp': total_sp
+    }
+```
+
+Dans le frontend, j'ai ajouté un service qui va récupérer ces infos dans l'API.
+Les données sont récupérées directement dans le composant *dashboard* puis sont transmises au composant enfant *current-state*. Le dashboard va également gérer une mise à jour régulière des données. Pour éviter les sauts de page, j'ai du utiliser BehaviorSubject qui permet de mettre à jour les données sans reconstruire les composants à chaque requête.
+[https://angular.fr/services/behavior-subject](https://angular.fr/services/behavior-subject)
+
+```typescript
+export class DashboardComponent implements OnInit, OnDestroy {
+  private headerService = inject(HeaderService);
+  private statService = inject(StatsService);
+
+  private destroy$ = new Subject<void>();
+  private currentStateSubject = new BehaviorSubject<CurrentState | null>(null);
+  
+  currentState$ = this.currentStateSubject.asObservable();
+
+  refreshIntervalMS = 30 * 60 * 1000;
+
+  ngOnInit(): void {
+    this.headerService.setSubtitle("Résumé d'activités")
+
+    interval(this.refreshIntervalMS).pipe(
+      startWith(0),
+      takeUntil(this.destroy$),
+      switchMap(() => this.statService.getCurrentState()),
+      tap(state => this.currentStateSubject.next(state))
+    ).subscribe()
+  }
+
+  ngOnDestroy(): void {
+    this.destroy$.next();
+    this.destroy$.complete();
+  }
+
+  onRefresh(): void {
+    this.statService.getCurrentState().subscribe(
+      state => {
+        this.currentStateSubject.next(state);
+      }
+    );
+  }
+}
+```
+
+Je pense que l'affichage des chartes utilisera *ng2-charts*
+[https://valor-software.com/ng2-charts/](https://valor-software.com/ng2-charts/)
 
 
