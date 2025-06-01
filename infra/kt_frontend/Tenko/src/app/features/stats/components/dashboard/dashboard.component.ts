@@ -1,18 +1,20 @@
 import { Component, inject, OnDestroy, OnInit } from '@angular/core';
 import { CommonModule } from '@angular/common';
+import { interval, startWith, Subject, takeUntil, tap, BehaviorSubject, switchMap} from 'rxjs';
 
 import { HeaderService } from '../../../../core/services/header.service';
 import { StatsService } from '../../services/stats.service';
 
 import { CurrentStateComponent } from '../current-state/current-state.component';
 import { CurrentState } from '../../models/stats.model';
-import { interval, startWith, Subject, takeUntil, tap, BehaviorSubject, switchMap} from 'rxjs';
+import { DashboardPageComponent } from '../dashboard-page/dashboard-page.component';
 
 @Component({
   selector: 'app-dashboard',
   imports: [
+    CommonModule,
     CurrentStateComponent,
-    CommonModule
+    DashboardPageComponent
   ],
   templateUrl: './dashboard.component.html',
   styleUrl: './dashboard.component.scss'
