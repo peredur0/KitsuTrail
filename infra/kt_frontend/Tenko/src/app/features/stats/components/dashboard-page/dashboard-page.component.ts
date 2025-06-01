@@ -1,6 +1,7 @@
-import { Component } from '@angular/core';
+import { Component, Input } from '@angular/core';
 
 import { LineTimestampAuthAccessComponent } from '../charts/line-timestamp-auth-access/line-timestamp-auth-access.component';
+import { UsersActivities } from '../../models/stats.model';
 
 @Component({
   selector: 'app-dashboard-page',
@@ -11,5 +12,6 @@ import { LineTimestampAuthAccessComponent } from '../charts/line-timestamp-auth-
   styleUrl: './dashboard-page.component.scss'
 })
 export class DashboardPageComponent {
+  @Input() usersActivity!: UsersActivities;
 
 }

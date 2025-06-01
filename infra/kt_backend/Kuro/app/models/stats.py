@@ -11,3 +11,14 @@ class CurrentState(BaseModel):
     total_users: int = 0
     total_idp: int = 0
     total_sp: int = 0
+
+class BaseIntData(BaseModel):
+    data: list[int] = []
+
+class BaseStrData(BaseModel):
+    data: list[str] = []
+
+class UserActivities(BaseModel):
+    authentications: BaseIntData
+    access: BaseIntData
+    labels: BaseStrData

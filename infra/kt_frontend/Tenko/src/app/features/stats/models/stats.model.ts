@@ -5,3 +5,17 @@ export class CurrentState {
     total_idp!: number;
     total_sp!: number;
 }
+
+export class BaseIntData {
+    data!: number[];
+}
+
+export class BaseStrData {
+    data!: string[];
+}
+
+export class UsersActivities {
+    authentications!: BaseIntData;
+    access!: BaseIntData;
+    labels!: BaseStrData;
+}
