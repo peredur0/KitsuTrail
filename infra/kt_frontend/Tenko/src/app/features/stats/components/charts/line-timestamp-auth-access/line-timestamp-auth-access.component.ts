@@ -18,7 +18,7 @@ export class LineTimestampAuthAccessComponent implements OnChanges {
   
   public lineChartData!: ChartConfiguration['data']
   public lineChartOptions: ChartConfiguration['options'] = {
-    elements: { line: { tension: 0.5 }},
+    elements: { line: { tension: 0.3 }},
     scales: { y: { position: 'left' }},
     plugins: { legend: { display: true }}
   };
@@ -46,7 +46,4 @@ export class LineTimestampAuthAccessComponent implements OnChanges {
       labels: this.data.labels.data
     };
   }
-
-
-
 }

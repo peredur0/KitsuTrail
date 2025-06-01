@@ -320,4 +320,146 @@ export class DashboardComponent implements OnInit, OnDestroy {
 L'affichage des chartes utilisera *ng2-charts*
 [https://valor-software.com/ng2-charts/](https://valor-software.com/ng2-charts/)
 
+### Partie 2 : Premier graphique
+Le premier graphique de cette page regroupe les authentifications et les accès des utilisateurs connu de la plateforme lors des 24 dernières heures.
+Sauf pour la recherche d'attaque, l'ensemble des traitement de données va se porté sur le trafic légitime.
 
+On a ajouter un nouvel endpoint API `/api/v1/stats/activity/users/hourly` qui execute cette requête:
+```sql
+    WITH hours AS (
+        SELECT generate_series(
+            date_trunc('hour', NOW() - INTERVAL '24 hours'),
+            date_trunc('hour', NOW()),
+            INTERVAL '1 hour'
+        ) AS hour
+    ),
+    events AS (
+        SELECT
+            date_trunc('hour', timestamp) AS hour,
+            COUNT(*) FILTER (WHERE action = 'authentication') AS authentications,
+            COUNT(*) FILTER (WHERE action = 'access') AS access
+            FROM audit_logs
+        WHERE
+            timestamp >= NOW() - INTERVAL '24 hours'
+            AND user_id IS NOT NULL
+        GROUP BY hour
+    )
+    SELECT
+        TO_CHAR(h.hour, 'YYYY-MM-DD HH24:00') AS hours,
+        COALESCE(e.authentications, 0) AS authentications,
+        COALESCE(e.access, 0) AS access
+    FROM hours h
+    LEFT JOIN events e ON h.hour = e.hour
+    ORDER BY h.hour;
+```
+On aura techniquement toute les 24 dernière heures même si aucune authentification n'a eu lieu.
+
+Coté Frontend la récupération a été ajoutée dans le processus du composant *dashboard*.
+Ce composant a été légèrement améliorer pour prendre en compte les délais de chargement et les erreurs.
+La méthode de refresh a été également refondue
+```typescript
+export class DashboardComponent implements OnInit, OnDestroy {
+  private headerService = inject(HeaderService);
+  private statService = inject(StatsService);
+  private destroy$ = new Subject<void>();
+
+  private refreshTrigger$ = new Subject<void>(); // déclenchement d'un refresh
+
+  dashboardDataSubject = new BehaviorSubject<DashBoardData | null>(null); // Fusion de l'ensemble des données du dashboard
+  dashboardData$ = this.dashboardDataSubject.asObservable(); 
+
+  isLoading$ = new BehaviorSubject<boolean>(false); // Pour la gestion du chargement
+  
+  refreshIntervalMS = 30 * 60 * 1000;
+
+  ngOnInit(): void {
+    this.headerService.setSubtitle("Résumé d'activités")
+
+    const autoRefresh$ = interval(this.refreshIntervalMS).pipe(startWith(0)); // début de l'auto refresh
+    const manualRefresh$ = this.refreshTrigger$.asObservable();
+
+    this.dashboardData$ = merge(autoRefresh$, manualRefresh$).pipe( // merge les deux observables pour le refresh
+      takeUntil(this.destroy$),
+      tap(() => this.isLoading$.next(true)),    // Début du chargement
+      switchMap(() => 
+        forkJoin({      // Execute la recherche de 2 observables, attend que les deux soient terminer et assign aux bons attributs
+          currentState: this.statService.getCurrentState(),
+          usersActivity: this.statService.getUsersActivity(),
+        }).pipe(
+          catchError(err => {   // Gestion des erreurs
+            console.error(`Error during dashboard loading: ${err}`);
+            return of(null);
+          })
+        )
+      ),
+      tap(() => this.isLoading$.next(false)) // fin du chargement
+    );
+  }
+
+  ngOnDestroy(): void {
+    this.destroy$.next();
+    this.destroy$.complete();
+  }
+
+  onRefresh(): void {
+    this.refreshTrigger$.next(); // execution du refresh
+  }
+}
+```
+
+Je vais récapituler un peu les composants que j'ai en place:
+* dashboard - Composant principal, gère le rafraîchissement des données et la distributions aux composants enfants
+* current-state - ensemble de petite cartes dans le header du dashboard avec des informations récente < 1h
+* dashboard-page - Composant hébergeant et responsable de l'organisation des charts, il redistribue également les données vers les différent charts
+* charts/line-timestamp-auth-access - Composant affichant les données d'authentification et d'accès des utilisateurs.
+
+La mise en place d'un line chart avec *ng2-charts* [https://valor-software.com/ng2-charts/line](https://valor-software.com/ng2-charts/line) se déroule comme suit
+```html
+<h3>Activité utilisateurs des dernières 24h</h3>
+<canvas
+    baseChart
+    [data]="lineChartData"
+    [options]="lineChartOptions"
+    type="line"
+    style="width: 100%; height: 400px;">
+</canvas>
+```
+
+```typescript
+export class LineTimestampAuthAccessComponent implements OnChanges {
+  @Input() data!: UsersActivities
+  
+  public lineChartData!: ChartConfiguration['data']
+  public lineChartOptions: ChartConfiguration['options'] = {
+    elements: { line: { tension: 0.5 }},
+    scales: { y: { position: 'left' }},
+    plugins: { legend: { display: true }}
+  };
+
+  ngOnChanges(): void {     //OnChange pour prendre en compte les modifications dynamiques
+    if (!this.data) return;
+    
+    this.lineChartData = {
+      datasets: [
+        {
+          data: this.data.authentications.data,
+          label: "Authentifications",
+          borderColor: 'rgba(0, 100, 0, 1)',
+          backgroundColor: 'rgba(0, 100, 0, 0.2)',
+          fill: 'origin'
+        },
+        {
+          data: this.data.access.data,
+          label: "Accès",
+          borderColor: 'rgba(0, 0, 139, 1)',
+          backgroundColor: 'rgba(0, 0, 139, 0.2)',
+          fill: 'origin'
+        }
+      ],
+      labels: this.data.labels.data
+    };
+  }
+}
+```
+En définitive on à cette représentation:
+![./img/20250601_chart1.png](./img/20250601_chart1.png)
