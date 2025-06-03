@@ -42,7 +42,7 @@ def get_current_state(session: Session_dep):
         select(func.count()).select_from(Provider).where(Provider.type == 'sp')
     ).one()
 
-    delta = datetime.timedelta(hours=1)
+    delta = datetime.timedelta(minutes=20)
     time_limit = datetime.datetime.now(datetime.timezone.utc) - delta
     active_user_stmt = (
         select(func.count(func.distinct(AuditLog.user_id))).where(
