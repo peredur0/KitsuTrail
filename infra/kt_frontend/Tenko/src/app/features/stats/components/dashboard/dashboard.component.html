@@ -5,7 +5,9 @@
         <app-current-state [state]="data.currentState" />
     </div>
     <div class="dashboard-container">
-        <app-dashboard-page [usersActivity]="data.usersActivity" /> 
+        <app-dashboard-page 
+            [usersActivity]="data.usersActivity"
+            [providersActivity]="data.providersActivity"/> 
     </div>
 </ng-container>
 

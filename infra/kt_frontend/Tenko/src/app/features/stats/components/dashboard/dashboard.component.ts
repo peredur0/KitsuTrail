@@ -6,7 +6,6 @@ import { HeaderService } from '../../../../core/services/header.service';
 import { StatsService } from '../../services/stats.service';
 
 import { CurrentStateComponent } from '../current-state/current-state.component';
-import { CurrentState, UsersActivities } from '../../models/stats.model';
 import { DashboardPageComponent } from '../dashboard-page/dashboard-page.component';
 import { DashBoardData } from '../../models/dashboard-data.model';
 
@@ -47,6 +46,7 @@ export class DashboardComponent implements OnInit, OnDestroy {
         forkJoin({
           currentState: this.statService.getCurrentState(),
           usersActivity: this.statService.getUsersActivity(),
+          providersActivity: this.statService.getProvidersActivity()
         }).pipe(
           catchError(err => {
             console.error(`Error during dashboard loading: ${err}`);

@@ -1,6 +1,6 @@
 import { Component, Input } from '@angular/core';
 
-import { UsersActivities } from '../../models/stats.model';
+import { ProvidersActivities, UsersActivities } from '../../models/stats.model';
 import { LineTimestampAuthAccessComponent } from '../charts/line-timestamp-auth-access/line-timestamp-auth-access.component';
 import { BarProvidersSuccessFailComponent } from '../charts/bar-providers-success-fail/bar-providers-success-fail.component';
 
@@ -15,5 +15,5 @@ import { BarProvidersSuccessFailComponent } from '../charts/bar-providers-succes
 })
 export class DashboardPageComponent {
   @Input() usersActivity!: UsersActivities;
-
+  @Input() providersActivity!: ProvidersActivities;
 }
