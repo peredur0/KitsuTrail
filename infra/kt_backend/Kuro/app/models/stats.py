@@ -22,3 +22,12 @@ class UserActivities(BaseModel):
     authentications: BaseIntData
     access: BaseIntData
     labels: BaseStrData
+
+class ActivitiesResults(BaseModel):
+    success: BaseIntData
+    failure: BaseIntData
+    labels: BaseStrData
+
+class ProvidersActivities(BaseModel):
+    idp: ActivitiesResults
+    sp: ActivitiesResults

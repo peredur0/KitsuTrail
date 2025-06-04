@@ -15,6 +15,6 @@ export class StatsService {
     }
 
     getUsersActivity(): Observable<UsersActivities> {
-        return this.http.get<UsersActivities>('http://localhost:8000/api/v1/stats/activity/users/hourly');
+        return this.http.get<UsersActivities>('http://localhost:8000/api/v1/stats/activity/users');
     }
 }

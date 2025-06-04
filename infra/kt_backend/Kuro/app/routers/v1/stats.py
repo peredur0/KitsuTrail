@@ -14,7 +14,14 @@ from sqlalchemy.sql import text
 from utils.database_utils import get_session, check_required_tables
 from utils.check_utils import check_accept_json
 
-from models.stats import CurrentState, UserActivities, BaseIntData, BaseStrData
+from models.stats import (
+    CurrentState,
+    UserActivities,
+    BaseIntData,
+    BaseStrData,
+    ActivitiesResults,
+    ProvidersActivities
+)
 from models.user import UserInDB
 from models.provider import Provider
 from models.audit_log import AuditLog
@@ -72,11 +79,11 @@ def get_current_state(session: Session_dep):
 
 
 @_router.get(
-        '/activity/users/hourly',
+        '/activity/users',
         dependencies=[Depends(check_accept_json)],
         response_model=UserActivities
 )
-def get_users_activity_hourly(session: Session_dep):
+def get_users_activity(session: Session_dep):
     query = text("""
         WITH hours AS (
             SELECT generate_series(
@@ -120,6 +127,64 @@ def get_users_activity_hourly(session: Session_dep):
         labels=BaseStrData(data=data['labels']),
         authentications=BaseIntData(data=data['authentications']),
         access=BaseIntData(data=data['access'])
+    )
+
+
+@_router.get(
+        '/activity/providers',
+        dependencies=[Depends(check_accept_json)],
+        response_model=ProvidersActivities
+)
+def get_providers_activity(session: Session_dep):
+    query = text("""
+        WITH activity AS (
+            SELECT 
+                provider_id,
+                COUNT(*) FILTER (WHERE result = 'success') AS success,
+                COUNT(*) FILTER (WHERE result = 'fail') AS failure
+            FROM audit_logs
+            WHERE
+                timestamp >= NOW() - INTERVAL '24 hours'
+                AND user_id IS NOT NULL
+            GROUP BY
+                provider_id
+        )
+        SELECT
+            p.name,
+            p.type,
+            COALESCE(a.success, 0) AS success,
+            COALESCE(a.failure, 0) AS failure
+        FROM providers p
+        LEFT JOIN activity a ON p.id = a.provider_id
+        ORDER BY (a.success + a.failure) DESC;
+    """)
+    result = session.exec(query).all()
+    data = {
+        'idp_success': [],
+        'idp_failure': [],
+        'idp_labels': [],
+        'sp_success': [],
+        'sp_failure': [],
+        'sp_labels': [],
+    }
+
+    for row in result:
+        p_type = row[1]
+        data[f'{p_type}_success'].append(row[2])
+        data[f'{p_type}_failure'].append(row[3])
+        data[f'{p_type}_labels'].append(row[0])
+    
+    return ProvidersActivities(
+        idp=ActivitiesResults(
+            success=BaseIntData(data=data['idp_success']),
+            failure=BaseIntData(data=data['idp_failure']),
+            labels=BaseStrData(data=data['idp_labels'])
+        ),
+        sp=ActivitiesResults(
+            success=BaseIntData(data=data['sp_success']),
+            failure=BaseIntData(data=data['sp_failure']),
+            labels=BaseStrData(data=data['sp_labels'])
+        )
     )
 
 
