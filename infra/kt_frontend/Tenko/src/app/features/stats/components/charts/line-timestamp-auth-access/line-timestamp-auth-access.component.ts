@@ -29,17 +29,11 @@ export class LineTimestampAuthAccessComponent implements OnChanges {
           blur: 10,
           opacity: 0.2
         },
-        toolbar: {
-          show: false
-        }
+        toolbar: { show: false}
       },
       colors: ["#006400", "#00008B"],
-      dataLabels: {
-        enabled: false
-      },
-      stroke: {
-        curve: "smooth"
-      },
+      dataLabels: { enabled: false },
+      stroke: { curve: "smooth"},
       title: {
         text: "Activités utilisateurs des 24 dernières heures",
         align: "left"
@@ -51,17 +45,9 @@ export class LineTimestampAuthAccessComponent implements OnChanges {
           opacity: 0.5
         }
       },
-      markers: {
-        size: 1
-      },
-      xaxis: {
-        categories: [],
-      },
-      yaxis: {
-        title: {
-          text: "Évènements"
-        },
-      },
+      markers: { size: 0 },
+      xaxis: { categories: [] },
+      yaxis: { title: { text: "Évènements" } },
       legend: {
         position: "top",
         horizontalAlign: "right",
