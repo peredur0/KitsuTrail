@@ -19,3 +19,14 @@ export class UsersActivities {
     access!: BaseIntData;
     labels!: BaseStrData;
 }
+
+export class ActivitiesResults {
+    success!: BaseIntData;
+    failure!: BaseIntData;
+    labels!: BaseStrData;
+}
+
+export class ProvidersActivities {
+    idp!: ActivitiesResults;
+    sp!: ActivitiesResults;
+}
