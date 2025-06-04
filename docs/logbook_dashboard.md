@@ -463,3 +463,20 @@ export class LineTimestampAuthAccessComponent implements OnChanges {
 ```
 En définitive on à cette représentation:
 ![./img/20250601_chart1.png](./img/20250601_chart1.png)
+
+### 2025-06-04: Changement de module de charts.
+Après discussion avec un développeur de ma société, j'ai décidé de basculer de ng2-chart + chart.js à ApexCharts.
+Ce projet est opensource, avec une licence MIT. La documentation possède pas mal d'exemples (Angular, js, React).
+Leur site possède un éditeur de dashboard assez pratique.
+Et enfin le design des charts est plus moderne que ng2-charts
+
+- [https://apexcharts.com/](https://apexcharts.com/)
+- [https://editor.apexcharts.com](https://editor.apexcharts.com)
+- [https://apexcharts.com/docs/angular-charts/](https://apexcharts.com/docs/angular-charts/)
+
+
+```
+npm uninstall n2-charts chart.js
+
+npm install apexcharts ng-apexcharts --save
+```

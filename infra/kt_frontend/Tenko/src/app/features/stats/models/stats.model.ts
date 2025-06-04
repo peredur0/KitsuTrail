@@ -7,11 +7,11 @@ export class CurrentState {
 }
 
 export class BaseIntData {
-    data!: number[];
+    data: number[] = [];
 }
 
 export class BaseStrData {
-    data!: string[];
+    data: string[] = [];
 }
 
 export class UsersActivities {
