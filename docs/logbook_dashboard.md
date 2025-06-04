@@ -480,3 +480,22 @@ npm uninstall n2-charts chart.js
 
 npm install apexcharts ng-apexcharts --save
 ```
+
+J'ai pu facilement remplacer le premier chart par un line char un peu plus moderne.
+J'ai également ajouter 2 bar chart pour les success fail par providers.
+
+La mise en place d'un nouveau data feed se passe de la manière suivante:
+1. Construction et test de la requête SQL (Inari)
+2. Mise en place du endpoint API et des modèles ORM si besoin (Kuro)
+3. Ajout des modèles manquants (Tenko)
+4. Ajout de la nouvelle requête dans le service stats (Tenko)
+5. Mise à jour de la classe DashBoardData
+6. Mise à jour du forkJoin pour l'observable dashboardData$
+7. Mise à jour des @Input dans dashboard-page
+8. Mise à jour des paramètre transmis à app-dashboard-page
+9. Fourniture des données dans le composant voulu
+
+Visuel de l'étape
+![./img/20250605_dash1.png](./img/20250605_dash1.png)
+
+Je vais devoir trouver un moyen plus efficace de gérer la disposition.
