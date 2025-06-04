@@ -1,7 +1,7 @@
 import { Component, Input, OnChanges, SimpleChanges } from '@angular/core';
 
 import { ChartComponent } from "ng-apexcharts";
-import { ChartOptions } from '../../../models/chart-options.model';
+import { LineChartOptions } from '../../../models/chart-options.model';
 
 import { UsersActivities } from '../../../models/stats.model';
 
@@ -16,10 +16,10 @@ import { UsersActivities } from '../../../models/stats.model';
 export class LineTimestampAuthAccessComponent implements OnChanges {
   @Input() data!: UsersActivities;
 
-  public chartOptions: ChartOptions = {
+  public chartOptions: LineChartOptions = {
       series: [],
       chart: {
-        height: 350,
+        height: 400,
         type: "line",
         dropShadow: {
           enabled: true,
@@ -31,7 +31,7 @@ export class LineTimestampAuthAccessComponent implements OnChanges {
         },
         toolbar: { show: false}
       },
-      colors: ["#006400", "#00008B"],
+      colors: ["#4B0082", "#00008B"],
       dataLabels: { enabled: false },
       stroke: { curve: "smooth"},
       title: {

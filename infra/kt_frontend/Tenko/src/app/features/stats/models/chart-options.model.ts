@@ -8,10 +8,11 @@ import {
   ApexYAxis,
   ApexGrid,
   ApexTitleSubtitle,
-  ApexLegend
+  ApexLegend,
+  ApexPlotOptions
 } from "ng-apexcharts";
 
-export type ChartOptions = {
+export type LineChartOptions = {
   series: ApexAxisChartSeries;
   chart: ApexChart;
   xaxis: ApexXAxis;
@@ -23,4 +24,15 @@ export type ChartOptions = {
   grid: ApexGrid;
   legend: ApexLegend;
   title: ApexTitleSubtitle;
+};
+
+export type BarChartOptions = {
+  title: ApexTitleSubtitle;
+  series: ApexAxisChartSeries;
+  chart: ApexChart;
+  plotOptions: ApexPlotOptions;
+  dataLabels: ApexDataLabels;
+  stroke: ApexStroke;
+  xaxis: ApexXAxis;
+  colors: string[];
 };
