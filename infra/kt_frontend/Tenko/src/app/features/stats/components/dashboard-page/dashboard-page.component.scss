@@ -1,12 +1,23 @@
-.row-1 {
-    margin-top: 10px;
+.dashboard-grid {
+    display: grid;
+    grid-template-columns: 1fr 1fr;
+    gap: 20px;
+    margin-top: 20px;
+    padding-right: 10px;
+    align-items: start;
+}
+
+.cell-1 {
+    width: 100%;
+}
+
+.cell-2 {
     display: flex;
-    gap: 10px;
-    .cell-1 {
-        flex: 1.1;
-    }
-    .cell-2 {
-        display: flex;
-        flex: 1;
-    }
+    flex-direction: row;
+    justify-content: space-between;
+    gap: 20px;
+}
+
+.cell-2 > * {
+    flex: 1;
 }

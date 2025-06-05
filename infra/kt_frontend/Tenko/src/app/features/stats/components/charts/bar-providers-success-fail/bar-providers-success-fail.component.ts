@@ -23,7 +23,10 @@ export class BarProvidersSuccessFailComponent implements OnChanges {
       align: "left"
     },
     series: [],
-    chart: { type: "bar", height: 400 },
+    chart: {
+      type: "bar",
+      height: 400,
+      toolbar: { show: false } },
     plotOptions: {
       bar: {
         horizontal: true,
