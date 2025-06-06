@@ -4,13 +4,15 @@ import { ProvidersActivities, UsersActivities, ChartData } from '../../models/st
 import { LineTimestampAuthAccessComponent } from '../charts/line-timestamp-auth-access/line-timestamp-auth-access.component';
 import { BarProvidersSuccessFailComponent } from '../charts/bar-providers-success-fail/bar-providers-success-fail.component';
 import { RadarProtocolsComponent } from '../charts/radar-protocols/radar-protocols.component';
+import { PieFailureReasonsComponent } from '../charts/pie-failure-reasons/pie-failure-reasons.component';
 
 @Component({
   selector: 'app-dashboard-page',
   imports: [
     LineTimestampAuthAccessComponent,
     BarProvidersSuccessFailComponent,
-    RadarProtocolsComponent
+    RadarProtocolsComponent,
+    PieFailureReasonsComponent
   ],
   templateUrl: './dashboard-page.component.html',
   styleUrl: './dashboard-page.component.scss'
@@ -19,4 +21,5 @@ export class DashboardPageComponent {
   @Input() usersActivity!: UsersActivities;
   @Input() providersActivity!: ProvidersActivities;
   @Input() protocolsActivity!: ChartData;
+  @Input() failureActivity!: ChartData;
 }

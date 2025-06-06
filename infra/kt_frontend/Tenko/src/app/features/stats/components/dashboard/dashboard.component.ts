@@ -47,7 +47,8 @@ export class DashboardComponent implements OnInit, OnDestroy {
           currentState: this.statService.getCurrentState(),
           usersActivity: this.statService.getUsersActivity(),
           providersActivity: this.statService.getProvidersActivity(),
-          protocolsActivity: this.statService.getProtocolActivity()
+          protocolsActivity: this.statService.getProtocolActivity(),
+          failureActivity: this.statService.getFailureActivity()
         }).pipe(
           catchError(err => {
             console.error(`Error during dashboard loading: ${err}`);

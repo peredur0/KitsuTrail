@@ -47,3 +47,11 @@ export type RadarChartOptions = {
   colors: string[];
   xaxis: ApexXAxis;
 };
+
+export type PieChartOptions = {
+  series: ApexNonAxisChartSeries;
+  chart: ApexChart;
+  labels: string[];
+  title: ApexTitleSubtitle;
+  colors: string[];
+}
