@@ -25,7 +25,7 @@ export class BarProvidersSuccessFailComponent implements OnChanges {
     series: [],
     chart: {
       type: "bar",
-      height: 350,
+      height: 325,
       toolbar: { show: false } },
     plotOptions: {
       bar: {

@@ -1,31 +1,18 @@
 .dashboard-grid {
-    display: grid;
-    grid-template-columns: 1fr 1fr;
-    gap: 20px;
     margin-top: 20px;
     padding-right: 10px;
-    align-items: start;
 }
 
-.cell-1 {
-    width: 100%;
+.row1, .row2 {
+    display: grid;
+    row-gap: 10px;
 }
 
-.cell-2 {
-    display: flex;
-    flex-direction: row;
-    justify-content: space-between;
-    gap: 20px;
+.row1 {
+    grid-template-columns: 2fr 1fr 1fr;
+    margin-bottom: 30px;
 }
 
-.cell-2 > * {
-    flex: 1;
-}
-
-.cell-3 {
-    width: 50%;
-}
-
-.cell-4 {
-    width: 50%;
+.row2 {
+    grid-template-columns: 1fr 2fr 1fr;
 }

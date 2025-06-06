@@ -20,7 +20,7 @@ export class RadarProtocolsComponent implements OnChanges {
   public chartOptions: RadarChartOptions = {
     series: [],
     chart: {
-      height: 320,
+      height: 325,
       type: "radar",
       toolbar: { show: false },
       dropShadow: {

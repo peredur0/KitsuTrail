@@ -54,4 +54,6 @@ export type PieChartOptions = {
   labels: string[];
   title: ApexTitleSubtitle;
   colors: string[];
+  legend: ApexLegend;
+  plotOptions: ApexPlotOptions;
 }

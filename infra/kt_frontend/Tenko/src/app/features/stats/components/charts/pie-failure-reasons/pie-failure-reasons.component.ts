@@ -21,10 +21,18 @@ export class PieFailureReasonsComponent implements OnChanges {
     labels: [],
     title: { text: 'Raison des échecs' },
     chart: {
-      height: 320,
+      height: 325,
       type: 'pie'
     },
-    colors: ['#8B0000', '#DC143C', '#FF8C00', '#FFA500']
+    colors: ['#8B0000', '#DC143C', '#FF8C00', '#FFA500'],
+    legend: { position: 'bottom'},
+    plotOptions: {
+      pie: {
+        customScale: 1,
+        offsetY: 35,
+        offsetX: 10
+      }
+    }
   }
   ngOnChanges(changes: SimpleChanges): void {
     if (changes['data'] && this.data) {

@@ -19,7 +19,7 @@ export class LineTimestampAuthAccessComponent implements OnChanges {
   public chartOptions: LineChartOptions = {
       series: [],
       chart: {
-        height: 350,
+        height: 325,
         type: "line",
         dropShadow: {
           enabled: true,
