@@ -36,6 +36,7 @@ Kuro API server is managing the data related to the KitsuTrail project.
 * **Get current state of the platform**
 * **Get users activities (last 24h)**
 * **Get providers success/fail activities (last 24h)**
+* **Get users per provider type per protocol (last 24h)**
 """
 
 app = FastAPI(

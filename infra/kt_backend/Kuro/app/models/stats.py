@@ -31,3 +31,11 @@ class ActivitiesResults(BaseModel):
 class ProvidersActivities(BaseModel):
     idp: ActivitiesResults
     sp: ActivitiesResults
+
+class SerieInt(BaseModel):
+    name: str
+    data: list[int]
+
+class ChartData(BaseModel):
+    series: list[SerieInt]
+    categories: list[str]

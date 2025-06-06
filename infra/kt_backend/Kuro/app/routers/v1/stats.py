@@ -8,7 +8,7 @@ import datetime
 
 from typing import Annotated
 from sqlmodel import Session, select, func
-from fastapi import APIRouter, Depends
+from fastapi import APIRouter, Depends, HTTPException
 from sqlalchemy.sql import text
 
 from utils.database_utils import get_session, check_required_tables
@@ -20,7 +20,9 @@ from models.stats import (
     BaseIntData,
     BaseStrData,
     ActivitiesResults,
-    ProvidersActivities
+    ProvidersActivities,
+    SerieInt,
+    ChartData
 )
 from models.user import UserInDB
 from models.provider import Provider
@@ -187,6 +189,67 @@ def get_providers_activity(session: Session_dep):
         )
     )
 
+@_router.get(
+        '/activity/protocol',
+        dependencies=[Depends(check_accept_json)],
+        response_model=ChartData
+)
+def get_protocol_usage(session: Session_dep):
+    query = text("""
+        WITH protocols AS (SELECT DISTINCT protocol FROM providers),
+        types AS (SELECT DISTINCT type FROM providers ),
+        combined AS (
+            SELECT
+                t.type,
+                p.protocol
+            FROM
+                types t
+            CROSS JOIN protocols p
+        ),
+        users_per_providers AS (
+            SELECT
+                provider_type,
+                provider_protocol,
+                COUNT(DISTINCT(user_id)) AS users
+            FROM audit_logs
+            WHERE
+                timestamp >= NOW() - INTERVAL '24 hours'
+                AND result = 'success'
+                AND provider_id IS NOT NULL
+            GROUP BY
+                provider_type,
+                provider_protocol
+        )
+        SELECT
+            c.type,
+            c.protocol,
+            COALESCE(u.users, 0) AS users
+        FROM combined c
+        LEFT JOIN users_per_providers u
+            ON c.type = u.provider_type
+            AND c.protocol = u.provider_protocol
+        ORDER BY type, protocol;
+    """)
+    result = session.exec(query).all()
+    data = {
+        'idp_serie': [row[2] for row in result if row[0] == 'idp'],
+        'sp_serie': [row[2] for row in result if row[0] == 'sp'],
+    }
+    idp_protocols = [row[1] for row in result if row[0] == 'idp']
+    sp_protocols = [row[1] for row in result if row[0] == 'sp']
+
+    if idp_protocols != sp_protocols:
+        logger.error('Mismatch between IDP and SP protocols - %s %s',
+                     idp_protocols, sp_protocols)
+        raise HTTPException(500, detail="Protocols mismatch between idp and sp")
+    
+    return ChartData(
+        series=[
+            SerieInt(name='idp', data=data['idp_serie']),
+            SerieInt(name='sp', data=data['sp_serie'])
+        ],
+        categories=idp_protocols
+    ) 
 
 # === Functions === #
 def init_router():

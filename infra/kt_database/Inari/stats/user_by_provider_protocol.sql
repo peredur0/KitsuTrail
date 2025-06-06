@@ -23,7 +23,8 @@ users_per_providers AS (
         COUNT(DISTINCT(user_id)) AS users
     FROM audit_logs
     WHERE
-        result = 'success'
+        timestamp >= NOW() - INTERVAL '24 hours'
+        AND result = 'success'
         AND provider_id IS NOT NULL
     GROUP BY
         provider_type,
@@ -36,4 +37,5 @@ SELECT
 FROM combined c
 LEFT JOIN users_per_providers u
     ON c.type = u.provider_type
-    AND c.protocol = u.provider_protocol;
+    AND c.protocol = u.provider_protocol
+ORDER BY type, protocol;
