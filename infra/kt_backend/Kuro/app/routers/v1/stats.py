@@ -251,6 +251,44 @@ def get_protocols_usage(session: Session_dep):
         categories=idp_protocols
     ) 
 
+
+@_router.get(
+        '/activity/failure-reasons',
+        dependencies=[Depends(check_accept_json)],
+        response_model=ChartData
+)
+def get_failure_reasons(session: Session_dep):
+    query = text("""
+        SELECT
+            reason,
+            COUNT(*) AS records
+        FROM audit_logs
+        WHERE
+            timestamp >= NOW() - INTERVAL '24 hours'
+            AND user_id IS NOT NULL
+            AND result = 'fail'
+        GROUP BY
+            reason
+        ORDER BY
+            records DESC;
+    """)
+    result = session.exec(query).all()
+    data = {
+        'labels': [],
+        'records': [],
+    }
+    for row in result:
+        data['labels'].append(row[0])
+        data['records'].append(row[1])
+    
+    return ChartData(
+        series=[
+            SerieInt(name='records', data=data['records']),
+        ],
+        categories=data['labels']
+    ) 
+
+
 # === Functions === #
 def init_router():
     try:

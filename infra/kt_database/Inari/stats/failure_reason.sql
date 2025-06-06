@@ -7,4 +7,6 @@ WHERE
     AND user_id IS NOT NULL
     AND result = 'fail'
 GROUP BY
-    reason;
+    reason
+ORDER BY
+    records DESC;
