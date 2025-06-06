@@ -20,8 +20,9 @@ export class RadarProtocolsComponent implements OnChanges {
   public chartOptions: RadarChartOptions = {
     series: [],
     chart: {
-      height: 350,
+      height: 320,
       type: "radar",
+      toolbar: { show: false },
       dropShadow: {
         enabled: true,
         blur: 1,
@@ -29,9 +30,9 @@ export class RadarProtocolsComponent implements OnChanges {
         top: 1
       }
     },
-    title: { text: "Utilisateur par protocol" },
+    title: { text: "Utilisateurs par protocole" },
     stroke: { width: 0 },
-    fill: { opacity: 0.4 },
+    fill: { opacity: 0.3 },
     colors: ["#4B0082", "#00008B"],
     markers: { size: 0 },
     xaxis: {

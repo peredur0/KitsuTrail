@@ -25,7 +25,7 @@ export class BarProvidersSuccessFailComponent implements OnChanges {
     series: [],
     chart: {
       type: "bar",
-      height: 400,
+      height: 350,
       toolbar: { show: false } },
     plotOptions: {
       bar: {
@@ -54,7 +54,7 @@ export class BarProvidersSuccessFailComponent implements OnChanges {
 
   ngOnChanges(changes: SimpleChanges): void {
     if (changes['title'] && this.title) {
-      this.chartOptions.title.text = `Success/Fail: ${this.title}`;
+      this.chartOptions.title.text = `Réussite/Échec: ${this.title}`;
     }
     if (changes['data'] && this.data){
       this.chartOptions.series = [

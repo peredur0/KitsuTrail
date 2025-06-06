@@ -19,7 +19,7 @@ export class LineTimestampAuthAccessComponent implements OnChanges {
   public chartOptions: LineChartOptions = {
       series: [],
       chart: {
-        height: 400,
+        height: 350,
         type: "line",
         dropShadow: {
           enabled: true,
@@ -35,7 +35,7 @@ export class LineTimestampAuthAccessComponent implements OnChanges {
       dataLabels: { enabled: false },
       stroke: { curve: "smooth"},
       title: {
-        text: "Activités utilisateurs des 24 dernières heures",
+        text: "Activités utilisateurs",
         align: "left"
       },
       grid: {
