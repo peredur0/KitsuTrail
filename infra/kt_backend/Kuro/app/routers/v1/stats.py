@@ -190,11 +190,11 @@ def get_providers_activity(session: Session_dep):
     )
 
 @_router.get(
-        '/activity/protocol',
+        '/activity/protocols',
         dependencies=[Depends(check_accept_json)],
         response_model=ChartData
 )
-def get_protocol_usage(session: Session_dep):
+def get_protocols_usage(session: Session_dep):
     query = text("""
         WITH protocols AS (SELECT DISTINCT protocol FROM providers),
         types AS (SELECT DISTINCT type FROM providers ),
