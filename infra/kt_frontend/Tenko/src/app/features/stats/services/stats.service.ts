@@ -2,7 +2,7 @@ import { Injectable, inject } from "@angular/core";
 import { HttpClient } from "@angular/common/http";
 import { Observable } from "rxjs";
 
-import { CurrentState, ProvidersActivities, UsersActivities } from "../models/stats.model";
+import { ChartData, CurrentState, ProvidersActivities, UsersActivities } from "../models/stats.model";
 
 @Injectable({
     providedIn: 'root'
@@ -20,5 +20,9 @@ export class StatsService {
 
     getProvidersActivity(): Observable<ProvidersActivities> {
         return this.http.get<ProvidersActivities>('http://localhost:8000/api/v1/stats/activity/providers');
+    }
+
+    getProtocolActivity(): Observable<ChartData> {
+        return this.http.get<ChartData>('http://localhost:8000/api/v1/stats/activity/protocols');
     }
 }

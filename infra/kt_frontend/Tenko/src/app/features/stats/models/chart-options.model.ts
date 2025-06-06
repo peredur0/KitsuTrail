@@ -36,3 +36,14 @@ export type BarChartOptions = {
   xaxis: ApexXAxis;
   colors: string[];
 };
+
+export type RadarChartOptions = {
+  series: ApexAxisChartSeries;
+  chart: ApexChart;
+  title: ApexTitleSubtitle;
+  stroke: ApexStroke;
+  fill: ApexFill;
+  markers: ApexMarkers;
+  colors: string[];
+  xaxis: ApexXAxis;
+};

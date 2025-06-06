@@ -46,7 +46,8 @@ export class DashboardComponent implements OnInit, OnDestroy {
         forkJoin({
           currentState: this.statService.getCurrentState(),
           usersActivity: this.statService.getUsersActivity(),
-          providersActivity: this.statService.getProvidersActivity()
+          providersActivity: this.statService.getProvidersActivity(),
+          protocolsActivity: this.statService.getProtocolActivity()
         }).pipe(
           catchError(err => {
             console.error(`Error during dashboard loading: ${err}`);

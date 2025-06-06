@@ -30,3 +30,13 @@ export class ProvidersActivities {
     idp!: ActivitiesResults;
     sp!: ActivitiesResults;
 }
+
+export class SerieInt {
+    name: string = '';
+    data: number[] = [];
+}
+
+export class ChartData {
+    series!: SerieInt[];
+    categories!: string[];
+}
