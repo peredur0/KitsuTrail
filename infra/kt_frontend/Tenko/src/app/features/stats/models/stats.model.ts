@@ -40,3 +40,11 @@ export class ChartData {
     series!: SerieInt[];
     categories!: string[];
 }
+
+export class UsersSummary {
+    login!: string;
+    authentication: number = 0;
+    access: number = 0;
+    failure: number = 0;
+    events: number = 0;
+}

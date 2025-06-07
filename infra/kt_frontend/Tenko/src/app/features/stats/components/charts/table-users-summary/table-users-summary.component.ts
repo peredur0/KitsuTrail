@@ -1,4 +1,5 @@
-import { Component } from '@angular/core';
+import { Component, Input, OnChanges, SimpleChanges } from '@angular/core';
+import { UsersSummary } from '../../../models/stats.model';
 
 @Component({
   selector: 'app-table-users-summary',
@@ -6,6 +7,10 @@ import { Component } from '@angular/core';
   templateUrl: './table-users-summary.component.html',
   styleUrl: './table-users-summary.component.scss'
 })
-export class TableUsersSummaryComponent {
+export class TableUsersSummaryComponent implements OnChanges{
+  @Input() data!: UsersSummary;
 
+  ngOnChanges(changes: SimpleChanges): void {
+    
+  }
 }

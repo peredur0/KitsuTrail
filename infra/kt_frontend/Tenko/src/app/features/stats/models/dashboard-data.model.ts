@@ -1,4 +1,4 @@
-import { ChartData, CurrentState, ProvidersActivities } from "./stats.model";
+import { ChartData, CurrentState, ProvidersActivities, UsersSummary } from "./stats.model";
 import { UsersActivities } from "./stats.model";
 
 export interface DashBoardData {
@@ -7,4 +7,5 @@ export interface DashBoardData {
     providersActivity: ProvidersActivities;
     protocolsActivity: ChartData;
     failureActivity: ChartData;
+    usersSummary: UsersSummary;
 }
