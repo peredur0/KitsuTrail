@@ -24,5 +24,5 @@ export class DashboardPageComponent {
   @Input() providersActivity!: ProvidersActivities;
   @Input() protocolsActivity!: ChartData;
   @Input() failureActivity!: ChartData;
-  @Input() usersSummary!: UsersSummary;
+  @Input() usersSummary!: UsersSummary[];
 }

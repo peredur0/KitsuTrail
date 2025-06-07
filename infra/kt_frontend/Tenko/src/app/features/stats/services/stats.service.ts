@@ -32,7 +32,7 @@ export class StatsService {
         return this.http.get<ChartData>(`${HOST}/api/v1/stats/activity/failure-reasons`)
     }
     
-    getUsersSummary(): Observable<UsersSummary> {
-        return this.http.get<UsersSummary>(`${HOST}/api/v1/stats/activity/users-summary`)
+    getUsersSummary(): Observable<UsersSummary[]> {
+        return this.http.get<UsersSummary[]>(`${HOST}/api/v1/stats/activity/users-summary`)
     }
 }

@@ -7,5 +7,5 @@ export interface DashBoardData {
     providersActivity: ProvidersActivities;
     protocolsActivity: ChartData;
     failureActivity: ChartData;
-    usersSummary: UsersSummary;
+    usersSummary: UsersSummary[];
 }

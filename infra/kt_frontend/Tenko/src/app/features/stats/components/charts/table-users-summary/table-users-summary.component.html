@@ -1,1 +1,30 @@
-<p>table-users-summary works!</p>
+<table mat-table [dataSource]="dataSource" class="mat-elevation-z8">
+    
+    <ng-container matColumnDef="login">
+        <th mat-header-cell *matHeaderCellDef class="text-center">Login</th>
+        <td mat-cell *matCellDef="let element" class="text-right">{{ element.login }}</td>
+    </ng-container>
+
+    <ng-container matColumnDef="authentication">
+        <th mat-header-cell *matHeaderCellDef class="text-center">Authentifications</th>
+        <td mat-cell *matCellDef="let element" class="text-center">{{ element.authentication }}</td>
+    </ng-container>
+
+    <ng-container matColumnDef="access">
+        <th mat-header-cell *matHeaderCellDef class="text-center">Accès</th>
+        <td mat-cell *matCellDef="let element" class="text-center">{{ element.access }}</td>
+    </ng-container>
+
+    <ng-container matColumnDef="failure">
+        <th mat-header-cell *matHeaderCellDef class="text-center">Échecs</th>
+        <td mat-cell *matCellDef="let element" class="text-center">{{ element.failure }}</td>
+    </ng-container>
+
+    <ng-container matColumnDef="events">
+        <th mat-header-cell *matHeaderCellDef class="text-center">Évènements</th>
+        <td mat-cell *matCellDef="let element" class="text-center">{{ element.events }}</td>
+    </ng-container>
+
+    <tr mat-header-row *matHeaderRowDef="displayColumns"></tr>
+    <tr mat-row *matRowDef="let row; columns: displayColumns;"></tr>
+</table>
