@@ -22,7 +22,8 @@ from models.stats import (
     ActivitiesResults,
     ProvidersActivities,
     SerieInt,
-    ChartData
+    ChartData,
+    UsersSummary
 )
 from models.user import UserInDB
 from models.provider import Provider
@@ -287,6 +288,54 @@ def get_failure_reasons(session: Session_dep):
         ],
         categories=data['labels']
     ) 
+
+
+@_router.get(
+        '/activity/users-summary',
+        dependencies=[Depends(check_accept_json)],
+        response_model=list[UsersSummary]
+)
+def get_users_summary(session: Session_dep):
+    query = text("""
+        WITH users AS (
+            SELECT login FROM users
+        ),
+        activity AS (
+            SELECT
+                user_login,
+                COUNT(*) FILTER(WHERE action = 'authentication' AND result = 'success') AS authentication,
+                COUNT(*) FILTER(WHERE action = 'access' AND result = 'success') AS access,
+                COUNT(*) FILTER(WHERE result = 'fail') AS failure,
+                COUNT(*) FILTER(WHERE category = 'autorisation')AS events
+            FROM audit_logs
+            WHERE
+                timestamp >= NOW() - INTERVAL '24 hours'
+                AND user_id IS NOT NULL
+            GROUP BY user_login
+        )
+        SELECT
+            u.login,
+            COALESCE(a.authentication, 0) AS authentication,
+            COALESCE(a.access, 0) AS access,
+            COALESCE(a.failure, 0) AS failure,
+            COALESCE(a.events, 0) AS events
+        FROM users u
+        LEFT JOIN activity a
+            ON u.login = a.user_login
+        ORDER BY
+            events DESC;
+    """)
+    result = session.exec(query).all()
+    data = [
+        UsersSummary(
+            login=row[0],
+            authentication=row[1],
+            access=row[2],
+            failure=row[3],
+            events=row[4]
+        ) for row in result
+    ]
+    return data
 
 
 # === Functions === #

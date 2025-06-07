@@ -10,7 +10,8 @@ activity AS (
         COUNT(*) FILTER(WHERE category = 'autorisation')AS events
     FROM audit_logs
     WHERE
-        user_id IS NOT NULL
+        timestamp >= NOW() - INTERVAL '24 hours'
+        AND user_id IS NOT NULL
     GROUP BY user_login
 )
 SELECT

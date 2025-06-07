@@ -39,3 +39,10 @@ class SerieInt(BaseModel):
 class ChartData(BaseModel):
     series: list[SerieInt]
     categories: list[str]
+
+class UsersSummary(BaseModel):
+    login: str
+    authentication: int
+    access: int
+    failure: int
+    events: int
