@@ -17,6 +17,10 @@
     * Simulation de l'activité (audit log)
     * Visualisation des audit logs
 
+4. logbook_dashboard.md - 2025/05/27 > 2025/06/09
+    * Migration de SQLlite vers PSQL
+    * Mise en place du dashboard de monitoring
+
 ## Progress summary
 1. 20250330_front.md
     * Base du frontend
