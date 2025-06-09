@@ -1,0 +1,19 @@
+<ng-container *ngIf="dashboardData$ | async as data">
+    <div *ngIf="isLoading$ | async" class="loader">Chargement en cours...</div>
+    <div class="dashboard-header">
+        <button (click)="onRefresh()">Rafraîchir</button>
+        <app-current-state [state]="data.currentState" />
+    </div>
+    <div class="dashboard-container">
+        <app-dashboard-page 
+            [usersActivity]="data.usersActivity"
+            [providersActivity]="data.providersActivity"
+            [protocolsActivity]="data.protocolsActivity"
+            [failureActivity]="data.failureActivity"
+            [usersSummary]="data.usersSummary"/> 
+    </div>
+</ng-container>
+
+<ng-container *ngIf="(dashboardData$ | async) === null">
+    <div class="error-message">Échec de chargement des données</div>
+</ng-container>

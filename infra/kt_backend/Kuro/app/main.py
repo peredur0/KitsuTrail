@@ -31,6 +31,14 @@ Kuro API server is managing the data related to the KitsuTrail project.
 
 ## Audit
 * **Read list of audit logs**
+
+## Statistics
+* **Get current state of the platform**
+* **Get users activities (last 24h)**
+* **Get providers success/fail activities (last 24h)**
+* **Get users per provider type per protocol (last 24h)**
+* **Get failure reason of existing users (last 24h)**
+* **Get users summary - success auth, access & failure & total events (last 24h)**
 """
 
 app = FastAPI(
@@ -60,7 +68,8 @@ app.add_middleware(
 modules = [
     {'name': 'users', 'path': 'routers.v1.users'},
     {'name': 'providers', 'path': 'routers.v1.providers'},
-    {'name': 'audit', 'path': 'routers.v1.audits'}
+    {'name': 'audit', 'path': 'routers.v1.audits'},
+    {'name': 'stats', 'path': 'routers.v1.stats'}
 ]
 
 for module in modules:

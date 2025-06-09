@@ -9,7 +9,7 @@ from typing import Annotated
 from sqlmodel import Session, select
 from fastapi import APIRouter, Depends
 
-from utils.sqlite_utils import get_session, check_required_tables
+from utils.database_utils import get_session, check_required_tables
 from utils.check_utils import check_accept_json
 from models.provider import Provider
 

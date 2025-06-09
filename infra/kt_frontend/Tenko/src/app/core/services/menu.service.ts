@@ -26,8 +26,8 @@ export class MenuService {
             display: true,
             links: [
                 { label: "Journal d'audit", path: "audit/logs", disabled: false },
-                { label: "Tableau de bord", path: "audit/dashboard", disabled: true },
-                { label: "Reports", path: 'audit/reports', disabled: true }
+                { label: "Tableau de bord", path: "stats/dashboard", disabled: false },
+                { label: "Rapports", path: 'audit/reports', disabled: true }
             ]
         }
     ];

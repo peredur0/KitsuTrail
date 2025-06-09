@@ -6,7 +6,7 @@ import uuid
 
 from fastapi import Request, HTTPException
 from sqlmodel import Session
-from utils.sqlite_utils import is_uuid_available
+from utils.database_utils import is_uuid_available
 
 def check_accept_json(request: Request):
     headers_accept = request.headers.get('accept', '')

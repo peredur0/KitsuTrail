@@ -11,7 +11,7 @@ from fastapi import APIRouter, Depends, Query, HTTPException
 from sqlalchemy.exc import IntegrityError
 from sqlalchemy import func
 
-from utils.sqlite_utils import get_session, check_required_tables
+from utils.database_utils import get_session, check_required_tables
 from utils.check_utils import check_accept_json, generate_id
 from models.user import UserInDB, UserPublic, UserCreate, UserUpdate
 

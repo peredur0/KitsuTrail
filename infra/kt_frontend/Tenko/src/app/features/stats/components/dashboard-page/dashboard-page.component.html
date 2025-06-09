@@ -1,0 +1,25 @@
+<div class="dashboard-grid">
+    <div class="row1">
+        <div class="cell-10">
+            <app-line-timestamp-auth-access [data]="usersActivity"/>
+        </div>
+        <div class="cell-11">
+            <app-bar-providers-success-fail title="IDP" [data]="providersActivity.idp"/>
+        </div>
+        <div class="cell-12">
+            <app-bar-providers-success-fail title="SP" [data]="providersActivity.sp"/>
+        </div>
+    </div>
+    
+    <div class="row2">
+        <div class="cell-20">
+            <app-radar-protocols [data]="protocolsActivity"/>
+        </div>
+        <div class="cell-21">
+            <app-table-users-summary [data]="usersSummary"/>
+        </div>
+        <div class="cell-22">
+            <app-pie-failure-reasons [data]="failureActivity"/>
+        </div>
+    </div>
+</div>

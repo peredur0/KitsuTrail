@@ -230,7 +230,7 @@ def monitoring_activity(conn: tuple, providers_list: list[tuple]) -> None:
 
 def init():
     print('Init of dev database - step audit logs')
-    connection = sqlite3.connect('inari.db')
+    connection = sqlite3.connect('zenko.db')
     cursor = connection.cursor()
     conn = (connection, cursor)
     init_table(conn)
