@@ -499,3 +499,28 @@ Visuel de l'étape
 ![./img/20250605_dash1.png](./img/20250605_dash1.png)
 
 Je vais devoir trouver un moyen plus efficace de gérer la disposition.
+
+## 2025-06-08 Fin du tableau de bord.
+Finalement, j'ai décidé de passer par un grid (CSS) pour organiser mon tableau de bord.
+
+A ce stade la page comporte les informations suivantes:
+- Nombre de sessions actives (authentification il y a moins de 5 minutes)
+- Nombre d'utilisateur actifs (Accès il y a moins de 5 minutes)
+- Utilisateurs total (utilisateurs en base)
+- Fournisseurs d'identité (IDP en base)
+- Fournisseurs de service (SP en base)
+- Sur les 24 dernières heures:
+    - Nombre d'authentifications et d'accès par heure
+    - Répartition des succès et échec en fonction des fournisseurs
+    - Nombre d'utilisateurs unique par protocol
+    - Tableau de comptage des activités par utilisateur
+    - Répartition des raisons d'échec d'authentification ou d'accès
+
+Les données ne prennent en compte que le traffic légitime (pour lequel un user_id est présent)
+
+Le tableau se rafraîchis à interval régulier ou alors il est possible de lancer le rafraîchissement avec le bouton prévu à cet effet
+![./img/20250608_dash_full.png](./img/20250608_dash_full.png)
+
+Le développement et l'intégration du dashboard est maintenant terminer.
+
+Je vais réfléchir à une méthode de déploiement via container docker
