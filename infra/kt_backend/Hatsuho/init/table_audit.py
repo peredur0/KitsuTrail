@@ -3,7 +3,6 @@
 Init the audit log table in SQLite DB
 """
 import sys
-import json
 import uuid
 import random
 import logging

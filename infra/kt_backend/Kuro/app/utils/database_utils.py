@@ -3,6 +3,7 @@
 Utils functions for interacting with sqlite
 """
 
+import os
 import sys
 import json
 import sqlmodel
@@ -11,15 +12,16 @@ import sqlalchemy
 from models.user import UserInDB
 
 MODE = 'psql'
+
 if MODE == 'psql':
-    with open('../../secrets.json', 'r', encoding='utf-8') as fp:
-        secrets = json.load(fp)['psql']
+    DB_URL = os.getenv('KITSUTRAIL__DATABASE__CONN')
+    if not DB_URL:
+        raise RuntimeError('Missing environment variable KITSUTRAIL__DATABASE_CONN ')
 
     ENGINE = sqlalchemy.create_engine(
-        f"postgresql+psycopg2://{secrets['user']}:{secrets['password']}@"
-        f"{secrets['host']}:{secrets['port']}/{secrets['database']}",
         pool_pre_ping=True
     )
+
 elif MODE == 'sqlite':
     DB_URL = 'sqlite:///../../kt_database/'
     ENGINE = sqlalchemy.create_engine(
@@ -28,8 +30,9 @@ elif MODE == 'sqlite':
             'check_same_thread': False
         }
     )
+
 else:
-    print(f"Unknown bd mode {MODE}", file=sys.stderr)
+    print(f"Unknown db mode {MODE}", file=sys.stderr)
     sys.exit(1)
 
 
