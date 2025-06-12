@@ -2,187 +2,159 @@
 """
 Init the audit log table in SQLite DB
 """
-
 import sys
 import json
 import uuid
 import random
 import logging
 import datetime
-import psycopg2
+import sqlalchemy
+import sqlalchemy.exc
 
+from sqlalchemy import text
 
 from utils import activities
 
-TABLE = 'audit_logs'
 MIN_TO_MS = 60000
-SECRET_FILE = '../../secrets.json'
 
 logger = logging.getLogger(__name__)
 
 
-def init_table(conn: tuple) -> None:
-    connection, cursor = conn
+def init_table(engine: sqlalchemy.Engine, table: str) -> None:
     """
     Drop/create the table
     """
-    cursor.execute(f'DROP TABLE IF EXISTS {TABLE}')
-    cursor.execute(f'''
-        CREATE TABLE IF NOT EXISTS {TABLE}(
-            timestamp TIMESTAMPTZ NOT NULL,
-            audit_id TEXT PRIMARY KEY,
-            user_id TEXT,
-            user_login TEXT,
-            provider_type TEXT,
-            provider_id INTEGER,
-            provider_name TEXT,
-            provider_protocol TEXT,
-            trace_id TEXT NOT NULL,
-            source_ip TEXT,
-            source_admin TEXT,
-            category TEXT NOT NULL,
-            action TEXT NOT NULL,
-            result TEXT,
-            reason TEXT,
-            info TEXT
-        )
-    ''')
-    cursor.execute(f'CREATE UNIQUE INDEX idx_audit_id ON {TABLE}(audit_id)')
-    cursor.execute(f'CREATE INDEX idx_timestamp ON {TABLE}(timestamp)')
-    cursor.execute(f'CREATE INDEX idx_category ON {TABLE}(category)')
-    cursor.execute(f'CREATE INDEX idx_trace_id ON {TABLE}(trace_id)')
-    cursor.execute(f'CREATE INDEX idx_action ON {TABLE}(action)')
-    cursor.execute(f'CREATE INDEX idx_result ON {TABLE}(result)')
-    cursor.execute(f'CREATE INDEX idx_user_id ON {TABLE}(user_id)')
-    cursor.execute(f'CREATE INDEX idx_user_login ON {TABLE}(user_login)')
-    cursor.execute(f'CREATE INDEX idx_provider_id ON {TABLE}(provider_id)')
-    cursor.execute(f'CREATE INDEX idx_provider_name ON {TABLE}(provider_name)')
-    cursor.execute(f'CREATE INDEX idx_provider_type ON {TABLE}(provider_type)')
-    cursor.execute(f'CREATE INDEX idx_provider_protocol ON {TABLE}(provider_protocol)')
+    with engine.begin() as conn:
+        try:
+            conn.execute(text(f'DROP TABLE IF EXISTS {table}'))
+            conn.execute(text(f'''
+                CREATE TABLE IF NOT EXISTS {table}(
+                    timestamp TIMESTAMPTZ NOT NULL,
+                    audit_id TEXT PRIMARY KEY,
+                    user_id TEXT,
+                    user_login TEXT,
+                    provider_type TEXT,
+                    provider_id INTEGER,
+                    provider_name TEXT,
+                    provider_protocol TEXT,
+                    trace_id TEXT NOT NULL,
+                    source_ip TEXT,
+                    source_admin TEXT,
+                    category TEXT NOT NULL,
+                    action TEXT NOT NULL,
+                    result TEXT,
+                    reason TEXT,
+                    info TEXT
+                )
+            '''))
+            conn.execute(text(f'CREATE UNIQUE INDEX idx_audit_id ON {table}(audit_id)'))
+            conn.execute(text(f'CREATE INDEX idx_timestamp ON {table}(timestamp)'))
+            conn.execute(text(f'CREATE INDEX idx_category ON {table}(category)'))
+            conn.execute(text(f'CREATE INDEX idx_trace_id ON {table}(trace_id)'))
+            conn.execute(text(f'CREATE INDEX idx_action ON {table}(action)'))
+            conn.execute(text(f'CREATE INDEX idx_result ON {table}(result)'))
+            conn.execute(text(f'CREATE INDEX idx_user_id ON {table}(user_id)'))
+            conn.execute(text(f'CREATE INDEX idx_user_login ON {table}(user_login)'))
+            conn.execute(text(f'CREATE INDEX idx_provider_id ON {table}(provider_id)'))
+            conn.execute(text(f'CREATE INDEX idx_provider_name ON {table}(provider_name)'))
+            conn.execute(text(f'CREATE INDEX idx_provider_type ON {table}(provider_type)'))
+            conn.execute(text(f'CREATE INDEX idx_provider_protocol ON {table}(provider_protocol)'))
+        except sqlalchemy.exc.SQLAlchemyError as err:
+            logger.error('Failed to init audit logs table - %s', err)
+            sys.exit(1)
 
-    connection.commit()
 
-
-def users_audit_logs(conn: tuple) -> None:
+def users_audit_logs(engine: sqlalchemy.Engine, table: str) -> list[dict]:
     """
     Create the user creation logs based on inplace creation dates
     """
-    connection, cursor = conn
-    cursor.execute(f'SELECT id, login, created_at FROM users')
-    _users = cursor.fetchall()
+    with engine.begin() as conn:
+        result = conn.execute(f'SELECT id, login, created_at FROM users')
+        users = [dict(row._mapping) for row in result.fetchall()]
 
-    for user in _users:
-        entry = {
-            'timestamp': user[2], 
-            'audit_id': str(uuid.uuid4())[:8], 
-            'user_id': user[0],
-            'user_login': user[1],
-            'trace_id': str(uuid.uuid4())[:8],
-            'source_ip': '127.0.0.1',
-            'source_admin': 'init-system',
-            'category': 'management',
-            'action': 'create_user',
-            'result': 'success'
-        }
-        try:
-            cursor.execute(f'''
-                INSERT INTO {TABLE} 
-                    (timestamp, audit_id, user_id, user_login, trace_id, source_ip, 
-                    source_admin, category, action, result)
-                VALUES 
-                    (%s, %s, %s, %s, %s, %s, %s, %s, %s, %s)
-            ''', (
-                entry['timestamp'],
-                entry['audit_id'],
-                entry['user_id'],
-                entry['user_login'],
-                entry['trace_id'],
-                entry['source_ip'],
-                entry['source_admin'],
-                entry['category'],
-                entry['action'],
-                entry['result']
-            ))
+        for user in users:
+            entry = {
+                'timestamp': user['created_at'], 
+                'audit_id': str(uuid.uuid4())[:8], 
+                'user_id': user['id'],
+                'user_login': user['login'],
+                'trace_id': str(uuid.uuid4())[:8],
+                'source_ip': '127.0.0.1',
+                'source_admin': 'init-system',
+                'category': 'management',
+                'action': 'create_user',
+                'result': 'success'
+            }
+            try:
+                keys = list(entry.keys())
+                conn.execute(text(f'''
+                    INSERT INTO {table} ({','.join(keys)})
+                    VALUES ({','.join([f':{key}' for key in keys])})
+                '''), entry)
 
-        except psycopg2.IntegrityError:
-            connection.rollback()
-            continue
+            except sqlalchemy.exc.IdentifierError:
+                logger.error('Failed to log users creation - please retry')
+                sys.exit(1)
 
-    connection.commit()
-    return _users
+    return users
 
 
-def providers_audit_logs(conn: tuple) -> None:
+def providers_audit_logs(engine: sqlalchemy.Engine, table: str) -> list[dict]:
     """
     Create provider creation before the first user creation
     """
-    connection, cursor = conn
-    cursor.execute(f'SELECT MIN(created_at) FROM users')
+    with engine.begin() as conn:
+        result = conn.execute('SELECT MIN(created_at) FROM users')
 
-    start_time = cursor.fetchone()[0]
-    start_time.replace(hour=0, minute=0, second=0)
-    start_time = start_time - datetime.timedelta(days=1)
-    
-    cursor.execute(f'SELECT id, type, protocol, name FROM providers')
-    _providers = cursor.fetchall()
+        start_time = result.fetchone()[0]
+        start_time.replace(hour=0, minute=0, second=0)
+        start_time = start_time - datetime.timedelta(days=1)
+        
+        result = conn.execute(text(f'SELECT id, type, protocol, name FROM {table}'))
+        providers = [dict(row._mapping) for row in result.fetchall()]
 
-    for provider in _providers:
-        start_time = start_time + datetime.timedelta(minutes=30)
-        entry = {
-            'timestamp': start_time.isoformat(),
-            'audit_id': str(uuid.uuid4())[:8], 
-            'provider_type': provider[1],
-            'provider_id': provider[0],
-            'provider_name': provider[3],
-            'provider_protocol': provider[2],
-            'trace_id': str(uuid.uuid4())[:8],
-            'source_ip': '127.0.0.1',
-            'source_admin': 'init-system',
-            'category': 'management',
-            'action': 'create_provider',
-            'result': 'success'
-        }
+        for provider in providers:
+            start_time = start_time + datetime.timedelta(minutes=30)
+            entry = {
+                'timestamp': start_time.isoformat(),
+                'audit_id': str(uuid.uuid4())[:8], 
+                'provider_type': provider['type'],
+                'provider_id': provider['id'],
+                'provider_name': provider['name'],
+                'provider_protocol': provider['protocol'],
+                'trace_id': str(uuid.uuid4())[:8],
+                'source_ip': '127.0.0.1',
+                'source_admin': 'init-system',
+                'category': 'management',
+                'action': 'create_provider',
+                'result': 'success'
+            }
 
-        try:
-            cursor.execute(f'''
-                INSERT INTO {TABLE}
-                    (timestamp, audit_id, provider_type, provider_id, provider_name,
-                    provider_protocol, trace_id, source_ip, source_admin, category, action, result)
-                VALUES
-                    (%s, %s, %s, %s, %s, %s, %s, %s, %s, %s, %s, %s)
-            ''', (
-                entry['timestamp'],
-                entry['audit_id'],
-                entry['provider_type'],
-                entry['provider_id'],
-                entry['provider_name'],
-                entry['provider_protocol'],
-                entry['trace_id'],
-                entry['source_ip'],
-                entry['source_admin'],
-                entry['category'],
-                entry['action'],
-                entry['result']
-            ))
-        except psycopg2.IntegrityError:
-            connection.rollback()
-            continue
+            try:
+                keys = list(entry.keys())
+                conn.execute(text(f'''
+                    INSERT INTO {table} ({','.join(keys)})
+                    VALUES ({','.join([f':{key}' for key in keys])})
+                '''), entry)
 
-    connection.commit()
-    return _providers
+            except sqlalchemy.exc.IdentifierError:
+                logger.error('Failed to log users creation - please retry')
+                sys.exit(1)
+
+    return providers
 
 
-def activity_audit_logs(conn: tuple, user: tuple, providers_list: list[tuple]) -> None:
+def activity_audit_logs(engine: sqlalchemy.Engine, table:str,
+                        user: dict, providers_list: list[dict]) -> None:
     """
     Generate activities for a user
     """
-    connection, cursor = conn
     use_cases = [
         activities.auth_ok, activities.auth_ok, activities.auth_ok,
         activities.auth_nok,
         activities.access_nok
     ]
-    start_ts = user[2]
+    start_ts = user['created_at']
     start_ts = start_ts + datetime.timedelta(minutes=1)
     
     while start_ts < datetime.datetime.now(datetime.timezone.utc):
@@ -195,14 +167,14 @@ def activity_audit_logs(conn: tuple, user: tuple, providers_list: list[tuple]) -
             for activity in data['activities']
         ]
         try:
-            cursor.executemany(
-                f'''INSERT INTO {TABLE} ({', '.join(keys)})
-                    VALUES ({', '.join(['%s'] * len(keys))})
-                ''',
-                values
-            )
-        except psycopg2.IntegrityError:
-            connection.rollback()
+            with engine.begin() as conn:
+                conn.executemany(text(
+                    f'''INSERT INTO {table} ({', '.join(keys)})
+                        VALUES ({', '.join([f':{key}' for key in keys])})
+                    '''),
+                    values
+                )
+        except sqlalchemy.exc.IntegrityError:
             continue
 
         start_ts = data['end_ts']
@@ -219,99 +191,78 @@ def activity_audit_logs(conn: tuple, user: tuple, providers_list: list[tuple]) -
         
         start_ts = start_ts + delta
 
-    connection.commit() 
 
-
-def monitoring_activity(conn: tuple, providers_list: list[tuple]) -> None:
+def monitoring_activity(engine: sqlalchemy.Engine, table: str,
+                        providers_list: list[dict]) -> None:
     """
     Generate activities like clients monitoring the platform
     """
-    connection, cursor = conn
     users = [
         ('monitoring', '145.5.187.3'),
         ('vpn_user', '52.62.72.83'), 
         ('test', '184.254.8.1')
     ]
-    cursor.execute(f'SELECT MIN(created_at) FROM users')
-    start_time = cursor.fetchone()[0]
-    start_time.replace(hour=0, minute=0, second=0)
+    with engine.begin() as conn:
+        result = conn.execute('SELECT MIN(created_at) FROM users')
+        start_time = result.fetchone()[0]
+        start_time.replace(hour=0, minute=0, second=0)
 
-    sp_list = [provider for provider in providers_list if provider[1] == 'sp']
+        sp_list = [provider for provider in providers_list if provider['type'] == 'sp']
 
-    while start_time < datetime.datetime.now(datetime.timezone.utc):
-        for user in users:
-            provider = random.choice(sp_list)
-            event = {
-                'timestamp': start_time,
-                'audit_id': str(uuid.uuid4())[:8],
-                'user_login': user[0],
-                'provider_id': provider[0],
-                'provider_type': provider[1],
-                'provider_protocol': provider[2],
-                'provider_name': provider[3],
-                'trace_id': str(uuid.uuid4())[:8],
-                'source_ip': user[1],
-                'category': 'autorisation',
-                'action': 'access',
-                'result': 'fail',
-                'reason': 'unknown_user',
-                'info': 'Unknown in KT'
-            }
+        while start_time < datetime.datetime.now(datetime.timezone.utc):
+            for user in users:
+                provider = random.choice(sp_list)
+                event = {
+                    'timestamp': start_time,
+                    'audit_id': str(uuid.uuid4())[:8],
+                    'user_login': user[0],
+                    'provider_id': provider['id'],
+                    'provider_type': provider['type'],
+                    'provider_protocol': provider['protocol'],
+                    'provider_name': provider['name'],
+                    'trace_id': str(uuid.uuid4())[:8],
+                    'source_ip': user[1],
+                    'category': 'autorisation',
+                    'action': 'access',
+                    'result': 'fail',
+                    'reason': 'unknown_user',
+                    'info': 'Unknown in KT'
+                }
 
-            keys = list(event.keys())
-            values = tuple(event[key] for key in keys)
-            try:
-                cursor.execute(
-                    f'''INSERT INTO {TABLE} ({', '.join(keys)})
-                        VALUES ({', '.join(['%s'] * len(keys))})
-                    ''',
-                    values
-                )
-            except psycopg2.IntegrityError:
-                connection.rollback()
-                continue
-        
-        start_time = start_time + datetime.timedelta(minutes=5)            
-
-    connection.commit()
+                keys = list(event.keys())
+                values = tuple(event[key] for key in keys)
+                try:
+                    conn.execute(text(
+                        f'''INSERT INTO {table} ({', '.join(keys)})
+                            VALUES ({', '.join([f':{key}' for key in keys])})
+                        ''',
+                        values
+                    ))
+                except sqlalchemy.exc.IntegrityError:
+                    continue
+            
+            start_time = start_time + datetime.timedelta(minutes=5)            
 
 
-def init():
+def init(engine: sqlalchemy.Engine, table: str):
+    """
+    Initiate audit log table and add some activities
+    """
     logger.info('Init of dev database - step audit logs')
 
-    with open(SECRET_FILE, 'r', encoding='utf-8') as fp:
-        secrets = json.load(fp)['psql']
-    
-    try:
-        conn = psycopg2.connect(
-            dbname=secrets['database'],
-            user=secrets['user'],
-            password=secrets['password'],
-            host=secrets['host'],
-            port=secrets['port']
-        )
-    except psycopg2.Error as err:
-        logger.error("Failed at connection - %s", err)
-        sys.exit(1)
-
-    cursor = conn.cursor()
-    connect = (conn, cursor)
-    init_table(connect)
+    init_table(engine, table)
 
     logger.info('Adding first audit logs')
-    users = users_audit_logs(connect)
-    providers = providers_audit_logs(connect)
+    users = users_audit_logs(engine, table)
+    providers = providers_audit_logs(engine, table)
 
     logger.info('Generate random activity')
     for user in users:
         logger.info(f'Generating activities for {user[1]}')
-        activity_audit_logs(connect, user, providers)
+        activity_audit_logs(engine, table, user, providers)
     logger.info('Users activity generation end')
 
     logger.info('Generate connection attempt with unknown user')
-    monitoring_activity(connect, providers)
+    monitoring_activity(engine, table, providers)
 
-    
-    cursor.close()
-    conn.close()
     logger.info('Init dev database - step audit logs: end')

@@ -1,12 +1,29 @@
+x-kitsutrail-backend:
+    &kt-backend
+    image: peredur/kitsutrail-base:1.0
+    environment:
+        - KITSUTRAIL__DATABASE__CONN: postgresql+psycopg2://inari:inari@postgres/inari
+    depends_on:
+        &kitsutrail-backend-depends-on
+        postgres:
+            condition: service_healthy
+
 services:
-    inari:
+    postgres:
         image: postgres:16.9
-        container_name: inari-db
-        restart: unless-stopped
+        container_name: kitsutrail-db
         environment:
-            - POSTGRES_PASSWORD=${PSQL_PASSWORD}
+            - POSTGRES_USER=inari
+            - POSTGRES_PASSWORD=inari
+            - POSTGRES_DB=inari
         ports:
             - "5432:5432"
         volumes:
             - ./kt_database/Inari/pgdata:/var/lib/postgresql/data
-            - ./kt_database/Inari/init.sql:/docker-entrypoint-initdb.d/init.sql
+        healthcheck:
+            test: ["CMD", "pg_isready", "-U", "inari"]
+            interval: 10s
+            timeout: 30s
+            retries: 5
+            start_period: 5s
+        restart: always
