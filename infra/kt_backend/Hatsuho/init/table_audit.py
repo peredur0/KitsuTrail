@@ -11,8 +11,8 @@ import sqlalchemy
 import sqlalchemy.exc
 
 from sqlalchemy import text
-
 from utils import activities
+
 
 MIN_TO_MS = 60000
 
@@ -28,7 +28,7 @@ def init_table(engine: sqlalchemy.Engine, table: str) -> None:
             conn.execute(text(f'DROP TABLE IF EXISTS {table}'))
             conn.execute(text(f'''
                 CREATE TABLE IF NOT EXISTS {table}(
-                    timestamp TIMESTAMPTZ NOT NULL,
+                    timestamp TIMESTAMP NOT NULL,
                     audit_id TEXT PRIMARY KEY,
                     user_id TEXT,
                     user_login TEXT,
@@ -68,7 +68,7 @@ def users_audit_logs(engine: sqlalchemy.Engine, table: str) -> list[dict]:
     Create the user creation logs based on inplace creation dates
     """
     with engine.begin() as conn:
-        result = conn.execute(f'SELECT id, login, created_at FROM users')
+        result = conn.execute(text('SELECT id, login, created_at FROM users'))
         users = [dict(row._mapping) for row in result.fetchall()]
 
         for user in users:
@@ -103,13 +103,13 @@ def providers_audit_logs(engine: sqlalchemy.Engine, table: str) -> list[dict]:
     Create provider creation before the first user creation
     """
     with engine.begin() as conn:
-        result = conn.execute('SELECT MIN(created_at) FROM users')
+        result = conn.execute(text('SELECT MIN(created_at) FROM users'))
 
         start_time = result.fetchone()[0]
         start_time.replace(hour=0, minute=0, second=0)
         start_time = start_time - datetime.timedelta(days=1)
         
-        result = conn.execute(text(f'SELECT id, type, protocol, name FROM {table}'))
+        result = conn.execute(text(f'SELECT id, type, protocol, name FROM providers'))
         providers = [dict(row._mapping) for row in result.fetchall()]
 
         for provider in providers:
@@ -156,22 +156,18 @@ def activity_audit_logs(engine: sqlalchemy.Engine, table:str,
     start_ts = user['created_at']
     start_ts = start_ts + datetime.timedelta(minutes=1)
     
-    while start_ts < datetime.datetime.now(datetime.timezone.utc):
+    while start_ts < datetime.datetime.now():
         use_case = random.choice(use_cases)
         data = use_case(start_ts, user, providers_list)
         
         keys = data['activities'][0].keys()
-        values = [
-            tuple(activity[key] for key in keys)
-            for activity in data['activities']
-        ]
         try:
             with engine.begin() as conn:
-                conn.executemany(text(
+                conn.execute(text(
                     f'''INSERT INTO {table} ({', '.join(keys)})
                         VALUES ({', '.join([f':{key}' for key in keys])})
                     '''),
-                    values
+                    data['activities']
                 )
         except sqlalchemy.exc.IntegrityError:
             continue
@@ -198,17 +194,16 @@ def monitoring_activity(engine: sqlalchemy.Engine, table: str,
     """
     users = [
         ('monitoring', '145.5.187.3'),
-        ('vpn_user', '52.62.72.83'), 
-        ('test', '184.254.8.1')
     ]
     with engine.begin() as conn:
-        result = conn.execute('SELECT MIN(created_at) FROM users')
+        result = conn.execute(text(
+            'SELECT MIN(created_at) FROM users'))
         start_time = result.fetchone()[0]
         start_time.replace(hour=0, minute=0, second=0)
 
         sp_list = [provider for provider in providers_list if provider['type'] == 'sp']
 
-        while start_time < datetime.datetime.now(datetime.timezone.utc):
+        while start_time < datetime.datetime.now():
             for user in users:
                 provider = random.choice(sp_list)
                 event = {
@@ -229,17 +224,12 @@ def monitoring_activity(engine: sqlalchemy.Engine, table: str,
                 }
 
                 keys = list(event.keys())
-                values = tuple(event[key] for key in keys)
-                try:
-                    conn.execute(text(
-                        f'''INSERT INTO {table} ({', '.join(keys)})
-                            VALUES ({', '.join([f':{key}' for key in keys])})
-                        ''',
-                        values
-                    ))
-                except sqlalchemy.exc.IntegrityError:
-                    continue
-            
+                conn.execute(text(
+                    f'''INSERT INTO {table} ({', '.join(keys)})
+                        VALUES ({', '.join([f':{key}' for key in keys])})
+                        ON CONFLICT (audit_id) DO NOTHING
+                    '''), event)
+
             start_time = start_time + datetime.timedelta(minutes=5)            
 
 
@@ -257,7 +247,7 @@ def init(engine: sqlalchemy.Engine, table: str):
 
     logger.info('Generate random activity')
     for user in users:
-        logger.info(f'Generating activities for {user[1]}')
+        logger.info(f"Generating activities for {user['login']}")
         activity_audit_logs(engine, table, user, providers)
     logger.info('Users activity generation end')
 

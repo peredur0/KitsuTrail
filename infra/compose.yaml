@@ -1,10 +1,11 @@
 x-kitsutrail-backend:
     &kt-backend
-    image: peredur/kitsutrail-base:1.0
+    image: kitsutrail-base:0.2
     environment:
-        - KITSUTRAIL__DATABASE__CONN: postgresql+psycopg2://inari:inari@postgres/inari
+        &kt-backend-env
+        - KITSUTRAIL__DATABASE__CONN=postgresql+psycopg2://inari:inari@postgres/inari
     depends_on:
-        &kitsutrail-backend-depends-on
+        &kt-backend-depends-on
         postgres:
             condition: service_healthy
 
@@ -27,3 +28,28 @@ services:
             retries: 5
             start_period: 5s
         restart: always
+
+    kuro:
+        <<: *kt-backend
+        command: kuro
+        container_name: kitsutrail-api
+        ports:
+            - "8000:8000"
+        restart: always
+        healthcheck:
+            test: ["CMD", "curl", '--fail', "http://localhost:8000/health"]
+            interval: 30s
+            timeout: 10s
+            retries: 5
+            start_period: 30s
+        depends_on:
+            <<: *kt-backend-depends-on
+            hatsuho:
+                condition: service_completed_successfully
+    
+    hatsuho:
+        <<: *kt-backend
+        command: hatsuho
+        container_name: kitsutrail-init
+        depends_on:
+            <<: *kt-backend-depends-on

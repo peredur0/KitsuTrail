@@ -1,0 +1,6 @@
+datetime==5.5
+fastapi[standard]==0.115.12
+sqlalchemy==2.0.41
+pydantic==2.11.5
+sqlmodel==0.0.24
+psycopg2==2.9.10

@@ -45,26 +45,26 @@ def init(engine: sqlalchemy.Engine, table: str) -> None:
                 )
             '''))
 
-            conn.execute(sqlalchemy.text('CREATE UNIQUE INDEX idx_login ON {table}(login)'))
-            conn.execute(sqlalchemy.text('CREATE INDEX idx_firstname ON {table}(firstname)'))
-            conn.execute(sqlalchemy.text('CREATE INDEX idx_lastname ON {table}(lastname)'))
-            conn.execute(sqlalchemy.text('CREATE INDEX idx_email ON {table}(email)'))
+            conn.execute(sqlalchemy.text(f'CREATE UNIQUE INDEX idx_login ON {table}(login)'))
+            conn.execute(sqlalchemy.text(f'CREATE INDEX idx_firstname ON {table}(firstname)'))
+            conn.execute(sqlalchemy.text(f'CREATE INDEX idx_lastname ON {table}(lastname)'))
+            conn.execute(sqlalchemy.text(f'CREATE INDEX idx_email ON {table}(email)'))
 
             with open('./data/base_users.json', 'r') as file:
                 data = json.load(file)
                 for user in data:
-                    tmp_user = (
-                        str(uuid.uuid4())[:8],
-                        user.get('login'),
-                        user.get('firstname'),
-                        user.get('lastname'),
-                        user.get('email'),
-                        random_date().isoformat()
-                    )
+                    tmp_user = {
+                        'id': str(uuid.uuid4())[:8],
+                        'login': user.get('login'),
+                        'firstname': user.get('firstname'),
+                        'lastname': user.get('lastname'),
+                        'email': user.get('email'),
+                        'created_at': random_date().isoformat()
+                    }
                     conn.execute(sqlalchemy.text(f'''
                         INSERT INTO {table} (id, login, firstname, lastname, email, created_at)
                         VALUES (:id, :login, :firstname, :lastname, :email, :created_at)
-                    ''', tmp_user))
+                    '''), tmp_user)
                     logger.info("User added - %s", user.get('login'))
 
         except sqlalchemy.exc.SQLAlchemyError as err:

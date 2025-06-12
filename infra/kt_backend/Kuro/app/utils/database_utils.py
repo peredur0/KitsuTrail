@@ -5,7 +5,6 @@ Utils functions for interacting with sqlite
 
 import os
 import sys
-import json
 import sqlmodel
 import sqlalchemy
 
@@ -18,17 +17,13 @@ if MODE == 'psql':
     if not DB_URL:
         raise RuntimeError('Missing environment variable KITSUTRAIL__DATABASE_CONN ')
 
-    ENGINE = sqlalchemy.create_engine(
-        pool_pre_ping=True
-    )
+    ENGINE = sqlalchemy.create_engine(DB_URL, pool_pre_ping=True)
 
 elif MODE == 'sqlite':
     DB_URL = 'sqlite:///../../kt_database/'
     ENGINE = sqlalchemy.create_engine(
         'sqlite:///../../kt_database/Zenko/zenko.db', 
-        connect_args={
-            'check_same_thread': False
-        }
+        connect_args={'check_same_thread': False}
     )
 
 else:

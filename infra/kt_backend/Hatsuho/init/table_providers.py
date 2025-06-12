@@ -45,7 +45,7 @@ def init(engine: sqlalchemy.Engine, table: str) -> None:
                     conn.execute(sqlalchemy.text(f'''
                         INSERT INTO {table} (type, protocol, name)
                         VALUES (:type, :protocol, :name)
-                    ''', provider))
+                    '''), provider)
                     logger.info("Provider added - %s", provider['name'])
 
         except sqlalchemy.exc.SQLAlchemyError as err:
