@@ -1,6 +1,6 @@
 x-kitsutrail-backend:
     &kt-backend
-    image: kitsutrail-base:1.0
+    image: peredur/kitsutrail-base:1.0
     environment:
         &kt-backend-env
         - KITSUTRAIL__DATABASE__CONN=postgresql+psycopg2://inari:inari@postgres/inari
@@ -56,7 +56,7 @@ services:
             <<: *kt-backend-depends-on
 
     tenko:
-        image: kitsutrail-app:1.0
+        image: peredur/kitsutrail-app:1.0
         container_name: kitsutrail-app
         ports:
             - "8080:80"
