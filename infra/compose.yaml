@@ -1,12 +1,75 @@
+x-kitsutrail-backend:
+    &kt-backend
+    image: peredur/kitsutrail-base:1.0
+    environment:
+        &kt-backend-env
+        - KITSUTRAIL__DATABASE__CONN=postgresql+psycopg2://inari:inari@postgres/inari
+        - KITSUTRAIL__APP__URL=http://localhost:8080
+    depends_on:
+        &kt-backend-depends-on
+        postgres:
+            condition: service_healthy
+
 services:
-    inari:
+    postgres:
         image: postgres:16.9
-        container_name: inari-db
-        restart: unless-stopped
+        container_name: kitsutrail-db
         environment:
-            - POSTGRES_PASSWORD=${PSQL_PASSWORD}
+            - POSTGRES_USER=inari
+            - POSTGRES_PASSWORD=inari
+            - POSTGRES_DB=inari
         ports:
             - "5432:5432"
         volumes:
             - ./kt_database/Inari/pgdata:/var/lib/postgresql/data
-            - ./kt_database/Inari/init.sql:/docker-entrypoint-initdb.d/init.sql
+        healthcheck:
+            test: ["CMD", "pg_isready", "-U", "inari"]
+            interval: 10s
+            timeout: 30s
+            retries: 5
+            start_period: 5s
+        restart: always
+
+    kuro:
+        <<: *kt-backend
+        command: kuro
+        container_name: kitsutrail-api
+        ports:
+            - "8000:8000"
+        restart: always
+        healthcheck:
+            test: ["CMD", "curl", "-f", "http://localhost:8000/"]
+            interval: 30s
+            timeout: 10s
+            retries: 5
+            start_period: 10s
+        depends_on:
+            <<: *kt-backend-depends-on
+            hatsuho:
+                condition: service_completed_successfully
+    
+    hatsuho:
+        <<: *kt-backend
+        command: hatsuho
+        container_name: kitsutrail-init
+        depends_on:
+            <<: *kt-backend-depends-on
+
+    tenko:
+        image: peredur/kitsutrail-app:1.0
+        container_name: kitsutrail-app
+        ports:
+            - "8080:80"
+        environment:
+            - KITSUTRAIL__API__URL=http://localhost:8000
+        restart: always
+        healthcheck:
+            test: ["CMD", "curl", "-f", "http://localhost:80"]
+            interval: 30s
+            timeout: 10s
+            retries: 3
+            start_period: 10s
+        depends_on:
+            kuro:
+                condition: service_healthy
+ 

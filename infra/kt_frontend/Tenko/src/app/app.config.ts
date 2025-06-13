@@ -1,4 +1,4 @@
-import { ApplicationConfig, provideZoneChangeDetection } from '@angular/core';
+import { APP_INITIALIZER, ApplicationConfig, provideZoneChangeDetection } from '@angular/core';
 import { provideRouter, withComponentInputBinding, withRouterConfig } from '@angular/router';
 import { routes } from './app.routes';
 import { provideHttpClient } from '@angular/common/http';
@@ -6,6 +6,8 @@ import { provideHttpClient } from '@angular/common/http';
 import { MomentDateAdapter, MAT_MOMENT_DATE_ADAPTER_OPTIONS } from '@angular/material-moment-adapter';
 import { DateAdapter, MAT_DATE_FORMATS, MAT_DATE_LOCALE } from '@angular/material/core';
 
+import { ConfigService } from './core/services/config.service';
+import { firstValueFrom } from 'rxjs';
 
 export const CUSTOM_DATE_FORMATS = {
   parse: {
@@ -22,6 +24,10 @@ export const CUSTOM_DATE_FORMATS = {
   }
 };
 
+function initializeApp(configService: ConfigService): () => Promise<void> {
+  return () => firstValueFrom(configService.loadConfig()).then(() => {});
+}
+
 export const appConfig: ApplicationConfig = {
   providers: [
     provideZoneChangeDetection({ eventCoalescing: true }), 
@@ -34,6 +40,12 @@ export const appConfig: ApplicationConfig = {
     provideHttpClient(),
     { provide: DateAdapter, useClass: MomentDateAdapter, deps: [MAT_DATE_LOCALE, MAT_MOMENT_DATE_ADAPTER_OPTIONS] },
     { provide: MAT_DATE_FORMATS, useValue: CUSTOM_DATE_FORMATS },
-    { provide: MAT_DATE_LOCALE, useValue: 'fr' }
+    { provide: MAT_DATE_LOCALE, useValue: 'fr' },
+    {
+      provide: 'APP_INIT',
+      useFactory: initializeApp,
+      deps: [ConfigService],
+      multi: true
+    }
   ]
 };

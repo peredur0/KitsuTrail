@@ -8,15 +8,13 @@ import uuid
 import json
 import random
 import logging
-import psycopg2
 import datetime
+import sqlalchemy
+import sqlalchemy.exc
 
 logger = logging.getLogger(__name__)
 
-TABLE = 'users'
-SECRET_FILE = '../../secrets.json'
-
-def random_date():
+def random_date() -> datetime.datetime:
     """
     Generate a random datetime
     """
@@ -28,64 +26,47 @@ def random_date():
     return start + datetime.timedelta(days=random_days, seconds=random_secs)
 
 
-def init():
+def init(engine: sqlalchemy.Engine, table: str) -> None:
     logger.info("Init of dev database - step users")
 
-    with open(SECRET_FILE, 'r', encoding='utf-8') as fp:
-        secrets = json.load(fp)['psql']
-
-    try:
-        conn = psycopg2.connect(
-            dbname=secrets['database'],
-            user=secrets['user'],
-            password=secrets['password'],
-            host=secrets['host'],
-            port=secrets['port']
-        )
-    except psycopg2.Error as err:
-        logger.error("Failed at connection - %s", err)
-        sys.exit(1)
-
-    try:
-        cursor = conn.cursor()
-        cursor.execute(f'DROP TABLE IF EXISTS {TABLE}')
-        cursor.execute(f'''
-            CREATE TABLE IF NOT EXISTS {TABLE}(
-                id CHAR(8) PRIMARY KEY CHECK (length(id) = 8),
-                login TEXT NOT NULL UNIQUE,
-                firstname TEXT,
-                lastname TEXT,
-                email TEXT,
-                created_at TIMESTAMPTZ DEFAULT CURRENT_TIMESTAMP
-            )
-        ''')
-
-        cursor.execute('CREATE UNIQUE INDEX idx_login ON users(login)')
-        cursor.execute('CREATE INDEX idx_firstname ON users(firstname)')
-        cursor.execute('CREATE INDEX idx_lastname ON users(lastname)')
-        cursor.execute('CREATE INDEX idx_email ON users(email)')
-
-        with open('./data/base_users.json', 'r') as file:
-            data = json.load(file)
-            for user in data:
-                tmp_user = (
-                    str(uuid.uuid4())[:8],
-                    user.get('login'),
-                    user.get('firstname'),
-                    user.get('lastname'),
-                    user.get('email'),
-                    random_date().isoformat()
+    with engine.begin() as conn:
+        try:
+            conn.execute(sqlalchemy.text(
+                f'DROP TABLE IF EXISTS {table}'))
+            conn.execute(sqlalchemy.text(
+                f'''
+                CREATE TABLE IF NOT EXISTS {table}(
+                    id CHAR(8) PRIMARY KEY CHECK (length(id) = 8),
+                    login TEXT NOT NULL UNIQUE,
+                    firstname TEXT,
+                    lastname TEXT,
+                    email TEXT,
+                    created_at TIMESTAMP DEFAULT CURRENT_TIMESTAMP
                 )
-                cursor.execute('''
-                    INSERT INTO users (id, login, firstname, lastname, email, created_at)
-                    VALUES (%s, %s, %s, %s, %s, %s)
-                ''', tmp_user)
-                logger.info("User added - %s", user.get('login'))
+            '''))
 
-        conn.commit()
-    except psycopg2.Error as err:
-        logger.error('Failed to init providers data - %s', err)
-    finally:
-        if cursor:
-            cursor.close()
-        conn.close()
+            conn.execute(sqlalchemy.text(f'CREATE UNIQUE INDEX idx_login ON {table}(login)'))
+            conn.execute(sqlalchemy.text(f'CREATE INDEX idx_firstname ON {table}(firstname)'))
+            conn.execute(sqlalchemy.text(f'CREATE INDEX idx_lastname ON {table}(lastname)'))
+            conn.execute(sqlalchemy.text(f'CREATE INDEX idx_email ON {table}(email)'))
+
+            with open('./data/base_users.json', 'r') as file:
+                data = json.load(file)
+                for user in data:
+                    tmp_user = {
+                        'id': str(uuid.uuid4())[:8],
+                        'login': user.get('login'),
+                        'firstname': user.get('firstname'),
+                        'lastname': user.get('lastname'),
+                        'email': user.get('email'),
+                        'created_at': random_date().isoformat()
+                    }
+                    conn.execute(sqlalchemy.text(f'''
+                        INSERT INTO {table} (id, login, firstname, lastname, email, created_at)
+                        VALUES (:id, :login, :firstname, :lastname, :email, :created_at)
+                    '''), tmp_user)
+                    logger.info("User added - %s", user.get('login'))
+
+        except sqlalchemy.exc.SQLAlchemyError as err:
+            logger.error('Failed to init users data - %s', err)
+            sys.exit(1)

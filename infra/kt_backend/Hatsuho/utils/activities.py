@@ -31,7 +31,7 @@ import datetime
 import ipaddress
 
 
-def auth_ok(start_ts: datetime.datetime, user: tuple, providers: list[tuple]) -> dict:
+def auth_ok(start_ts: datetime.datetime, user: dict, providers: list[dict]) -> dict:
     """
     Generate application access log.
     The authentication is always successful.
@@ -55,8 +55,8 @@ def auth_ok(start_ts: datetime.datetime, user: tuple, providers: list[tuple]) ->
     trace_id = str(uuid.uuid4())[:8]
     user_ip = str(ipaddress.IPv4Address(random.getrandbits(32)))
 
-    sp_list = [provider for provider in providers if provider[1] == 'sp']
-    idp_list = [provider for provider in providers if provider[1] == 'idp']
+    sp_list = [provider for provider in providers if provider['type'] == 'sp']
+    idp_list = [provider for provider in providers if provider['type'] == 'idp']
 
     for event_nb in range(random.randint(2, 5)):
         if event_nb == 0:
@@ -78,12 +78,12 @@ def auth_ok(start_ts: datetime.datetime, user: tuple, providers: list[tuple]) ->
         event = {
             'timestamp': start_ts,
             'audit_id': str(uuid.uuid4())[:8],
-            'user_id': user[0],
-            'user_login': user[1],
-            'provider_id': provider[0],
-            'provider_type': provider[1],
-            'provider_protocol': provider[2],
-            'provider_name': provider[3],
+            'user_id': user['id'],
+            'user_login': user['login'],
+            'provider_id': provider['id'],
+            'provider_type': provider['type'],
+            'provider_protocol': provider['protocol'],
+            'provider_name': provider['name'],
             'trace_id': trace_id,
             'source_ip': user_ip,
             'category': 'autorisation',
@@ -98,7 +98,7 @@ def auth_ok(start_ts: datetime.datetime, user: tuple, providers: list[tuple]) ->
     return {'end_ts': start_ts, 'activities': activities}
 
 
-def auth_nok(start_ts: datetime.datetime, user: tuple, providers: list[tuple]) -> dict:
+def auth_nok(start_ts: datetime.datetime, user: dict, providers: list[dict]) -> dict:
     """
     Generate logs where the authentication failed
 
@@ -118,8 +118,8 @@ def auth_nok(start_ts: datetime.datetime, user: tuple, providers: list[tuple]) -
     trace_id = str(uuid.uuid4())[:8]
     user_ip = str(ipaddress.IPv4Address(random.getrandbits(32)))
 
-    sp_list = [provider for provider in providers if provider[1] == 'sp']
-    idp_list = [provider for provider in providers if provider[1] == 'idp']
+    sp_list = [provider for provider in providers if provider['type'] == 'sp']
+    idp_list = [provider for provider in providers if provider['type'] == 'idp']
 
     for event_nb in range(2):
         if event_nb == 0:
@@ -135,12 +135,12 @@ def auth_nok(start_ts: datetime.datetime, user: tuple, providers: list[tuple]) -
         event = {
             'timestamp': start_ts,
             'audit_id': str(uuid.uuid4())[:8],
-            'user_id': user[0],
-            'user_login': user[1],
-            'provider_id': provider[0],
-            'provider_type': provider[1],
-            'provider_protocol': provider[2],
-            'provider_name': provider[3],
+            'user_id': user['id'],
+            'user_login': user['login'],
+            'provider_id': provider['id'],
+            'provider_type': provider['type'],
+            'provider_protocol': provider['protocol'],
+            'provider_name': provider['name'],
             'trace_id': trace_id,
             'source_ip': user_ip,
             'category': 'autorisation',
@@ -155,30 +155,27 @@ def auth_nok(start_ts: datetime.datetime, user: tuple, providers: list[tuple]) -
     return {'end_ts': start_ts, 'activities': activities}
 
 
-def access_nok(start_ts: datetime.datetime, user: tuple, providers: list[tuple]) -> list:
+def access_nok(start_ts: datetime.datetime, user: dict, providers: list[dict]) -> list:
     """
     Generate log when the user is blocked by KT
-
-    Returns:
-        list:
     """
     reason_info = {
         'account_locked': ['Account locked in KT'],
         'permission_denied': ['profile_missing'],
     }
-    sp = random.choice([provider for provider in providers if provider[1] == 'sp'])
+    sp = random.choice([provider for provider in providers if provider['type'] == 'sp'])
     reason = random.choice(list(reason_info.keys()))
     info = random.choice(reason_info.get(reason))
 
     event = {
         'timestamp': start_ts,
         'audit_id': str(uuid.uuid4())[:8],
-        'user_id': user[0],
-        'user_login': user[1],
-        'provider_id': sp[0],
-        'provider_type': sp[1],
-        'provider_protocol': sp[2],
-        'provider_name': sp[3],
+        'user_id': user['id'],
+        'user_login': user['login'],
+        'provider_id': sp['id'],
+        'provider_type': sp['type'],
+        'provider_protocol': sp['protocol'],
+        'provider_name': sp['name'],
         'trace_id': str(uuid.uuid4())[:8],
         'source_ip': str(ipaddress.IPv4Address(random.getrandbits(32))),
         'category': 'autorisation',
