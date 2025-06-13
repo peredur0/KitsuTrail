@@ -55,10 +55,12 @@ services:
             <<: *kt-backend-depends-on
 
     tenko:
-        image: kitsutrail-face:0.0
+        image: kitsutrail-app:1.0
         container_name: kitsutrail-app
         ports:
             - "8080:80"
+        environment:
+            - KITSUTRAIL__API__URL=http://localhost:8000
         restart: always
         healthcheck:
             test: ["CMD", "curl", "-f", "http://localhost:80"]
@@ -69,4 +71,4 @@ services:
         depends_on:
             kuro:
                 condition: service_healthy
-            
+ 
