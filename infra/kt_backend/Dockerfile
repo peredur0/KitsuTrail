@@ -4,6 +4,7 @@ RUN apt-get update \
     && apt install -y \
     build-essential \
     libpq-dev \
+    curl \
     && rm -rf /var/lib/apt/lists/*
 
 WORKDIR /kt_backend

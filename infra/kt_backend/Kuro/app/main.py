@@ -14,7 +14,7 @@ sys.path.append(os.path.dirname(os.path.abspath(__file__)))
 
 logger = logging.getLogger('uvicorn.error')
 
-version = '0.1.0'
+version = '1.0.0'
 description = """
 Kuro API server is managing the data related to the KitsuTrail project.
 
@@ -54,7 +54,8 @@ app = FastAPI(
 )
 
 allow_origins = [
-    'http://localhost:4200'
+    'http://localhost:4200',
+    'http://localhost:8080'
 ]
 
 app.add_middleware(
