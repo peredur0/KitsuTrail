@@ -1,0 +1,17 @@
+__pycache__/
+*.pyc
+*.pyo
+.venv/
+env/
+*.egg-info/
+*.db
+.DS_Store
+.idea/
+.vscode/
+
+Hatsuho/.venv
+Hatsuho/.gitignore
+Kuro/.venv
+Kuro/.gitignore
+
+Dockerfile
