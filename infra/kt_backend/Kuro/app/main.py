@@ -54,8 +54,7 @@ app = FastAPI(
 )
 
 allow_origins = [
-    'http://localhost:4200',
-    'http://localhost:8080'
+    os.getenv('KITSUTRAIL__APP__URL', 'http://localhost:8080')
 ]
 
 app.add_middleware(

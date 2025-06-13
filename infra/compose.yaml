@@ -4,6 +4,7 @@ x-kitsutrail-backend:
     environment:
         &kt-backend-env
         - KITSUTRAIL__DATABASE__CONN=postgresql+psycopg2://inari:inari@postgres/inari
+        - KITSUTRAIL__APP__URL=http://localhost:8080
     depends_on:
         &kt-backend-depends-on
         postgres:
