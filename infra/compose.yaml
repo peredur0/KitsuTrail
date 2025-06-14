@@ -1,14 +1,36 @@
+# Final compose version for KitsuTrail deployment.
+# Using PostgreSQL as main database
+#
+# The following environment variables can ben adapted:
+#
+# KITSUTRAIL_IMAGE_BASE             - Docker image used to run the backend
+#                                     Default: peredur/kitsutrail-base:1.0
+#
+# KITSUTRAIL__DATABASE__CONN        - SQLAlchemy connection URL to the database
+#                                     Connection information must match the postgres env variables
+#
+# POSTGRES_USER                     - Create PostgreSQL user
+# POSTGRES_PASSWORD                 - Add PostgreSQL user's password
+# POSTGRES_DB                       - Create the target PostgreSQL database
+#
+# KITSUTRAIL__APP__URL              - Frontend url, used for settings up CORS
+#                                     Default: http://localhost:8080
+# KITSUTRAIL__API__URL              - API backend server URL for browser connection
+#                                     Default: http://localhost:8000
+---
 x-kitsutrail-backend:
     &kt-backend
-    image: peredur/kitsutrail-base:1.0
+    image: ${KITSUTRAIL_IMAGE:-peredur/kitsutrail-base:1.0}
     environment:
         &kt-backend-env
         - KITSUTRAIL__DATABASE__CONN=postgresql+psycopg2://inari:inari@postgres/inari
-        - KITSUTRAIL__APP__URL=http://localhost:8080
+        - KITSUTRAIL__APP__URL=${KITSUTRAIL__APP__URL:-http://localhost:8080}
     depends_on:
         &kt-backend-depends-on
         postgres:
             condition: service_healthy
+    networks:
+        - kitsutrail-network
 
 services:
     postgres:
@@ -21,7 +43,7 @@ services:
         ports:
             - "5432:5432"
         volumes:
-            - ./kt_database/Inari/pgdata:/var/lib/postgresql/data
+            - postgres_data:/var/lib/postgresql/data
         healthcheck:
             test: ["CMD", "pg_isready", "-U", "inari"]
             interval: 10s
@@ -29,6 +51,8 @@ services:
             retries: 5
             start_period: 5s
         restart: always
+        networks:
+            - kitsutrail-network
 
     kuro:
         <<: *kt-backend
@@ -61,10 +85,10 @@ services:
         ports:
             - "8080:80"
         environment:
-            - KITSUTRAIL__API__URL=http://localhost:8000
+            - KITSUTRAIL__API__URL=${KITSUTRAIL__API__URL:-http://localhost:8000}
         restart: always
         healthcheck:
-            test: ["CMD", "curl", "-f", "http://localhost:80"]
+            test: ["CMD", "curl", "-f", "http://localhost:80/"]
             interval: 30s
             timeout: 10s
             retries: 3
@@ -72,4 +96,13 @@ services:
         depends_on:
             kuro:
                 condition: service_healthy
- 
+        networks:
+            - kitsutrail-network
+
+volumes:
+    postgres_data:
+        name: kitsutrail_psql_data
+
+networks:
+    kitsutrail-network:
+        driver: bridge
