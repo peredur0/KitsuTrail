@@ -30,8 +30,8 @@ The Kitsutrail docker images are available in my repo in docker hub: [https://hu
 # In KitsuTrail/infra
 docker compose up -d
 ```
-- The main page should be accessible on [http://localhost:8080](http://localhost:4200).
-- The Api swagger is accessible on [http://127.0.0.1:8000/docs](http://127.0.0.1:8000/docs)
+- The main page should be accessible on [http://localhost:8080](http://localhost:8080).
+- The Api swagger is accessible on [http://localhost:8000/docs](http://localhost:8000/docs)
 
 ## Remove
 You can clear the instance by using
