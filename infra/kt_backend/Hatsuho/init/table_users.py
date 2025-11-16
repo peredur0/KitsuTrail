@@ -18,8 +18,8 @@ def random_date() -> datetime.datetime:
     """
     Generate a random datetime
     """
-    start = datetime.datetime(2025, 3, 1)
-    end = datetime.datetime(2025, 5, 1)
+    start = datetime.datetime(2025, 7, 1)
+    end = datetime.datetime(2025, 9, 1)
     delta = end - start
     random_days = random.randint(0, delta.days)
     random_secs = random.randint(0, 86400)

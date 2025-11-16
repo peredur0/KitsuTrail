@@ -1,0 +1,66 @@
+---
+stages:
+  - lint
+  - test
+  - build
+
+lint_python:
+  image: python3.12
+  stage: lint
+  before_script:
+    - pip install black flake8
+  script:
+    - black --check infra/kt_backend/Hatsuho infra/kt_backend/Kuro
+    - flake8 infra/kt_backend/Hatsuho infra/kt_backend/Kuro
+
+lint_angular:
+  image: node:18
+  stage: lint
+  before_script:
+    - cd infra/kt_frontend
+    - npm ci
+  script:
+    - npm run lint
+
+run_pytest:
+  image: python3.12
+  stage: test
+  before_script:
+    - pip install pytest
+    - pip install -r infra/kt_backend/requirements.txt
+  script:
+    - pytest
+
+run_tests_angular:
+  image: node:18
+  stage: test
+  before_script:
+    - cd infra/kt_frontend
+    - npm ci
+  script:
+    - npm run test -- --watch=false --browser=ChromeHeadless 
+
+build_backend:
+  image: docker:24
+  stage: build
+  services:
+    - docker:24-dind
+  script:
+    - docker build -t peredur/kitsutrail-base:$VERSION ./infra/kt_backend
+    - echo "$DOCKER_HUB_PASS" | docker login -u "$DOCKER_HUB_USER" --password-stdin
+    - docker push peredur/kitsutrail-base: $VERSION
+  rules:
+    - if: '$CI_COMMIT_BRANCH == "master"'
+
+
+build_frontend:
+  image: docker:24
+  stage: build
+  services:
+    - docker:24-dind
+  script:
+    - docker build -t peredur/kitsutrail-app:$VERSION ./infra/kt_frontend
+    - echo "$DOCKER_HUB_PASS" | docker login -u "$DOCKER_HUB_USER" --password-stdin
+    - docker push peredur/kitsutrail-app:$VERSION
+  rules:
+    - if: '$CI_COMMIT_BRANCH == "master"'

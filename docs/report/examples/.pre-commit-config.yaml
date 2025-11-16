@@ -1,0 +1,54 @@
+default_install_hook_types:
+  - pre-commit
+  - commit-msg
+repos:
+  - repo: https://github.com/Lucas-C/pre-commit-hooks
+    rev: v1.5.5
+    hooks:
+      - id: remove-crlf
+  - repo: https://github.com/pre-commit/pre-commit-hooks
+    rev: v6.0.0
+    hooks:
+      - id: check-merge-conflict
+      - id: check-case-conflict
+      - id: check-executables-have-shebangs
+      - id: check-vcs-permalinks
+      - id: check-yaml
+        args: [ --unsafe ]
+      - id: detect-private-key
+      - id: end-of-file-fixer
+      - id: fix-byte-order-marker
+      - id: mixed-line-ending
+        args: [ --fix=lf ]
+      - id: trailing-whitespace
+        args: [ --markdown-linebreak-ext=md ]
+      - id: requirements-txt-fixer
+  - repo: https://github.com/psf/black-pre-commit-mirror
+    rev: 25.1.0
+    hooks:
+      - id: black
+        language_version: python3.12
+  - repo: https://github.com/pycqa/flake8
+    rev: 7.3.0
+    hooks:
+      - id: flake8
+  - repo: https://github.com/compilerla/conventional-pre-commit
+    rev: v4.2.0
+    hooks:
+      - id: conventional-pre-commit
+        stages: [commit-msg]
+        args: [breaking, perf, ci, refactor, revert, improv, deps, chore, docs]
+  - repo: https://github.com/pre-commit/mirrors-eslint
+    rev: v9.34.0
+    hooks:
+      - id: eslint
+        files: \[jt]sx?$
+        types: [file]
+        additional_dependencies: [eslint]
+  - repo: local
+    hooks:
+      - id: run-pytest
+        name: Run pytest
+        entry: pytest
+        language: system
+        pass_filenames: false
